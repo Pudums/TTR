@@ -1,0 +1,9 @@
+Purple 12
+White 12
+Blue 12
+Yellow 12
+Orange 12
+Black 12
+Red 12
+Green 12
+Multicolored 14
