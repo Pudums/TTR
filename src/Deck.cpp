@@ -16,7 +16,8 @@ std::vector<Wagon_card> parse_wagons_file(std::ifstream &list_of_wagons) {
             wagons_list.push_back({color});
         }
     }
-    std::shuffle(wagons_list.begin(), wagons_list.end(), std::mt19937(std::random_device()()));
+    std::shuffle(wagons_list.begin(), wagons_list.end(),
+                 std::mt19937(std::random_device()()));
     return wagons_list;
 }
 
@@ -30,7 +31,8 @@ std::vector<Route> parse_routes_file(std::ifstream &list_of_routes) {
         list_of_routes >> points_for_passing;
         routes_list.push_back({city1, city2, points_for_passing});
     }
-    std::shuffle(routes_list.begin(), routes_list.end(), std::mt19937(std::random_device()()));
+    std::shuffle(routes_list.begin(), routes_list.end(),
+                 std::mt19937(std::random_device()()));
     return routes_list;
 }
 }  // namespace
@@ -46,20 +48,22 @@ Deck::Deck(const std::string &wagons_file_name,
     short_routes = parse_routes_file(list_of_short_routes);
     long_routes = parse_routes_file(list_of_long_routes);
     set_start_active_wagons();
-    for (const auto& elem : wagons_deck) {
+    for (const auto &elem : wagons_deck) {
         std::cout << elem.color << '\n';
     }
     std::cout << '\n';
-    for (const auto& elem : active_wagons) {
+    for (const auto &elem : active_wagons) {
         std::cout << elem.color << '\n';
     }
     std::cout << '\n';
-    for (const auto& elem : short_routes) {
-        std::cout << elem.city1 << ' ' << elem.city2 << ' ' << elem.points_for_passing << '\n';
+    for (const auto &elem : short_routes) {
+        std::cout << elem.city1 << ' ' << elem.city2 << ' '
+                  << elem.points_for_passing << '\n';
     }
     std::cout << '\n';
-    for (const auto& elem : long_routes) {
-        std::cout << elem.city1 << ' ' << elem.city2 << ' ' << elem.points_for_passing << '\n';
+    for (const auto &elem : long_routes) {
+        std::cout << elem.city1 << ' ' << elem.city2 << ' '
+                  << elem.points_for_passing << '\n';
     }
     std::cout << '\n';
 }
@@ -67,12 +71,15 @@ Deck::Deck(const std::string &wagons_file_name,
 int Deck::wagons_deck_size() const {
     return wagons_deck.size();
 }
+
 bool Deck::is_wagons_deck_empty() const {
     return wagons_deck.empty();
 }
+
 int Deck::routes_deck_size() const {
     return short_routes.size();
 }
+
 bool Deck::is_routes_deck_empty() const {
     return short_routes.empty();
 }
