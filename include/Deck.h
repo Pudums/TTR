@@ -5,17 +5,17 @@
 #ifndef PROJECT_DECK_H
 #define PROJECT_DECK_H
 
-#include "Route.h"
-#include "Wagon_card.h"
 #include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include "Route.h"
+#include "WagonCard.h"
 
 struct Deck {
 private:
-    std::vector<Wagon_card> wagons_deck;
-    std::vector<Wagon_card> active_wagons;
+    std::vector<WagonCard> wagons_deck;
+    std::vector<WagonCard> active_wagons;
     std::vector<Route> short_routes;
     std::vector<Route> long_routes;
     void set_start_active_wagons();

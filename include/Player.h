@@ -6,10 +6,10 @@
 #define PROJECT_PLAYER_H
 
 #include <iostream>
-#include <vector>
 #include <string>
-#include "Wagon_card.h"
+#include <vector>
 #include "Route.h"
+#include "WagonCard.h"
 
 struct Player {
 private:
@@ -20,7 +20,7 @@ private:
 
 public:
     std::string color;
-    std::vector<Wagon_card> wagon_cards;
+    std::vector<WagonCard> wagon_cards;
     std::vector<Route> active_routes;
     int number_of_wagons_left;
 

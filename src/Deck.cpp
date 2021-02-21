@@ -6,8 +6,8 @@
 #include <random>
 
 namespace {
-std::vector<Wagon_card> parse_wagons_file(std::ifstream &list_of_wagons) {
-    std::vector<Wagon_card> wagons_list;
+std::vector<WagonCard> parse_wagons_file(std::ifstream &list_of_wagons) {
+    std::vector<WagonCard> wagons_list;
     std::string color;
     int number_of_wagons;
     while (list_of_wagons >> color) {
@@ -47,7 +47,6 @@ Deck::Deck(const std::string &wagons_file_name,
     set_start_active_wagons();
     short_routes = parse_routes_file(list_of_short_routes);
     long_routes = parse_routes_file(list_of_long_routes);
-    set_start_active_wagons();
     for (const auto &elem : wagons_deck) {
         std::cout << elem.color << '\n';
     }
@@ -85,9 +84,9 @@ bool Deck::is_routes_deck_empty() const {
 }
 
 void Deck::set_start_active_wagons() {
-    active_wagons = std::vector<Wagon_card>(Deck::number_of_active_cards);
+    active_wagons = std::vector<WagonCard>(Deck::number_of_active_cards);
     for (int i = 0; i < Deck::number_of_active_cards; i++) {
-        active_wagons.push_back(wagons_deck.back());
+        active_wagons[i] = wagons_deck.back();
         wagons_deck.pop_back();
     }
 }

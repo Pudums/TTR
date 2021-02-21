@@ -8,7 +8,8 @@
 #include <iostream>
 #include <string>
 #include <vector>
-#include "Wagon_card.h"
+#include "WagonCard.h"
+#include "WagonBlock.h"
 
 struct Path {
     std::string start;
@@ -18,6 +19,7 @@ struct Path {
     int number_of_locomotives;
     bool is_tunnel;
     int owner;
+    std::vector<WagonBlock> wagon_blocks;
     // drawing
 };
 

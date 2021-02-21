@@ -5,13 +5,13 @@
 #ifndef PROJECT_DISCHARGE_H
 #define PROJECT_DISCHARGE_H
 
-#include "Wagon_card.h"
-#include "Route.h"
 #include <iostream>
 #include <vector>
+#include "Route.h"
+#include "WagonCard.h"
 
 class Discharge {
-    std::vector<Wagon_card> deck;
+    std::vector<WagonCard> deck;
     std::vector<Route> routes;
 };
 
