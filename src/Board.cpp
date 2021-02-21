@@ -2,7 +2,7 @@
 // Created by timofey on 20.02.2021.
 //
 
-#include "../include/Board.h"
+#include "Board.h"
 
 namespace {
 std::vector<Path> parse_paths_file(std::ifstream &list_of_paths) {
