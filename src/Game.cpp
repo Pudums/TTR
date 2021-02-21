@@ -2,7 +2,7 @@
 // Created by timofey on 20.02.2021.
 //
 
-#include "../include/Game.h"
+#include "Game.h"
 void Game::start() const {
 }
 
