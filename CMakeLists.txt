@@ -9,7 +9,9 @@ file(GLOB CPP
 	"src/*"
 )
 
+add_subdirectory(view)
+
 add_library(all_cpp OBJECT ${CPP})
 
 add_executable(Project main.cpp)
-target_link_libraries(Project all_cpp)
+target_link_libraries(Project all_cpp QT_VIEW)
