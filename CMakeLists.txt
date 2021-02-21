@@ -1,6 +1,15 @@
-cmake_minimum_required(VERSION 3.17)
+cmake_minimum_required(VERSION 3.16)
 project(Project)
 
 set(CMAKE_CXX_STANDARD 17)
 
-add_executable(Project main.cpp src/Wagon_card.cpp include/Wagon_card.h src/Deck.cpp include/Deck.h src/Route.cpp include/Route.h src/Path.cpp include/Path.h src/Discharge.cpp include/Discharge.h src/Board.cpp include/Board.h src/Player.cpp include/Player.h src/Game.cpp include/Game.h)
+include_directories(include)
+
+file(GLOB CPP
+	"src/*"
+)
+
+add_library(all_cpp OBJECT ${CPP})
+
+add_executable(Project main.cpp)
+target_link_libraries(Project all_cpp)
