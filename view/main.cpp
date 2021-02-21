@@ -1,5 +1,5 @@
-#include "View.h"
 #include <QApplication>
+#include "View.h"
 
 View *v;
 
@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
 
     v = new View();
     v->show();
-	v->display_menu();
+    v->display_menu();
 
     return app.exec();
 }

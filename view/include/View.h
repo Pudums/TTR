@@ -1,22 +1,22 @@
 #ifndef __View__H__
 #define __View__H__
 
-#include <QGraphicsView>
 #include <QGraphicsScene>
+#include <QGraphicsView>
 #include <QMouseEvent>
 
-class View: public QGraphicsView {
-	Q_OBJECT
+class View : public QGraphicsView {
+    Q_OBJECT
 public:
-	View(QWidget *parrent = nullptr);
+    View(QWidget *parrent = nullptr);
 
-	QGraphicsScene* scene;
+    QGraphicsScene *scene;
 
-	void display_menu();
+    void display_menu();
 
-//signals:
+    // signals:
 public slots:
-	void start();
+    void start();
 };
 
-#endif //__View__H__
+#endif  //__View__H__
