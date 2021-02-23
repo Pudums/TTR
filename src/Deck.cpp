@@ -98,6 +98,7 @@ std::vector<WagonCard> Deck::get_start_wagon_cards() {
     }
     return result;
 }
+
 std::vector<Route> Deck::get_start_route_cards() {
     std::vector<Route> result(Player::start_number_of_short_routes +
                               Player::start_number_of_long_routes);
@@ -110,4 +111,34 @@ std::vector<Route> Deck::get_start_route_cards() {
         long_routes.pop_back();
     }
     return result;
+}
+
+std::vector<Route> Deck::get_new_routes() {
+    std::vector<Route> result(Deck::number_of_getting_new_routes);
+    for (int i = 0; i < Deck::number_of_getting_new_routes; i++) {
+        result[i] = short_routes.back();
+        short_routes.pop_back();
+    }
+    return result;
+}
+
+bool Deck::check_active_card_set_is_correct() {
+    int number_of_locomotives = 0;
+    for (const auto &elem : active_wagons) {
+        if (elem.color == "Multicolored") {
+            number_of_locomotives++;
+        }
+    }
+    if (number_of_locomotives > Deck::max_number_of_active_locomotives) {
+        return false;
+    }
+    return true;
+}
+
+void Deck::replace_active_cards() {
+    while (!active_wagons.empty()) {
+        wagons_deck.push_back(active_wagons.back());
+        active_wagons.pop_back();
+    }
+    set_start_active_wagons();
 }

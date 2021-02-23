@@ -23,12 +23,17 @@ private:
 
 public:
     static const int number_of_active_cards = 5;
+    static const int number_of_getting_new_routes = 3;
+    static const int max_number_of_active_locomotives = 2;
     Deck(const std::string &wagons_file_name,
          const std::string &short_routes_file_name,
          const std::string &long_routes_file_name);
 
+    bool check_active_card_set_is_correct();
+    void replace_active_cards();
     [[nodiscard]] std::vector<WagonCard> get_start_wagon_cards();
     [[nodiscard]] std::vector<Route> get_start_route_cards();
+    [[nodiscard]] std::vector<Route> get_new_routes();
 
     [[nodiscard]] int wagons_deck_size() const;
     [[nodiscard]] bool is_wagons_deck_empty() const;
