@@ -10,7 +10,7 @@
 #include "Route.h"
 #include "WagonCard.h"
 
-class Discharge {
+struct Discharge {
     std::vector<WagonCard> deck;
     std::vector<Route> routes;
 };

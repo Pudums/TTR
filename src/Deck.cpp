@@ -67,22 +67,6 @@ Deck::Deck(const std::string &wagons_file_name,
     std::cout << '\n';
 }
 
-int Deck::wagons_deck_size() const {
-    return wagons_deck.size();
-}
-
-bool Deck::is_wagons_deck_empty() const {
-    return wagons_deck.empty();
-}
-
-int Deck::routes_deck_size() const {
-    return short_routes.size();
-}
-
-bool Deck::is_routes_deck_empty() const {
-    return short_routes.empty();
-}
-
 void Deck::set_start_active_wagons() {
     active_wagons = std::vector<WagonCard>(Deck::number_of_active_cards);
     for (int i = 0; i < Deck::number_of_active_cards; i++) {
@@ -141,4 +125,30 @@ void Deck::replace_active_cards() {
         active_wagons.pop_back();
     }
     set_start_active_wagons();
+}
+
+bool Deck::check_deck_empty() {
+    return wagons_deck.empty();
+}
+
+void Deck::return_cards_from_discharge(Discharge &discharge) {
+    std::shuffle(discharge.deck.begin(), discharge.deck.end(),
+                 std::mt19937(std::random_device()()));
+    while (!discharge.deck.empty()) {
+        wagons_deck.push_back(discharge.deck.back());
+        discharge.deck.pop_back();
+    }
+}
+
+WagonCard Deck::draw_card_from_deck() {
+    WagonCard result = wagons_deck.back();
+    wagons_deck.pop_back();
+    return result;
+}
+
+WagonCard Deck::draw_card_from_active_cards(int card_number) {
+    WagonCard result = active_wagons[card_number];
+    active_wagons[card_number] = wagons_deck.back();
+    wagons_deck.pop_back();
+    return result;
 }

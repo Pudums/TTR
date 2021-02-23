@@ -7,5 +7,6 @@ int main() {
     // Board board("paths.txt");
     Game g(3);
     g.start_game();
+    
     return 0;
 }

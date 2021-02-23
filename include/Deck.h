@@ -12,6 +12,7 @@
 #include "Player.h"
 #include "Route.h"
 #include "WagonCard.h"
+#include "Discharge.h"
 
 struct Deck {
 private:
@@ -29,16 +30,16 @@ public:
          const std::string &short_routes_file_name,
          const std::string &long_routes_file_name);
 
-    bool check_active_card_set_is_correct();
     void replace_active_cards();
+    void return_cards_from_discharge(Discharge& discharge);
+    [[nodiscard]] bool check_deck_empty();
+    [[nodiscard]] bool check_active_card_set_is_correct();
+
+    [[nodiscard]] WagonCard draw_card_from_deck();
+    [[nodiscard]] WagonCard draw_card_from_active_cards(int card_number);
     [[nodiscard]] std::vector<WagonCard> get_start_wagon_cards();
     [[nodiscard]] std::vector<Route> get_start_route_cards();
     [[nodiscard]] std::vector<Route> get_new_routes();
-
-    [[nodiscard]] int wagons_deck_size() const;
-    [[nodiscard]] bool is_wagons_deck_empty() const;
-    [[nodiscard]] int routes_deck_size() const;
-    [[nodiscard]] bool is_routes_deck_empty() const;
 };
 
 #endif  // PROJECT_DECK_H
