@@ -23,7 +23,9 @@ public:
     std::vector<Player> players;
     int active_player;
 
-    void start() const;
+    Game(int number_of_players);
+
+    void start_game();
     [[nodiscard]] bool check_end_game() const;
     void end_game() const;
 };

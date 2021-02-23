@@ -13,16 +13,20 @@
 
 struct Player {
 private:
+    static inline int id_ = 1;
+
+public:
     static const int start_number_of_wagons = 45;
     static const int start_number_of_wagon_cards = 4;
     static const int start_number_of_short_routes = 3;
     static const int start_number_of_long_routes = 1;
 
-public:
-    std::string color;
+    int id;
     std::vector<WagonCard> wagon_cards;
     std::vector<Route> active_routes;
     int number_of_wagons_left;
+
+    Player();
 
 };
 
