@@ -12,4 +12,4 @@ file(GLOB CPP
 add_library(all_cpp OBJECT ${CPP})
 
 add_executable(Project main.cpp)
-target_link_libraries(Project PRIVATE ill_cpp)
+target_link_libraries(Project PRIVATE all_cpp)
