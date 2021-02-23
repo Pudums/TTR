@@ -92,19 +92,20 @@ void Deck::set_start_active_wagons() {
 }
 std::vector<WagonCard> Deck::get_start_wagon_cards() {
     std::vector<WagonCard> result(Player::start_number_of_wagon_cards);
-    for (int i = 0; i < Player::start_number_of_wagon_cards; i ++) {
+    for (int i = 0; i < Player::start_number_of_wagon_cards; i++) {
         result[i] = wagons_deck.back();
         wagons_deck.pop_back();
     }
     return result;
 }
 std::vector<Route> Deck::get_start_route_cards() {
-    std::vector<Route> result(Player::start_number_of_short_routes + Player::start_number_of_long_routes);
-    for (int i = 0; i < Player::start_number_of_short_routes; i ++) {
+    std::vector<Route> result(Player::start_number_of_short_routes +
+                              Player::start_number_of_long_routes);
+    for (int i = 0; i < Player::start_number_of_short_routes; i++) {
         result[i] = short_routes.back();
         short_routes.pop_back();
     }
-    for (int i = 0; i < Player::start_number_of_long_routes; i ++) {
+    for (int i = 0; i < Player::start_number_of_long_routes; i++) {
         result[i + Player::start_number_of_short_routes] = long_routes.back();
         long_routes.pop_back();
     }

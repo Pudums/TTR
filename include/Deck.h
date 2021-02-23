@@ -9,9 +9,9 @@
 #include <fstream>
 #include <iostream>
 #include <vector>
+#include "Player.h"
 #include "Route.h"
 #include "WagonCard.h"
-#include "Player.h"
 
 struct Deck {
 private:

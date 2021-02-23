@@ -18,7 +18,8 @@ std::vector<Path> parse_paths_file(std::ifstream &list_of_paths) {
         list_of_paths >> finish >> color >> number_of_colored_wagons >>
             number_of_locomotives >> is_tunnel;
         paths.push_back({start, finish, color, number_of_colored_wagons,
-                         number_of_locomotives, is_tunnel, owner});
+                         number_of_locomotives, is_tunnel, owner,
+                         number_of_locomotives + number_of_colored_wagons});
     }
     return paths;
 }
@@ -31,6 +32,6 @@ Board::Board(const std::string &paths_file_name) {
         std::cout << elem.start << ' ' << elem.finish << ' ' << elem.color
                   << ' ' << elem.number_of_colored_wagons << ' '
                   << elem.number_of_locomotives << ' ' << elem.is_tunnel << ' '
-                  << elem.owner << '\n';
+                  << elem.owner << ' ' << elem.length << '\n';
     }
 }

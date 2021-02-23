@@ -11,6 +11,7 @@
 #include "Deck.h"
 #include "Discharge.h"
 #include "Player.h"
+#include "set"
 
 struct Game {
 private:

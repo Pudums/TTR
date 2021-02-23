@@ -27,7 +27,6 @@ public:
     int number_of_wagons_left;
 
     Player();
-
 };
 
 #endif  // PROJECT_PLAYER_H
