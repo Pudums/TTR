@@ -21,6 +21,9 @@ struct Path {
     int owner;
     int length;
     std::vector<WagonBlock> wagon_blocks;
+
+    [[nodiscard]] static int points_for_path(int path_lengths);
+
     // drawing
 };
 

@@ -82,8 +82,64 @@ void Game::end_game() const {
 
 Game::Game(int number_of_players)
     : board(Board("paths.txt")),
-      deck(Deck("wagons.txt", "short_routes.txt", "long_routes.txt")),
       discharge(Discharge()),
+      deck(
+          Deck("wagons.txt", "short_routes.txt", "long_routes.txt", discharge)),
       players(std::vector<Player>(number_of_players)),
-      active_player(1) {
+      active_player(0) {
+}
+
+void Game::move_get_new_roots() {
+    std::vector<Route> new_routes = deck.get_new_routes();
+    players[active_player].active_routes.insert(
+        players[active_player].active_routes.end(), new_routes.begin(),
+        new_routes.end());
+}
+
+void Game::move_get_new_wagon_cards() {
+    std::string from_where;
+    for (int i = 0; i < Game::number_of_getting_wagons; i++) {
+        //получение строки
+        if (from_where == "from_deck") {
+            get_wagon_card_from_deck();
+        } else if (from_where == "from_active_cards") {
+            int position = 0;
+            //получение номера карты
+            get_wagon_card_from_active_cards(position);
+        } else {
+            assert(false);
+        }
+    }
+}
+
+void Game::get_wagon_card_from_deck() {
+    players[active_player].wagon_cards.push_back(deck.draw_card_from_deck());
+}
+
+void Game::get_wagon_card_from_active_cards(int position) {
+    players[active_player].wagon_cards.push_back(
+        deck.draw_card_from_active_cards(position));
+}
+
+void Game::move_build_path(int position) {
+    Path& path = board.paths[position];
+    if (path.owner == -1) {
+        std::vector<WagonCard> list_of_wagon_cards;
+        //получение списка карточек вагонов
+        if (is_building_path_correct(path, list_of_wagon_cards)) {
+            update_state_after_path_building(path, players[active_player]);
+        }
+    }
+}
+
+void Game::update_state_after_path_building(Path &path, Player &player) {
+    path.owner = active_player;
+    player.points += Path::points_for_path(path.length);
+    //изменить состояние path.wagon_blocks
+}
+
+void Game::make_move() {
+    std::string type_of_move;
+    //получение строки
+    //TODO
 }

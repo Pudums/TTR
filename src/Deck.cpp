@@ -39,7 +39,8 @@ std::vector<Route> parse_routes_file(std::ifstream &list_of_routes) {
 
 Deck::Deck(const std::string &wagons_file_name,
            const std::string &short_routes_file_name,
-           const std::string &long_routes_file_name) {
+           const std::string &long_routes_file_name,
+           Discharge& discharge_) : discharge(discharge_) {
     std::ifstream list_of_wagons(wagons_file_name);
     std::ifstream list_of_short_routes(short_routes_file_name);
     std::ifstream list_of_long_routes(long_routes_file_name);
@@ -131,7 +132,7 @@ bool Deck::check_deck_empty() {
     return wagons_deck.empty();
 }
 
-void Deck::return_cards_from_discharge(Discharge &discharge) {
+void Deck::return_cards_from_discharge() {
     std::shuffle(discharge.deck.begin(), discharge.deck.end(),
                  std::mt19937(std::random_device()()));
     while (!discharge.deck.empty()) {
@@ -143,6 +144,7 @@ void Deck::return_cards_from_discharge(Discharge &discharge) {
 WagonCard Deck::draw_card_from_deck() {
     WagonCard result = wagons_deck.back();
     wagons_deck.pop_back();
+    check_correctness_of_deck();
     return result;
 }
 
@@ -150,5 +152,15 @@ WagonCard Deck::draw_card_from_active_cards(int card_number) {
     WagonCard result = active_wagons[card_number];
     active_wagons[card_number] = wagons_deck.back();
     wagons_deck.pop_back();
+    check_correctness_of_deck();
     return result;
+}
+
+void Deck::check_correctness_of_deck() {
+    if (check_deck_empty()) {
+        return_cards_from_discharge();
+    }
+    while (!check_active_card_set_is_correct()) {
+        replace_active_cards();
+    }
 }

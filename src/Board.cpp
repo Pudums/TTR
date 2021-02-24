@@ -13,7 +13,7 @@ std::vector<Path> parse_paths_file(std::ifstream &list_of_paths) {
     int number_of_colored_wagons;
     int number_of_locomotives;
     bool is_tunnel;
-    int owner = 0;
+    int owner = -1;
     while (list_of_paths >> start) {
         list_of_paths >> finish >> color >> number_of_colored_wagons >>
             number_of_locomotives >> is_tunnel;

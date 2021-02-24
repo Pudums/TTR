@@ -13,7 +13,7 @@
 
 struct Player {
 private:
-    static inline int id_ = 1;
+    static inline int id_ = 0;
 
 public:
     static const int start_number_of_wagons = 45;
@@ -25,7 +25,7 @@ public:
     std::vector<WagonCard> wagon_cards;
     std::vector<Route> active_routes;
     int number_of_wagons_left;
-
+    int points;
     Player();
 };
 
