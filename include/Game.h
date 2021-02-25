@@ -14,6 +14,7 @@
 #include "Deck.h"
 #include "Discharge.h"
 #include "Player.h"
+#include "Algo.h"
 
 struct Game {
 private:
@@ -26,6 +27,7 @@ public:
     Deck deck;
     std::vector<Player> players;
     int active_player;
+    int number_of_players;
 
     explicit Game(int number_of_players);
 
@@ -38,7 +40,8 @@ public:
     void get_wagon_card_from_active_cards(int position);
     void update_state_after_path_building(Path& path, Player &player);
     [[nodiscard]] bool check_end_game() const;
-    void end_game() const;
+    void end_game();
+    void count_players_points();
 };
 
 #endif  // PROJECT_GAME_H

@@ -47,6 +47,13 @@ bool is_building_path_correct(const Path &path,
     }
     return false;
 }
+
+void create_graphs_for_players(std::vector<Player> &players,
+                               const std::vector<Path> &paths) {
+    for (auto &player : players) {
+        player.graph = Algo(paths, player.id);
+    }
+}
 }  // namespace
 
 void Game::start_game() {
@@ -66,6 +73,7 @@ void Game::start_game() {
         }
         std::cout << '\n';
     }
+    // make_move();
 }
 
 bool Game::check_end_game() const {
@@ -77,16 +85,14 @@ bool Game::check_end_game() const {
     return false;
 }
 
-void Game::end_game() const {
-}
-
 Game::Game(int number_of_players)
     : board(Board("paths.txt")),
       discharge(Discharge()),
       deck(
           Deck("wagons.txt", "short_routes.txt", "long_routes.txt", discharge)),
       players(std::vector<Player>(number_of_players)),
-      active_player(0) {
+      active_player(0),
+      number_of_players(number_of_players) {
 }
 
 void Game::move_get_new_roots() {
@@ -99,12 +105,12 @@ void Game::move_get_new_roots() {
 void Game::move_get_new_wagon_cards() {
     std::string from_where;
     for (int i = 0; i < Game::number_of_getting_wagons; i++) {
-        //получение строки
+        // TODO получение строки
         if (from_where == "from_deck") {
             get_wagon_card_from_deck();
         } else if (from_where == "from_active_cards") {
             int position = 0;
-            //получение номера карты
+            // TODO получение номера карты
             get_wagon_card_from_active_cards(position);
         } else {
             assert(false);
@@ -122,10 +128,11 @@ void Game::get_wagon_card_from_active_cards(int position) {
 }
 
 void Game::move_build_path(int position) {
-    Path& path = board.paths[position];
+    Path &path = board.paths[position];
     if (path.owner == -1) {
         std::vector<WagonCard> list_of_wagon_cards;
-        //получение списка карточек вагонов
+        // TODO получение списка карточек вагонов
+        // TODO автовыбор карт
         if (is_building_path_correct(path, list_of_wagon_cards)) {
             update_state_after_path_building(path, players[active_player]);
         }
@@ -135,11 +142,27 @@ void Game::move_build_path(int position) {
 void Game::update_state_after_path_building(Path &path, Player &player) {
     path.owner = active_player;
     player.points += Path::points_for_path(path.length);
-    //изменить состояние path.wagon_blocks
+    // TODO изменить состояние path.wagon_blocks
 }
 
 void Game::make_move() {
-    std::string type_of_move;
-    //получение строки
-    //TODO
+    while (!check_end_game()) {
+        std::string type_of_move;
+        // TODO получение строки
+        // TODO
+        active_player = (active_player + 1) % number_of_players;
+    }
+    end_game();
+}
+
+void Game::count_players_points() {
+    for (auto &player : players) {
+        player.count_points();
+    }
+}
+
+void Game::end_game() {
+    create_graphs_for_players(players, board.paths);
+    count_players_points();
+    // TODO звершение
 }

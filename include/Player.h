@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include "Algo.h"
 #include "Route.h"
 #include "WagonCard.h"
 
@@ -26,7 +27,10 @@ public:
     std::vector<Route> active_routes;
     int number_of_wagons_left;
     int points;
+    Algo graph;
     Player();
+    void count_points();
+    void count_points_for_routes();
 };
 
 #endif  // PROJECT_PLAYER_H

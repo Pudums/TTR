@@ -14,6 +14,7 @@
 struct Algo {
     std::map<std::string, std::vector<std::string>> g;
 
+    Algo() = default;
     Algo(const std::vector<Path>& paths, const int& player);
 
     bool is_route_exists(const std::string& s, const std::string &t);
