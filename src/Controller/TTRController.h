@@ -1,10 +1,13 @@
-//
-// Created by megaserg01 on 25.02.2021.
-//
+#include "Game.h"
 
 #ifndef TTR_TTRCONTROLLER_H
 #define TTR_TTRCONTROLLER_H
 
-class TTRController {};
+class TTRController {
+    Game game;
+    //Network network implement later
+    void start_game();
+    void end_game();
+};
 
 #endif  // TTR_TTRCONTROLLER_H
