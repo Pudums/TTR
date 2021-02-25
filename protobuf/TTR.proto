@@ -51,10 +51,10 @@ message BoardState{
   Deck deck_state = 2;
   Players all_players = 3;
 }
-message Nothing{}
+
 message MakeTurnRequest{
   string type = 1;
-
+  PlayerID id = 2;
 }
 message Routes{
   repeated Route routes = 1;
@@ -63,8 +63,8 @@ message Wagons{
   repeated Wagon wagons = 1;
 }
 message PrivatePlayerInfo{
-  Wagons player_wagons = 1;
-  Routes player_routes = 2;
+  Wagons player_wagons = 2;
+  Routes player_routes = 3;
 }
 message PlayerState{
   Player player_general_info = 1;
@@ -76,7 +76,10 @@ message  MakeTurnResponse{
   PlayerState player_state = 3;
   Deck deck = 4;
 }
+message PlayerID{
+  int32 id = 1;
+}
 service TTRService{
-  rpc get_board_state(Nothing) returns (BoardState){};
+  rpc get_board_state(PlayerID) returns (BoardState){};
   rpc make_turn(MakeTurnRequest) returns (MakeTurnResponse);
 }
