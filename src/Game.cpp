@@ -3,6 +3,7 @@
 //
 
 #include "../include/Game.h"
+#include <memory>//or in .h?
 namespace {
 int number_of_locomotives(const std::vector<WagonCard> &list_of_wagons) {
     int counter = 0;
@@ -73,7 +74,6 @@ void Game::start_game() {
         }
         std::cout << '\n';
     }
-    // make_move();
 }
 
 bool Game::check_end_game() const {
@@ -103,7 +103,7 @@ void Game::move_get_new_roots() {
 }
 
 void Game::move_get_new_wagon_cards() {
-    std::string from_where;
+    std::string from_where;//useless? or not?
     for (int i = 0; i < Game::number_of_getting_wagons; i++) {
         // TODO получение строки
         if (from_where == "from_deck") {
@@ -127,32 +127,35 @@ void Game::get_wagon_card_from_active_cards(int position) {
         deck.draw_card_from_active_cards(position));
 }
 
-void Game::move_build_path(int position) {
+void Game::move_build_path(int position, const std::vector<WagonCard> &list_of_wagon_cards) {
     Path &path = board.paths[position];
     if (path.owner == -1) {
-        std::vector<WagonCard> list_of_wagon_cards;
-        // TODO получение списка карточек вагонов
-        // TODO автовыбор карт
         if (is_building_path_correct(path, list_of_wagon_cards)) {
             update_state_after_path_building(path, players[active_player]);
         }
     }
 }
 
-void Game::update_state_after_path_building(Path &path, Player &player) {
+void Game::update_state_after_path_building(Path &path, Player &player) const {
     path.owner = active_player;
     player.points += Path::points_for_path(path.length);
     // TODO изменить состояние path.wagon_blocks
 }
 
-void Game::make_move() {
-    while (!check_end_game()) {
-        std::string type_of_move;
-        // TODO получение строки
-        // TODO
-        active_player = (active_player + 1) % number_of_players;
+void Game::make_move(Turn *t) {
+    if(auto *p = dynamic_cast<DrawCardFromDeck*>(t)){
+        get_wagon_card_from_deck();
     }
-    end_game();
+    if(auto *p = dynamic_cast<DrawCardFromActive*>(t)){
+        get_wagon_card_from_active_cards(p->number);
+    }
+    if(auto *p = dynamic_cast<BuildPath*>(t)){
+            move_build_path(p->get_pos(), p->getWagons());
+    }
+    if(auto p = dynamic_cast<TakeRoutes*>(t)){
+        move_get_new_roots();
+    }
+    active_player = (active_player + 1) % number_of_players;
 }
 
 void Game::count_players_points() {
