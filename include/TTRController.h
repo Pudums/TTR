@@ -8,7 +8,6 @@ class TTRController {
     Game *game = nullptr;
     // View *view;
     // Server *server;
-    // Network network implement later
 public:
     void start_game();
     void end_game();

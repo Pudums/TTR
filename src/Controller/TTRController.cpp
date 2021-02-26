@@ -10,7 +10,7 @@ TTRController::TTRController() {
     // new (view) View(*game);
 }
 void TTRController::start_game() {
-    // View.start_game();
+    // View->start_game();
     game->start_game();
     // server.start();
 }
