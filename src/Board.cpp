@@ -35,7 +35,7 @@ Board::Board(const std::string &paths_file_name, const std::string &wagon_blocks
                   << elem.owner << ' ' << elem.length << '\n';
     }
     std::ifstream wagon_blocks_filestream(wagon_blocks_filename);
-    for(int i = 0; i < 1;i++){
+    for (int i = 0; i < paths.size(); i++) {
         paths[i].read_wagon_blocks(wagon_blocks_filestream);
     }
 }
