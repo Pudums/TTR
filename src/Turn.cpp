@@ -1,6 +1,6 @@
 #include "Turn.h"
 
-BuildPath::BuildPath(int id){
+BuildPath::BuildPath(int id) {
     pos = id;
 }
 
