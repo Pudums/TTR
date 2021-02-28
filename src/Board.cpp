@@ -25,7 +25,7 @@ std::vector<Path> parse_paths_file(std::ifstream &list_of_paths) {
 }
 }  // namespace
 
-Board::Board(const std::string &paths_file_name) {
+Board::Board(const std::string &paths_file_name, const std::string &wagon_blocks_filename) {
     std::ifstream list_of_paths(paths_file_name);
     paths = parse_paths_file(list_of_paths);
     for (const auto &elem : paths) {
@@ -33,5 +33,9 @@ Board::Board(const std::string &paths_file_name) {
                   << ' ' << elem.number_of_colored_wagons << ' '
                   << elem.number_of_locomotives << ' ' << elem.is_tunnel << ' '
                   << elem.owner << ' ' << elem.length << '\n';
+    }
+    std::ifstream wagon_blocks_filestream(wagon_blocks_filename);
+    for(int i = 0; i < 0;i++){
+        paths[i].read_wagon_blocks(wagon_blocks_filestream);
     }
 }

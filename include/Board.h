@@ -13,7 +13,7 @@
 
 struct Board {
     std::vector<Path> paths;
-    explicit Board(const std::string &paths_file_name);
+    explicit Board(const std::string &paths_file_name, const std::string &wagon_blocks_filename);
 };
 
 #endif  // PROJECT_BOARD_H

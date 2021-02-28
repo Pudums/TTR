@@ -4,50 +4,6 @@
 
 #include "../include/Game.h"
 namespace {
-int number_of_locomotives(const std::vector<WagonCard> &list_of_wagons) {
-    int counter = 0;
-    for (const auto &elem : list_of_wagons) {
-        if (elem.color == "Multicolored") {
-            counter++;
-        }
-    }
-    return counter;
-}
-
-bool one_type_wagons(const std::vector<WagonCard> &list_of_wagons) {
-    std::set<std::string> color_types;
-    for (const auto &elem : list_of_wagons) {
-        color_types.insert(elem.color);
-    }
-    if (color_types.size() > 2 ||
-        (color_types.size() == 2 &&
-         number_of_locomotives(list_of_wagons) == 0)) {
-        return false;
-    }
-    return true;
-}
-
-bool is_building_path_correct(const Path &path,
-                              const std::vector<WagonCard> &list_of_wagons) {
-    if (path.length != list_of_wagons.size() ||
-        path.number_of_locomotives > number_of_locomotives(list_of_wagons) ||
-        !one_type_wagons(list_of_wagons)) {
-        return false;
-    }
-    int number_of_wagons_same_type = 0;
-    for (const auto &elem : list_of_wagons) {
-        if (elem.color == path.color) {
-            number_of_wagons_same_type++;
-        }
-    }
-    if (path.color == "Uncolored" ||
-        number_of_wagons_same_type + number_of_locomotives(list_of_wagons) ==
-            path.length) {
-        return true;
-    }
-    return false;
-}
-
 void create_graphs_for_players(std::vector<Player> &players,
                                const std::vector<Path> &paths) {
     for (auto &player : players) {
@@ -86,10 +42,12 @@ bool Game::check_end_game() const {
 }
 
 Game::Game(int number_of_players)
-    : board(Board("data/paths.txt")),
+    : board(Board("data/paths.txt", "data/wagon_bocks.txt")),
       discharge(Discharge()),
-      deck(
-          Deck("data/wagons.txt", "data/short_routes.txt", "data/long_routes.txt", discharge)),
+      deck(Deck("data/wagons.txt",
+                "data/short_routes.txt",
+                "data/long_routes.txt",
+                discharge)),
       players(std::vector<Player>(number_of_players)),
       active_player(0),
       number_of_players(number_of_players) {
@@ -111,14 +69,20 @@ void Game::get_wagon_card_from_active_cards(int position) {
         deck.draw_card_from_active_cards(position));
 }
 
-void Game::move_build_path(int position, const std::vector<WagonCard> &list_of_wagon_cards) {
-    Path &path = board.paths[position];
-    if (path.owner == -1) {
-        // TODO автовыбор карт
-        if (is_building_path_correct(path, list_of_wagon_cards)) {
-            update_state_after_path_building(path, players[active_player]);
+void Game::move_build_path(int position,
+                           const std::vector<WagonCard> &list_of_wagon_cards) {
+    // TODO
+}
+
+std::vector<WagonCard> Game::cards_with_suitable_color(
+    const WagonCard &wagon_card) const {
+    std::vector<WagonCard> result;
+    for (const auto& elem : players[active_player].wagon_cards) {
+        if (elem.color == wagon_card.color || elem.color == "Multicolored") {
+            result.push_back(elem);
         }
     }
+    return result;
 }
 
 void Game::update_state_after_path_building(Path &path, Player &player) {
@@ -127,18 +91,17 @@ void Game::update_state_after_path_building(Path &path, Player &player) {
 }
 
 void Game::make_move(Turn *t) {
-    if(auto *p = dynamic_cast<DrawCardFromDeck*>(t)){
+    if (auto *p = dynamic_cast<DrawCardFromDeck *>(t)) {
         get_wagon_card_from_deck();
     }
-    if(auto *p = dynamic_cast<DrawCardFromActive*>(t)){
+    if (auto *p = dynamic_cast<DrawCardFromActive *>(t)) {
         get_wagon_card_from_active_cards(p->number);
     }
-    /*if(auto *p = dynamic_cast<BuildPath*>(t)){
-        move_build_path(p->get_pos(), p->getWagons());
-        active_player = (active_player + 1) % number_of_players;
-    }*/
-    if(auto p = dynamic_cast<TakeRoutes*>(t)) {
+    if (auto p = dynamic_cast<TakeRoutes *>(t)) {
         move_get_new_roots();
+    }
+    if (auto *p = dynamic_cast<BuildPath *>(t)) {
+        move_build_path(p->get_pos(), p->getWagons());
     }
     if (Turn::num == 0) {
         active_player = (active_player + 1) % number_of_players;
