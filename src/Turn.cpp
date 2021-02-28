@@ -10,7 +10,7 @@ void BuildPath::set_wagons(const std::vector<WagonCard> &new_wagons) {
     }
 }
 
-std::vector<WagonCard> BuildPath::getWagons(const WagonCard &wagon) {
+std::vector<WagonCard> BuildPath::getWagons() {
     return cards_to_build;
 }
 

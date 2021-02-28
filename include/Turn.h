@@ -35,7 +35,7 @@ public:
     explicit BuildPath(int);
     void set_wagons(const std::vector<WagonCard> &w);
     int get_pos();
-    std::vector<WagonCard> getWagons(const WagonCard &wagon);
+    std::vector<WagonCard> getWagons();
     ~BuildPath() override = default;
 };
 
