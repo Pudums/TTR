@@ -1,5 +1,6 @@
 #include "View.h"
 #include <QApplication>
+#include <string>
 #include <QBrush>
 #include <QDesktopWidget>
 #include <QGraphicsTextItem>
@@ -7,6 +8,7 @@
 #include "Button.h"
 #include "Wagon.h"
 #include "WagonCard.h"
+#include <QTextObject>
 
 View::View(QWidget *parrent) : Controller(new TTRController()) {
     int screen_width = 1920, screen_height = 1080;
@@ -161,7 +163,7 @@ void View::draw_deck() {
 }
 
 void View::get_card_from_deck() {
-    Controller->get_card_from_deck();
+	Controller->get_card_from_deck();
     draw_board();
 }
 
@@ -174,6 +176,7 @@ std::map<std::string, int> color_to_sdvig = {
 
 void View::draw_players_cards() {
     const auto &cards = Controller->get_current_player_cards();
+	std::map<std::string, int> count = Controller->get_count_by_color();
     for (const auto &card : cards) {
         int height = 150, width = 177;
         QVector<QPointF> coords;
@@ -185,5 +188,11 @@ void View::draw_players_cards() {
 
         Wagon *wagon_to_draw = new Wagon(coords, card.color);
         scene->addItem(wagon_to_draw);
+
+		QGraphicsTextItem* cur_color_count = new QGraphicsTextItem(QString::number(count[card.color]));
+		QFont font("comic sans",50);
+		cur_color_count->setFont(font);
+		cur_color_count->setPos(width * (color_to_sdvig[card.color] + 0.5), 1080 - height);
+		scene->addItem(cur_color_count);
     }
 }
