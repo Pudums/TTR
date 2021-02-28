@@ -145,14 +145,8 @@ void Game::update_state_after_path_building(Path &path, Player &player) {
     // TODO изменить состояние path.wagon_blocks
 }
 
-void Game::make_move() {
-    while (!check_end_game()) {
-        std::string type_of_move;
-        // TODO получение строки
-        // TODO
-        active_player = (active_player + 1) % number_of_players;
-    }
-    end_game();
+void Game::make_move(const std::string& s) {
+    std::cout << s;
 }
 
 void Game::count_players_points() {
