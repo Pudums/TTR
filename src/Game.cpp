@@ -129,11 +129,9 @@ void Game::update_state_after_path_building(Path &path, Player &player) {
 void Game::make_move(Turn *t) {
     if(auto *p = dynamic_cast<DrawCardFromDeck*>(t)){
         get_wagon_card_from_deck();
-        //TODO if
     }
     if(auto *p = dynamic_cast<DrawCardFromActive*>(t)){
         get_wagon_card_from_active_cards(p->number);
-        //TODO if
     }
     /*if(auto *p = dynamic_cast<BuildPath*>(t)){
         move_build_path(p->get_pos(), p->getWagons());
@@ -141,6 +139,8 @@ void Game::make_move(Turn *t) {
     }*/
     if(auto p = dynamic_cast<TakeRoutes*>(t)) {
         move_get_new_roots();
+    }
+    if (Turn::num == 0) {
         active_player = (active_player + 1) % number_of_players;
     }
 }
