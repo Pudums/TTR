@@ -86,10 +86,10 @@ bool Game::check_end_game() const {
 }
 
 Game::Game(int number_of_players)
-    : board(Board("paths.txt")),
+    : board(Board("data/paths.txt")),
       discharge(Discharge()),
       deck(
-          Deck("wagons.txt", "short_routes.txt", "long_routes.txt", discharge)),
+          Deck("data/wagons.txt", "data/short_routes.txt", "data/long_routes.txt", discharge)),
       players(std::vector<Player>(number_of_players)),
       active_player(0),
       number_of_players(number_of_players) {
