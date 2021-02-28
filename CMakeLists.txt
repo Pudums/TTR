@@ -9,6 +9,10 @@ file(GLOB CPP
 	"src/*"
 )
 
+file(GLOB CPP
+		"src/Controller/*"
+		)
+
 add_library(all_cpp OBJECT ${CPP})
 
 add_executable(Project main.cpp)
