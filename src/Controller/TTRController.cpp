@@ -3,26 +3,25 @@
 //
 
 #include "TTRController.h"
-TTRController::TTRController() {
-    // server = createServer();
+TTRController::TTRController(bool is_server) {
+    if(is_server) {
+        // server = createServer();
+    }else{
+        //server = createClient();
+    }
     int num = 3;  // Server.get_num();
     new (game) Game(num);
-    // new (view) View(*game);
 }
 void TTRController::start_game() {
-    // View->start_game();
     game->start_game();
-    // server.start();
 }
 void TTRController::end_game() {
     game->end_game();
 }
-void TTRController::play_game() {
-    while (!game->check_end_game()) {
-        Turn *t= nullptr;  //=Server.get_turn();
+void TTRController::make_turn(std::stringstream s){
+    Turn t =nullptr;  //=Parse
         game->make_move(t);
         // view.draw();
-    }
     game->end_game();
     //view.draw_end_game();
 }
