@@ -6,6 +6,7 @@
 #define TTR_WAGONBLOCK_H
 #include <fstream>
 #include <iostream>
+#include <vector>
 struct Point {
     int x, y;
 };
