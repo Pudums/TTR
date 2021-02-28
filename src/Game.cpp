@@ -4,12 +4,35 @@
 
 #include "../include/Game.h"
 namespace {
+struct ListOfCardsForPath {
+    std::string color = "None";
+    int number_of_colored_wagons = 0;
+    int number_of_locomotives = 0;
+};
+
+ListOfCardsForPath comfortable_format (const std::vector<WagonCard>& list_of_wagon_cards) {
+    ListOfCardsForPath result;
+    for (const auto& wagon_card : list_of_wagon_cards) {
+        if (result.color == "None" && wagon_card.color != "Multicolored") {
+            result.color = wagon_card.color;
+        }
+        else if (wagon_card.color != "Multicolored") {
+            result.number_of_colored_wagons++;
+        }
+        else {
+            result.number_of_locomotives++;
+        }
+    }
+    return result;
+}
+
 void create_graphs_for_players(std::vector<Player> &players,
                                const std::vector<Path> &paths) {
     for (auto &player : players) {
         player.graph = Algo(paths, player.id);
     }
 }
+
 }  // namespace
 
 void Game::start_game() {
@@ -71,13 +94,17 @@ void Game::get_wagon_card_from_active_cards(int position) {
 
 void Game::move_build_path(int position,
                            const std::vector<WagonCard> &list_of_wagon_cards) {
-    // TODO
+    if (check_if_enough_cards_for_building_path(board.paths[position],
+                                                list_of_wagon_cards)) {
+        update_state_after_path_building(board.paths[position],
+                                         list_of_wagon_cards);
+    }
 }
 
 std::vector<WagonCard> Game::cards_with_suitable_color(
     const WagonCard &wagon_card) const {
     std::vector<WagonCard> result;
-    for (const auto& elem : players[active_player].wagon_cards) {
+    for (const auto &elem : players[active_player].wagon_cards) {
         if (elem.color == wagon_card.color || elem.color == "Multicolored") {
             result.push_back(elem);
         }
@@ -85,24 +112,56 @@ std::vector<WagonCard> Game::cards_with_suitable_color(
     return result;
 }
 
-void Game::update_state_after_path_building(Path &path, Player &player) {
+void Game::update_state_after_path_building(
+    Path &path,
+    const std::vector<WagonCard> &list_of_wagon_cards) {
     path.owner = active_player;
-    player.points += Path::points_for_path(path.length);
+    players[active_player].points += Path::points_for_path(path.length);
+    ListOfCardsForPath result = comfortable_format(list_of_wagon_cards);
+    int remove_colored_cards_left = path.number_of_colored_wagons;
+    int remove_locomotives_left = path.number_of_locomotives;
+    int current_pos = 0;
+    while (current_pos < players[active_player].wagon_cards.size()) {
+        if (remove_colored_cards_left > 0 && players[active_player].wagon_cards[current_pos].color == result.color) {
+            discharge.deck.push_back(players[active_player].wagon_cards[current_pos]);
+            players[active_player].wagon_cards.erase(players[active_player].wagon_cards.begin() + current_pos);
+            remove_colored_cards_left--;
+        }
+        else {
+            current_pos++;
+        }
+    }
+    current_pos = 0;
+    while (current_pos < players[active_player].wagon_cards.size()) {
+        if (remove_colored_cards_left > 0 && players[active_player].wagon_cards[current_pos].color == "Multicolored") {
+            discharge.deck.push_back(players[active_player].wagon_cards[current_pos]);
+            players[active_player].wagon_cards.erase(players[active_player].wagon_cards.begin() + current_pos);
+            remove_colored_cards_left--;
+        }
+        else if (remove_locomotives_left > 0 && players[active_player].wagon_cards[current_pos].color == "Multicolored") {
+            discharge.deck.push_back(players[active_player].wagon_cards[current_pos]);
+            players[active_player].wagon_cards.erase(players[active_player].wagon_cards.begin() + current_pos);
+            remove_locomotives_left--;
+        }
+        else {
+            current_pos++;
+        }
+    }
 }
 
 void Game::make_move(Turn *t) {
     if (auto *p = dynamic_cast<DrawCardFromDeck *>(t); p) {
         get_wagon_card_from_deck();
-    } //OK
+    }  // OK
     if (auto *p = dynamic_cast<DrawCardFromActive *>(t); p) {
         get_wagon_card_from_active_cards(p->number);
-    } //OK
+    }  // OK
     if (auto p = dynamic_cast<TakeRoutes *>(t); p) {
         move_get_new_roots();
-    } //OK
+    }  // OK
     if (auto *p = dynamic_cast<BuildPath *>(t); p) {
         move_build_path(p->get_pos(), p->getWagons());
-    } //TODO
+    }  // OK
     if (Turn::num == 0) {
         active_player = (active_player + 1) % number_of_players;
     }
@@ -122,7 +181,7 @@ void Game::end_game() {
 
 int Game::number_of_cards_with_fixed_color(const std::string &color) const {
     int result = 0;
-    for (const auto& wagon_card : players[active_player].wagon_cards) {
+    for (const auto &wagon_card : players[active_player].wagon_cards) {
         if (wagon_card.color == color) {
             result++;
         }
@@ -131,9 +190,21 @@ int Game::number_of_cards_with_fixed_color(const std::string &color) const {
 }
 std::map<std::string, int> Game::color_to_num() const {
     std::map<std::string, int> result;
-    std::vector<std::string> colors{"White", "Orange", "Green", "Red", "Black", "Blue", "Yellow", "Purple", "Multicolored"};
-    for (const auto& color : colors) {
+    std::vector<std::string> colors{"White",  "Orange", "Green",
+                                    "Red",    "Black",  "Blue",
+                                    "Yellow", "Purple", "Multicolored"};
+    for (const auto &color : colors) {
         result[color] = number_of_cards_with_fixed_color(color);
     }
     return result;
+}
+bool Game::check_if_enough_cards_for_building_path(
+    const Path &path,
+    const std::vector<WagonCard> &list_of_cards) const {
+    if (path.length > list_of_cards.size() ||
+        path.number_of_locomotives >
+            number_of_cards_with_fixed_color("Multicolored")) {
+        return false;
+    }
+    return true;
 }

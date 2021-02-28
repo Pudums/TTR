@@ -38,11 +38,18 @@ public:
     void move_build_path(int position, const std::vector<WagonCard> &cards);
     void get_wagon_card_from_deck();
     void get_wagon_card_from_active_cards(int position);
-    void update_state_after_path_building(Path &path, Player &player);
+    void update_state_after_path_building(
+        Path &path,
+        const std::vector<WagonCard> &list_of_wagon_cards);
     [[nodiscard]] bool check_end_game() const;
-    [[nodiscard]] std::vector<WagonCard> cards_with_suitable_color(const WagonCard &wagon_card) const;
-    [[nodiscard]] int number_of_cards_with_fixed_color(const std::string& color) const;
+    [[nodiscard]] std::vector<WagonCard> cards_with_suitable_color(
+        const WagonCard &wagon_card) const;
+    [[nodiscard]] int number_of_cards_with_fixed_color(
+        const std::string &color) const;
     [[nodiscard]] std::map<std::string, int> color_to_num() const;
+    [[nodiscard]] bool check_if_enough_cards_for_building_path(
+        const Path &path,
+        const std::vector<WagonCard> &list_of_cards) const;
     void end_game();
     void count_players_points();
 };
