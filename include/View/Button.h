@@ -16,16 +16,16 @@ public:
     void hoverEnterEvent(QGraphicsSceneHoverEvent *event);
     void hoverLeaveEvent(QGraphicsSceneHoverEvent *event);
 
-	void set_clickable(bool clickable_) {
-		clickable = clickable_;
-	}
+    void set_clickable(bool clickable_) {
+        clickable = clickable_;
+    }
 signals:
     void clicked();
 
 private:
     QGraphicsTextItem *text;
-	bool image = false;
-	bool clickable = true;
+    bool image = false;
+    bool clickable = true;
 };
 
 #endif  // __BUTTON_H__
