@@ -9,7 +9,8 @@ public:
 };
 struct DrawCardFromDeck final : virtual Turn {
 public:
-    explicit DrawCardFromDeck() = default;
+    static inline int num = 0;
+    explicit DrawCardFromDeck();
     ~DrawCardFromDeck() override = default;
 };
 
@@ -17,6 +18,7 @@ struct DrawCardFromActive final : virtual Turn {
     std::size_t number;
 
 public:
+    static inline int num = 0;
     explicit DrawCardFromActive(std::size_t id);
     ~DrawCardFromActive() override = default;
 };
@@ -27,16 +29,14 @@ public:
 };
 struct BuildPath final : virtual Turn {
 private:
-    Path path;
     int pos;
     std::vector<WagonCard> cards_to_build;
 
 public:
-    explicit BuildPath(const Path &p);
-    void setPath(int n);
-    void set_wagons(std::vector<WagonCard> w);
+    explicit BuildPath(int);
+    void set_wagons(const std::vector<WagonCard> &w);
     int get_pos();
-    std::vector<WagonCard> getWagons();
+    std::vector<WagonCard> getWagons(const WagonCard &wagon);
     ~BuildPath() override = default;
 };
 

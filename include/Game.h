@@ -10,11 +10,12 @@
 #include <set>
 #include <string>
 #include <vector>
+#include "Algo.h"
 #include "Board.h"
 #include "Deck.h"
 #include "Discharge.h"
 #include "Player.h"
-#include "Algo.h"
+#include "Turn.h"
 
 struct Game {
 private:
@@ -32,13 +33,13 @@ public:
     explicit Game(int number_of_players);
 
     void start_game();
-    void make_move(const std::string& s);
+    void make_move(Turn *turn);
     void move_get_new_roots();
     void move_get_new_wagon_cards();
-    void move_build_path(int position);
+    void move_build_path(int position, const std::vector<WagonCard> &cards);
     void get_wagon_card_from_deck();
     void get_wagon_card_from_active_cards(int position);
-    void update_state_after_path_building(Path& path, Player &player);
+    void update_state_after_path_building(Path &path, Player &player);
     [[nodiscard]] bool check_end_game() const;
     void end_game();
     void count_players_points();
