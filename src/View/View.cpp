@@ -1,5 +1,7 @@
 #include "View.h"
+#include "WagonCard.h"
 #include "Button.h"
+#include "Wagon.h"
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QGraphicsTextItem>
@@ -118,7 +120,23 @@ void View::draw_map() {
 	scene->addItem(map);
 }
 
+void View::create_wagon(const WagonBlock &wagon) {
+	QVector<QPointF> coords;
+	for(const auto &point : wagon.coords.points) {
+		coords << QPointF(point.x, point.y);
+	}
+
+	Wagon *wagon_to_draw = new Wagon(coords);
+	scene->addItem(wagon_to_draw);
+}
+
 void View::draw_wagons() {
+	const auto &paths = Controller->get_paths();
+	for(const auto &path: paths) {
+		for(const auto &wagon : path.wagon_blocks) {
+			create_wagon(wagon);
+		}
+	}
 }
 
 void View::draw_deck() {

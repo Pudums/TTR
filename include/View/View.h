@@ -14,6 +14,7 @@ class View : public QGraphicsView {
 	void draw_deck();
 	void draw_wagons();
 	void draw_map();
+void create_wagon(const WagonBlock &wagon);
 public:
     View(QWidget *parrent = nullptr);
 
