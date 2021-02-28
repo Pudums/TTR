@@ -52,7 +52,6 @@ void Game::start_game() {
         }
         std::cout << '\n';
     }
-    // make_move();
 }
 
 bool Game::check_end_game() const {
@@ -188,6 +187,7 @@ int Game::number_of_cards_with_fixed_color(const std::string &color) const {
     }
     return result;
 }
+
 std::map<std::string, int> Game::color_to_num() const {
     std::map<std::string, int> result;
     std::vector<std::string> colors{"White",  "Orange", "Green",
@@ -198,6 +198,7 @@ std::map<std::string, int> Game::color_to_num() const {
     }
     return result;
 }
+
 bool Game::check_if_enough_cards_for_building_path(
     const Path &path,
     const std::vector<WagonCard> &list_of_cards) const {
