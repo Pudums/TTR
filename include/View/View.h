@@ -12,6 +12,8 @@ class View : public QGraphicsView {
 	void create_count_of_players();
 	void draw_board();
 	void draw_deck();
+	void draw_wagons();
+	void draw_map();
 public:
     View(QWidget *parrent = nullptr);
 
@@ -26,6 +28,7 @@ public slots:
 	void start_player_2();
 	void start_player_3();
 	void start_player_4();
+	void get_card_from_deck();
 };
 
 #endif  //__View__H__

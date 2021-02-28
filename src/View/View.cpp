@@ -1,9 +1,9 @@
 #include "View.h"
 #include "Button.h"
-#include <iostream> // TODO
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QGraphicsTextItem>
+#include <QBrush>
 #include <iostream>
 
 View::View(QWidget *parrent): Controller(new TTRController()) {
@@ -103,15 +103,37 @@ void View::start_player_4() {
 void View::draw_board() {
 	scene->clear();
 	draw_deck();
+	draw_map();
+	draw_wagons();
+}
+
+void View::draw_map() {
+	QBrush brush;
+	brush.setTextureImage(QImage("data/map.jpg"));
+
+	Button *map = new Button();
+	map->setRect(0, 0, 1320, 880);
+	map->set_clickable(false);
+	map->setBrush(brush);
+	scene->addItem(map);
+}
+
+void View::draw_wagons() {
 }
 
 void View::draw_deck() {
-	QString fileName = "data/deck.jpeg";
-	QImage image(fileName);
-	scene->addPixmap( QPixmap::fromImage(image));
-	/*
-	QImage *deck_image = new QImage();
-	deck_image->load("data/deck.jpeg");
-	scene->addItem(deck_image);
-	*/
+	QBrush q;
+    q.setTextureImage(QImage("data/deck.jpeg"));
+
+    Button* deck = new Button();
+	int hight = 200, width = 327; // free 1593 x 880
+    deck->setRect(1920 - width, 1080 - hight, width, hight);
+    deck->setBrush(q);
+	connect(deck, SIGNAL(clicked()), this, SLOT(get_card_from_deck()));
+    scene->addItem(deck);
+}
+
+void View::get_card_from_deck() {
+	Controller->get_card_from_deck();
+	draw_board();
 }
