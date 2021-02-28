@@ -5,8 +5,8 @@
 
 void play(int argc, char *argv[]) {
     QApplication a(argc, argv);
-    View view = new View();
-    view.display_menu();
+    View *view = new View();
+    view->display_menu();
     a.exec();
 }
 

@@ -2,10 +2,11 @@
 #define __WAGON_H__
 
 #include <QGraphicsPolygonItem>
+#include <string>
 
 class Wagon : public QGraphicsPolygonItem {
 public:
-	Wagon(QVector<QPointF> &points);
+	Wagon(const QVector<QPointF> &points, const std::string &color);
 };
 
 #endif // __WAGON_H__

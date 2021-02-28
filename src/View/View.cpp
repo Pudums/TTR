@@ -107,6 +107,7 @@ void View::draw_board() {
 	draw_deck();
 	draw_map();
 	draw_wagons();
+	draw_players_cards();
 }
 
 void View::draw_map() {
@@ -127,7 +128,7 @@ void View::create_wagon(const WagonBlock &wagon) {
                 std::cout<<"POINT: "<<point.x<<" "<<point.y<<"\n";
 	}
 
-	Wagon *wagon_to_draw = new Wagon(coords);
+	Wagon *wagon_to_draw = new Wagon(coords, wagon.color);
 	scene->addItem(wagon_to_draw);
 }
 
@@ -155,4 +156,8 @@ void View::draw_deck() {
 void View::get_card_from_deck() {
 	Controller->get_card_from_deck();
 	draw_board();
+}
+
+void View::draw_players_cards() {
+	const auto &get_current_player_cards();
 }
