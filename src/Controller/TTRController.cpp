@@ -11,22 +11,30 @@ void TTRController::start_game(int number_of_players) {
 }
 
 void TTRController::get_card_from_deck() {
-    auto t = new DrawCardFromDeck();
-    game->make_move(t);
+    current_turn = new DrawCardFromDeck();
+    game->make_move(current_turn);
 }
 
 void TTRController::get_card_from_active(int num) {
-    auto t = new DrawCardFromActive(num);
-    game->make_move(t);
+    current_turn = new DrawCardFromActive(num);
+    game->make_move(current_turn);
 }
 
 void TTRController::build_path_initialize(int id) {
-    auto t = new BuildPath(id);
-    game->make_move(t);
+    current_turn = new BuildPath(id);
 }
 
 void TTRController::get_routes() {
-    auto t = new DrawCardFromDeck();
-    game->start_game();
+    current_turn = new DrawCardFromDeck();
+    game->make_move(current_turn);
 }
-
+TTRController::~TTRController() {
+    delete game;
+    delete current_turn;
+}
+void TTRController::set_color_to_build_path(const WagonCard &w) {
+    if(auto p = dynamic_cast<BuildPath*>(current_turn)){
+        //p->set_wagons();
+        game->make_move(p);
+    }
+}
