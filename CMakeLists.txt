@@ -29,7 +29,7 @@ find_package(
   REQUIRED)
 
 add_library(QT_VIEW ${CPP} ${H})
-target_include_directories(QT_VIEW PUBLIC include)
+target_include_directories(QT_VIEW PUBLIC include include/View include/Controller)
 
 target_link_libraries(QT_VIEW
 	PUBLIC
