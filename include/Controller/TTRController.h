@@ -5,12 +5,12 @@
 
 class TTRController {
     //bool is_server_ = false;
-    Game &game;
+    Game *game = nullptr;
     // View *view;
     // Server *server;
     std::string data;
 public:
-    explicit TTRController(Game&);
+    TTRController() = default;
     void set_data();
     void get_data_to_game();
     //TTRController(bool is_server);

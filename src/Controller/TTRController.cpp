@@ -4,13 +4,10 @@
 
 #include "Controller/TTRController.h"
 
-TTRController::TTRController(Game &g):game(g) {
-
-}
 void TTRController::set_data() {
     data = "hello";
     get_data_to_game();
 }
 void TTRController::get_data_to_game() {
-    game.make_move(data);
+    game->make_move(data);
 }
