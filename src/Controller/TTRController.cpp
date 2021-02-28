@@ -43,6 +43,7 @@ void TTRController::set_color_to_build_path(const WagonCard &w) {
 const std::vector<WagonCard> &TTRController::get_current_player_cards() {
     return game->players[game->active_player].wagon_cards;
 }
+
 std::vector<Path> TTRController::get_paths() {
     return game->board.paths;
 }
