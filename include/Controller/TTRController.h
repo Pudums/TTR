@@ -17,6 +17,7 @@ public:
     void set_color_to_build_path(const WagonCard &w);
     void get_routes();
     const std::vector<WagonCard> &get_current_player_cards();
+    std::vector<Path> get_paths();
     // void end_game();
     // void make_turn(std::stringstream s);
     ~TTRController();
