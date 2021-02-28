@@ -10,10 +10,14 @@ set(CMAKE_AUTOUIC ON)
 
 file(GLOB CPP
 	"src/*"
+	"src/Controller/*"
+	"src/View/*"
 )
 
 file(GLOB H
 	"include/*"
+	"include/Controller/*"
+	"include/View/*"
 )
 
 find_package(

@@ -86,10 +86,10 @@ bool Game::check_end_game() const {
 }
 
 Game::Game(int number_of_players)
-    : board(Board("paths.txt")),
+    : board(Board("data/paths.txt")),
       discharge(Discharge()),
       deck(
-          Deck("wagons.txt", "short_routes.txt", "long_routes.txt", discharge)),
+          Deck("data/wagons.txt", "data/short_routes.txt", "data/long_routes.txt", discharge)),
       players(std::vector<Player>(number_of_players)),
       active_player(0),
       number_of_players(number_of_players) {
@@ -145,14 +145,8 @@ void Game::update_state_after_path_building(Path &path, Player &player) {
     // TODO изменить состояние path.wagon_blocks
 }
 
-void Game::make_move() {
-    while (!check_end_game()) {
-        std::string type_of_move;
-        // TODO получение строки
-        // TODO
-        active_player = (active_player + 1) % number_of_players;
-    }
-    end_game();
+void Game::make_move(const std::string& s) {
+    std::cout << s;
 }
 
 void Game::count_players_points() {
