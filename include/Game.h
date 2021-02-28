@@ -41,6 +41,8 @@ public:
     void update_state_after_path_building(Path &path, Player &player);
     [[nodiscard]] bool check_end_game() const;
     [[nodiscard]] std::vector<WagonCard> cards_with_suitable_color(const WagonCard &wagon_card) const;
+    [[nodiscard]] int number_of_cards_with_fixed_color(const std::string& color) const;
+    [[nodiscard]] std::map<std::string, int> color_to_num() const;
     void end_game();
     void count_players_points();
 };

@@ -93,16 +93,16 @@ void Game::update_state_after_path_building(Path &path, Player &player) {
 void Game::make_move(Turn *t) {
     if (auto *p = dynamic_cast<DrawCardFromDeck *>(t); p) {
         get_wagon_card_from_deck();
-    }
+    } //OK
     if (auto *p = dynamic_cast<DrawCardFromActive *>(t); p) {
         get_wagon_card_from_active_cards(p->number);
-    }
+    } //OK
     if (auto p = dynamic_cast<TakeRoutes *>(t); p) {
         move_get_new_roots();
-    }
+    } //OK
     if (auto *p = dynamic_cast<BuildPath *>(t); p) {
         move_build_path(p->get_pos(), p->getWagons());
-    }
+    } //TODO
     if (Turn::num == 0) {
         active_player = (active_player + 1) % number_of_players;
     }
@@ -118,4 +118,22 @@ void Game::end_game() {
     create_graphs_for_players(players, board.paths);
     count_players_points();
     // TODO звершение
+}
+
+int Game::number_of_cards_with_fixed_color(const std::string &color) const {
+    int result = 0;
+    for (const auto& wagon_card : players[active_player].wagon_cards) {
+        if (wagon_card.color == color) {
+            result++;
+        }
+    }
+    return result;
+}
+std::map<std::string, int> Game::color_to_num() const {
+    std::map<std::string, int> result;
+    std::vector<std::string> colors{"White", "Orange", "Green", "Red", "Black", "Blue", "Yellow", "Purple", "Multicolored"};
+    for (const auto& color : colors) {
+        result[color] = number_of_cards_with_fixed_color(color);
+    }
+    return result;
 }
