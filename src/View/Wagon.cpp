@@ -1,5 +1,6 @@
 #include "Wagon.h"
 #include <QBrush>
+#include <iostream>
 
 Wagon::Wagon(const QVector<QPointF> &points, const std::string &color) {
 	QPolygonF wagon_polygon(points);
@@ -7,6 +8,7 @@ Wagon::Wagon(const QVector<QPointF> &points, const std::string &color) {
 
 	QBrush brush;
 	brush.setStyle(Qt::SolidPattern);
+	brush.setColor(Qt::cyan);
 	if(color == "White") {
 		brush.setColor(Qt::white);
 	} else if (color == "Orange") {
@@ -23,8 +25,10 @@ Wagon::Wagon(const QVector<QPointF> &points, const std::string &color) {
 		brush.setColor(Qt::yellow);
 	} else if (color == "Purple") {
 		brush.setColor(Qt::magenta);
-	} else if (color == "Uncolored") {
+	} else if (color == "Uncolored" || color == "Multicolored") {
 		brush.setColor(Qt::gray);
+	} else {
+		std::cout << color << '\n';
 	}
 
 	setBrush(brush);

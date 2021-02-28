@@ -157,6 +157,32 @@ void View::get_card_from_deck() {
 	draw_board();
 }
 
+namespace {
+	std::map<std::string, int> color_to_sdvig = {
+		{"White", 0},
+		{"Orange", 1},
+		{"Green", 2},
+		{"Red", 3},
+		{"Black", 4},
+		{"Blue", 5},
+		{"Yellow", 6},
+		{"Purple", 7},
+		{"Uncolored", 8},
+		{"Multicolored", 8}
+	};
+}
+
 void View::draw_players_cards() {
-	const auto &get_current_player_cards();
+	const auto & cards = Controller->get_current_player_cards();
+	for(const auto & card : cards) {
+		int height = 150, width = 177;
+		QVector<QPointF> coords;
+		coords << QPointF(width * color_to_sdvig[card.color], 1080)
+			<< QPointF(width * color_to_sdvig[card.color], 1080 - height)
+			<< QPointF(width * (color_to_sdvig[card.color] + 1), 1080 - height)
+			<< QPointF(width * (color_to_sdvig[card.color] + 1), 1080);
+
+		Wagon *wagon_to_draw = new Wagon(coords, card.color);
+		scene->addItem(wagon_to_draw);
+	}
 }
