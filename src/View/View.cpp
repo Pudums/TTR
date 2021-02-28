@@ -5,9 +5,7 @@
 #include <QGraphicsTextItem>
 #include <iostream>
 
-extern View *v;
-
-View::View(QWidget *parrent) {
+View::View(QWidget *parrent, TTRController *contr): Controller(contr) {
     int screen_width = 1920, screen_height = 1080;
 
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -50,5 +48,11 @@ void View::display_menu() {
 }
 
 void View::start() {
-	// scene->clear();
+	scene->clear();
+    Button *play_1_player_button = new Button(QString("1 Player"));
+    int bxPos = this->width()/2-play_1_player_button->boundingRect().width()/2;
+    int byPos = 150;
+    play_1_player_button->setPos(bxPos, byPos);
+    connect(play_1_player_button, SIGNAL(clicked()),this,SLOT(count_of_players(1)));
+    scene->addItem(play_1_player_button);
 }
