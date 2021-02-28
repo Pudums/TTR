@@ -33,7 +33,8 @@ public:
     explicit Game(int number_of_players);
 
     void start_game();
-    void make_move(Turn *t);
+    //void make_move(Turn *t);
+    void make_move(const std::string &);
     void move_get_new_roots();
     void move_get_new_wagon_cards();
     void move_build_path(int position, const std::vector<WagonCard> &);

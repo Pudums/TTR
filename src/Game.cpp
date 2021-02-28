@@ -142,8 +142,9 @@ void Game::update_state_after_path_building(Path &path, Player &player) const {
     // TODO изменить состояние path.wagon_blocks
 }
 
-void Game::make_move(Turn *t) {
-    if(auto *p = dynamic_cast<DrawCardFromDeck*>(t)){
+void Game::make_move(const std::string & s) {
+    std::cout<<s;
+   /* if(auto *p = dynamic_cast<DrawCardFromDeck*>(t)){
         get_wagon_card_from_deck();
     }
     if(auto *p = dynamic_cast<DrawCardFromActive*>(t)){
@@ -154,7 +155,7 @@ void Game::make_move(Turn *t) {
     }
     if(auto p = dynamic_cast<TakeRoutes*>(t)){
         move_get_new_roots();
-    }
+    }*/
     active_player = (active_player + 1) % number_of_players;
 }
 
