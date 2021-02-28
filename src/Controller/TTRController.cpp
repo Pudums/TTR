@@ -47,3 +47,6 @@ const std::vector<WagonCard> &TTRController::get_current_player_cards() {
 std::vector<Path> TTRController::get_paths() {
     return game->board.paths;
 }
+std::map<std::string, int> TTRController::get_count_by_color() {
+    return game->color_to_num();
+}
