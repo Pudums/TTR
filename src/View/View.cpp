@@ -124,6 +124,7 @@ void View::create_wagon(const WagonBlock &wagon) {
 	QVector<QPointF> coords;
 	for(const auto &point : wagon.coords.points) {
 		coords << QPointF(point.x, point.y);
+                std::cout<<"POINT: "<<point.x<<" "<<point.y<<"\n";
 	}
 
 	Wagon *wagon_to_draw = new Wagon(coords);

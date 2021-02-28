@@ -42,7 +42,7 @@ bool Game::check_end_game() const {
 }
 
 Game::Game(int number_of_players)
-    : board(Board("data/paths.txt", "data/wagon_bocks.txt")),
+    : board(Board("data/paths.txt", "data/wagon_blocks.txt")),
       discharge(Discharge()),
       deck(Deck("data/wagons.txt",
                 "data/short_routes.txt",
