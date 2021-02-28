@@ -33,7 +33,7 @@ target_include_directories(QT_VIEW PUBLIC include include/View include/Controlle
 
 target_link_libraries(QT_VIEW
 	PUBLIC
-    Qt5::Quick
+	Qt5::Quick
     Qt5::Gui
     Qt5::Widgets
     Qt5::Core
