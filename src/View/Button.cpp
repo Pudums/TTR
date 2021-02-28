@@ -2,10 +2,9 @@
 #include <QBrush>
 #include <QGraphicsTextItem>
 
-Button::Button(QGraphicsItem *parent)
-    : QGraphicsRectItem(parent) {
+Button::Button(QGraphicsItem *parent) : QGraphicsRectItem(parent) {
     setAcceptHoverEvents(true);
-	image = true;
+    image = true;
 }
 
 Button::Button(QString name, QGraphicsItem *parent)
@@ -25,24 +24,24 @@ Button::Button(QString name, QGraphicsItem *parent)
 }
 
 void Button::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-	if(clickable)
-		emit clicked();
+    if (clickable)
+        emit clicked();
 }
 
 void Button::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
-	if(!image) {
-		QBrush brush;
-		brush.setStyle(Qt::SolidPattern);
-		brush.setColor(Qt::blue);
-		setBrush(brush);
-	}
+    if (!image) {
+        QBrush brush;
+        brush.setStyle(Qt::SolidPattern);
+        brush.setColor(Qt::blue);
+        setBrush(brush);
+    }
 }
 
 void Button::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
-	if(!image) {
-		QBrush brush;
-		brush.setStyle(Qt::SolidPattern);
-		brush.setColor(Qt::darkBlue);
-		setBrush(brush);
-	}
+    if (!image) {
+        QBrush brush;
+        brush.setStyle(Qt::SolidPattern);
+        brush.setColor(Qt::darkBlue);
+        setBrush(brush);
+    }
 }

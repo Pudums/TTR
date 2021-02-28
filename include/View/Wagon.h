@@ -6,7 +6,7 @@
 
 class Wagon : public QGraphicsPolygonItem {
 public:
-	Wagon(const QVector<QPointF> &points, const std::string &color);
+    Wagon(const QVector<QPointF> &points, const std::string &color);
 };
 
-#endif // __WAGON_H__
+#endif  // __WAGON_H__
