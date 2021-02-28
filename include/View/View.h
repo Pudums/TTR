@@ -10,8 +10,10 @@ class View : public QGraphicsView {
     Q_OBJECT
 	TTRController *Controller;
 	void create_count_of_players();
+	void draw_board();
+	void draw_deck();
 public:
-    View(QWidget *parrent = nullptr, TTRController *contr = nullptr);
+    View(QWidget *parrent = nullptr);
 
     QGraphicsScene *scene;
 
@@ -20,7 +22,10 @@ public:
     // signals:
 public slots:
     void start();
-	void start_player(int count_of_players);
+	void start_player_1();
+	void start_player_2();
+	void start_player_3();
+	void start_player_4();
 };
 
 #endif  //__View__H__

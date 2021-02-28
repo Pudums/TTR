@@ -6,7 +6,7 @@
 
 
 void TTRController::start_game(int number_of_players) {
-    new(game) Game(number_of_players);
+    game = new Game(number_of_players);
     game->start_game();
 }
 
