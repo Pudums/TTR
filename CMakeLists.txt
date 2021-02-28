@@ -9,11 +9,12 @@ file(GLOB CPP
 	"src/*"
 )
 
-file(GLOB CPP
+file(GLOB Controller
 		"src/Controller/*"
 		)
 
 add_library(all_cpp OBJECT ${CPP})
+add_library(controller_cpp OBJECT ${Controller})
 
 add_executable(Project main.cpp)
-target_link_libraries(Project PRIVATE all_cpp)
+target_link_libraries(Project PRIVATE all_cpp controller_cpp)
