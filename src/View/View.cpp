@@ -126,7 +126,7 @@ void View::create_wagon(const WagonBlock &wagon) {
 		coords << QPointF(point.x, point.y);
 	}
 
-	Wagon *wagon_to_draw = new Wagon(coords);
+	Wagon *wagon_to_draw = new Wagon(coords, wagon.color);
 	scene->addItem(wagon_to_draw);
 }
 
