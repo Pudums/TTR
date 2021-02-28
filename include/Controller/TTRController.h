@@ -21,6 +21,7 @@ public:
     // void end_game();
     // void make_turn(std::stringstream s);
     void get_card_from_deck();
+    std::map<std::string, int> get_count_by_color();
     ~TTRController();
 };
 
