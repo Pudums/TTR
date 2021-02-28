@@ -10,16 +10,15 @@ struct ListOfCardsForPath {
     int number_of_locomotives = 0;
 };
 
-ListOfCardsForPath comfortable_format (const std::vector<WagonCard>& list_of_wagon_cards) {
+ListOfCardsForPath comfortable_format(
+    const std::vector<WagonCard> &list_of_wagon_cards) {
     ListOfCardsForPath result;
-    for (const auto& wagon_card : list_of_wagon_cards) {
+    for (const auto &wagon_card : list_of_wagon_cards) {
         if (result.color == "None" && wagon_card.color != "Multicolored") {
             result.color = wagon_card.color;
-        }
-        else if (wagon_card.color != "Multicolored") {
+        } else if (wagon_card.color != "Multicolored") {
             result.number_of_colored_wagons++;
-        }
-        else {
+        } else {
             result.number_of_locomotives++;
         }
     }
@@ -121,28 +120,37 @@ void Game::update_state_after_path_building(
     int remove_locomotives_left = path.number_of_locomotives;
     int current_pos = 0;
     while (current_pos < players[active_player].wagon_cards.size()) {
-        if (remove_colored_cards_left > 0 && players[active_player].wagon_cards[current_pos].color == result.color) {
-            discharge.deck.push_back(players[active_player].wagon_cards[current_pos]);
-            players[active_player].wagon_cards.erase(players[active_player].wagon_cards.begin() + current_pos);
+        if (remove_colored_cards_left > 0 &&
+            players[active_player].wagon_cards[current_pos].color ==
+                result.color) {
+            discharge.deck.push_back(
+                players[active_player].wagon_cards[current_pos]);
+            players[active_player].wagon_cards.erase(
+                players[active_player].wagon_cards.begin() + current_pos);
             remove_colored_cards_left--;
-        }
-        else {
+        } else {
             current_pos++;
         }
     }
     current_pos = 0;
     while (current_pos < players[active_player].wagon_cards.size()) {
-        if (remove_colored_cards_left > 0 && players[active_player].wagon_cards[current_pos].color == "Multicolored") {
-            discharge.deck.push_back(players[active_player].wagon_cards[current_pos]);
-            players[active_player].wagon_cards.erase(players[active_player].wagon_cards.begin() + current_pos);
+        if (remove_colored_cards_left > 0 &&
+            players[active_player].wagon_cards[current_pos].color ==
+                "Multicolored") {
+            discharge.deck.push_back(
+                players[active_player].wagon_cards[current_pos]);
+            players[active_player].wagon_cards.erase(
+                players[active_player].wagon_cards.begin() + current_pos);
             remove_colored_cards_left--;
-        }
-        else if (remove_locomotives_left > 0 && players[active_player].wagon_cards[current_pos].color == "Multicolored") {
-            discharge.deck.push_back(players[active_player].wagon_cards[current_pos]);
-            players[active_player].wagon_cards.erase(players[active_player].wagon_cards.begin() + current_pos);
+        } else if (remove_locomotives_left > 0 &&
+                   players[active_player].wagon_cards[current_pos].color ==
+                       "Multicolored") {
+            discharge.deck.push_back(
+                players[active_player].wagon_cards[current_pos]);
+            players[active_player].wagon_cards.erase(
+                players[active_player].wagon_cards.begin() + current_pos);
             remove_locomotives_left--;
-        }
-        else {
+        } else {
             current_pos++;
         }
     }
