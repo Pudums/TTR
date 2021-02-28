@@ -1,8 +1,11 @@
 #include "View.h"
+#include "Button.h"
 #include <QApplication>
 #include <QDesktopWidget>
 #include <QGraphicsTextItem>
-#include "Button.h"
+#include <iostream>
+
+extern View *v;
 
 View::View(QWidget *parrent) {
     int screen_width = 1920, screen_height = 1080;
@@ -47,4 +50,5 @@ void View::display_menu() {
 }
 
 void View::start() {
+	scene->clear();
 }
