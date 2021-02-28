@@ -5,11 +5,11 @@
 #include "WagonCard.h"
 struct Turn {
 public:
+    static inline int num = 0;
     virtual ~Turn() = default;
 };
 struct DrawCardFromDeck final : virtual Turn {
 public:
-    static inline int num = 0;
     explicit DrawCardFromDeck();
     ~DrawCardFromDeck() override = default;
 };
@@ -18,7 +18,6 @@ struct DrawCardFromActive final : virtual Turn {
     std::size_t number;
 
 public:
-    static inline int num = 0;
     explicit DrawCardFromActive(std::size_t id);
     ~DrawCardFromActive() override = default;
 };
