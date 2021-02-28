@@ -8,7 +8,7 @@
 #include <iostream>
 #include <string>
 
-struct Wagon_card {
+struct WagonCard {
     std::string color;
 
     // drawing
