@@ -91,16 +91,16 @@ void Game::update_state_after_path_building(Path &path, Player &player) {
 }
 
 void Game::make_move(Turn *t) {
-    if (auto *p = dynamic_cast<DrawCardFromDeck *>(t)) {
+    if (auto *p = dynamic_cast<DrawCardFromDeck *>(t); p) {
         get_wagon_card_from_deck();
     }
-    if (auto *p = dynamic_cast<DrawCardFromActive *>(t)) {
+    if (auto *p = dynamic_cast<DrawCardFromActive *>(t); p) {
         get_wagon_card_from_active_cards(p->number);
     }
-    if (auto p = dynamic_cast<TakeRoutes *>(t)) {
+    if (auto p = dynamic_cast<TakeRoutes *>(t); p) {
         move_get_new_roots();
     }
-    if (auto *p = dynamic_cast<BuildPath *>(t)) {
+    if (auto *p = dynamic_cast<BuildPath *>(t); p) {
         move_build_path(p->get_pos(), p->getWagons());
     }
     if (Turn::num == 0) {
