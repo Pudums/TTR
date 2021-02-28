@@ -27,16 +27,14 @@ public:
 };
 struct BuildPath final : virtual Turn {
 private:
-    Path path;
     int pos;
     std::vector<WagonCard> cards_to_build;
 
 public:
-    explicit BuildPath(const Path &p);
-    void setPath(int n);
-    void set_wagons(std::vector<WagonCard> w);
+    explicit BuildPath(int);
+    void set_wagons(const std::vector<WagonCard> &w);
     int get_pos();
-    std::vector<WagonCard> getWagons();
+    std::vector<WagonCard> getWagons(const WagonCard &wagon);
     ~BuildPath() override = default;
 };
 

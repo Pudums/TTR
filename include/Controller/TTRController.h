@@ -13,7 +13,9 @@ public:
     explicit TTRController() = default;
     void get_card_from_deck();
     void start_game(int num);
-
+    void get_card_from_active(int);
+    void build_path_initialize(int);
+    void get_routes();
     // void end_game();
     // void make_turn(std::stringstream s);
 };

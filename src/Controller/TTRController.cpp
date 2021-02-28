@@ -13,3 +13,12 @@ void TTRController::start_game(int number_of_players) {
 void TTRController::get_card_from_deck() {
     auto t = new DrawCardFromDeck();
 }
+void TTRController::get_card_from_active(int num) {
+    auto t = new DrawCardFromActive(num);
+}
+void TTRController::build_path_initialize(int id) {
+    auto t = new BuildPath(id);
+}
+void TTRController::get_routes() {
+    auto t = new DrawCardFromDeck();
+}
