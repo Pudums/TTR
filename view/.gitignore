@@ -13,3 +13,5 @@ cmake-build-debug
 .idea/
 *.a
 test_qt
+QT_VIEW_autogen/
+test_qt_autogen/

@@ -1,16 +1,43 @@
 cmake_minimum_required(VERSION 3.16)
+
 project(test_qt)
 
 set(CMAKE_CXX_STANDARD 17)
+
+set(CMAKE_AUTORCC ON)
+set(CMAKE_AUTOMOC ON)
+set(CMAKE_AUTOUIC ON)
+
 
 file(GLOB CPP
 	"src/*"
 )
 
-add_library(QT_VIEW ${CPP})
+file(GLOB H
+	"include/*"
+)
+
+find_package(
+  Qt5
+  COMPONENTS Quick
+             QuickCompiler
+             Widgets
+             Gui
+  REQUIRED)
+
+add_library(QT_VIEW ${CPP} ${H})
 target_include_directories(QT_VIEW PUBLIC include)
+
+target_link_libraries(QT_VIEW
+	PUBLIC
+    Qt5::Quick
+    Qt5::Gui
+    Qt5::Widgets
+    Qt5::Core
+)
 
 #add_library(all_cpp OBJECT ${CPP})
 
 add_executable(${PROJECT_NAME} main.cpp)
+
 target_link_libraries(${PROJECT_NAME} QT_VIEW)
