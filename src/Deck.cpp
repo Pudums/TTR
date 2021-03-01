@@ -40,7 +40,8 @@ std::vector<Route> parse_routes_file(std::ifstream &list_of_routes) {
 Deck::Deck(const std::string &wagons_file_name,
            const std::string &short_routes_file_name,
            const std::string &long_routes_file_name,
-           Discharge& discharge_) : discharge(discharge_) {
+           Discharge &discharge_)
+    : discharge(discharge_) {
     std::ifstream list_of_wagons(wagons_file_name);
     std::ifstream list_of_short_routes(short_routes_file_name);
     std::ifstream list_of_long_routes(long_routes_file_name);
@@ -48,24 +49,6 @@ Deck::Deck(const std::string &wagons_file_name,
     set_start_active_wagons();
     short_routes = parse_routes_file(list_of_short_routes);
     long_routes = parse_routes_file(list_of_long_routes);
-    for (const auto &elem : wagons_deck) {
-        std::cout << elem.color << '\n';
-    }
-    std::cout << '\n';
-    for (const auto &elem : active_wagons) {
-        std::cout << elem.color << '\n';
-    }
-    std::cout << '\n';
-    for (const auto &elem : short_routes) {
-        std::cout << elem.city1 << ' ' << elem.city2 << ' '
-                  << elem.points_for_passing << '\n';
-    }
-    std::cout << '\n';
-    for (const auto &elem : long_routes) {
-        std::cout << elem.city1 << ' ' << elem.city2 << ' '
-                  << elem.points_for_passing << '\n';
-    }
-    std::cout << '\n';
 }
 
 void Deck::set_start_active_wagons() {
@@ -75,6 +58,7 @@ void Deck::set_start_active_wagons() {
         wagons_deck.pop_back();
     }
 }
+
 std::vector<WagonCard> Deck::get_start_wagon_cards() {
     std::vector<WagonCard> result(Player::start_number_of_wagon_cards);
     for (int i = 0; i < Player::start_number_of_wagon_cards; i++) {
@@ -145,6 +129,7 @@ WagonCard Deck::draw_card_from_deck() {
     WagonCard result = wagons_deck.back();
     wagons_deck.pop_back();
     check_correctness_of_deck();
+    last_card = result;
     return result;
 }
 
@@ -153,6 +138,7 @@ WagonCard Deck::draw_card_from_active_cards(int card_number) {
     active_wagons[card_number] = wagons_deck.back();
     wagons_deck.pop_back();
     check_correctness_of_deck();
+    last_card = result;
     return result;
 }
 

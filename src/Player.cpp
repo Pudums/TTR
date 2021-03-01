@@ -16,5 +16,4 @@ void Player::count_points_for_routes() {
 
 void Player::count_points() {
     count_points_for_routes();
-
 }

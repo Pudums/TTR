@@ -16,6 +16,8 @@ std::vector<WagonCard> BuildPath::getWagons() {
 
 DrawCardFromActive::DrawCardFromActive(std::size_t id) {
     number = id;
+    num++;
+    num %= 2;
 }
 
 int BuildPath::get_pos() {

@@ -39,18 +39,6 @@ void Game::start_game() {
         player.wagon_cards = deck.get_start_wagon_cards();
         player.active_routes = deck.get_start_route_cards();
     }
-    for (auto &player : players) {
-        std::cout << player.id << '\n';
-        for (const auto &elem : player.wagon_cards) {
-            std::cout << elem.color << ' ';
-        }
-        std::cout << '\n';
-        for (const auto &elem : player.active_routes) {
-            std::cout << elem.city1 << ' ' << elem.city2 << ' '
-                      << elem.points_for_passing << '\n';
-        }
-        std::cout << '\n';
-    }
 }
 
 bool Game::check_end_game() const {

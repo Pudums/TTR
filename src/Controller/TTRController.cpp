@@ -29,6 +29,7 @@ void TTRController::get_routes() {
 }
 
 TTRController::~TTRController() {
+    Turn::num = 0;
     delete game;
     delete current_turn;
 }

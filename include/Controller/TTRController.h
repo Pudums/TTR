@@ -3,7 +3,7 @@
 #include "Game.h"
 #include "Turn.h"
 
-class TTRController {
+struct TTRController {
     // bool is_server_ = false;
     Game *game = nullptr;
     Turn *current_turn = nullptr;
