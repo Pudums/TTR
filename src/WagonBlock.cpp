@@ -5,7 +5,6 @@
 #include "WagonBlock.h"
 WagonBlock::WagonBlock(std::ifstream &wagon_blocks_info) {
     wagon_blocks_info >> color;
-    std::cout<<color<<" COLOR!!!";
     for (int i = 0; i < 4; i++) {
         int x, y;
         wagon_blocks_info >> x >> y;
