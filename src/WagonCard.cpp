@@ -3,3 +3,7 @@
 //
 
 #include "WagonCard.h"
+
+#include <utility>
+WagonCard::WagonCard(std::string s) : color(std::move(s)) {
+}

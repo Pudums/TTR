@@ -13,7 +13,7 @@ std::vector<WagonCard> parse_wagons_file(std::ifstream &list_of_wagons) {
     while (list_of_wagons >> color) {
         list_of_wagons >> number_of_wagons;
         for (int i = 0; i < number_of_wagons; i++) {
-            wagons_list.push_back({color});
+            wagons_list.emplace_back(color);
         }
     }
     std::shuffle(wagons_list.begin(), wagons_list.end(),
@@ -138,7 +138,7 @@ WagonCard Deck::draw_card_from_active_cards(int card_number) {
     active_wagons[card_number] = wagons_deck.back();
     wagons_deck.pop_back();
     check_correctness_of_deck();
-    last_card = result;
+    last_card = active_wagons[card_number];
     return result;
 }
 

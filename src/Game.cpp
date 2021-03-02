@@ -82,8 +82,12 @@ void Game::move_build_path(int position,
                            const std::vector<WagonCard> &list_of_wagon_cards) {
     if (check_if_enough_cards_for_building_path(board.paths[position],
                                                 list_of_wagon_cards)) {
+        last_path_is_builded = true;
         update_state_after_path_building(board.paths[position],
                                          list_of_wagon_cards);
+    }
+    else {
+        last_path_is_builded = false;
     }
 }
 

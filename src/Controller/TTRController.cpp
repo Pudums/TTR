@@ -24,7 +24,7 @@ void TTRController::build_path_initialize(int id) {
 }
 
 void TTRController::get_routes() {
-    current_turn = new DrawCardFromDeck();
+    current_turn = new TakeRoutes();
     game->make_move(current_turn);
 }
 

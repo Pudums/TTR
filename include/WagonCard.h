@@ -10,7 +10,8 @@
 
 struct WagonCard {
     std::string color;
-
+    WagonCard() = default;
+    explicit WagonCard(std::string s);
     // drawing
 };
 

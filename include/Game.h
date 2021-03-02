@@ -29,6 +29,7 @@ public:
     std::vector<Player> players;
     int active_player;
     int number_of_players;
+    bool last_path_is_builded; //for debug
 
     explicit Game(int number_of_players);
 
