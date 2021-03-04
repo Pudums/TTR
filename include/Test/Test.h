@@ -18,6 +18,7 @@ struct Test {
     static void test_move_draw_card_from_both();
     static void test_move_draw_routes();
     static void test_move_build_path_1();
+    static void test_move_build_path_2();
 
 };
 
