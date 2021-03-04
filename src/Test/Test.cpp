@@ -14,6 +14,8 @@ void Test::run_tests() {
     test_move_draw_routes();
     test_move_build_path_1();
     test_move_build_path_2();
+    test_move_build_path_3();
+    test_move_build_path_4();
 }
 
 void Test::test_move_draw_card_from_deck() {
@@ -328,6 +330,67 @@ void Test::test_move_build_path_2() {
     if (!g.last_path_is_built || g.players[0].wagon_cards.size() != 2) {
         std::cout << "- FAILED\n";
         std::cout << "Turn 7\n";
+        return;
+    }
+    g.players[0].wagon_cards.clear();
+    std::cout << "- PASSED\n";
+}
+
+void Test::test_move_build_path_3() {
+    std::cout << "TEST_CASE: test_move_build_path_3 ";
+    TTRController controller;
+    controller.start_game(1);
+    Game &g = *controller.game;
+    g.players[0].wagon_cards =
+        std::vector<WagonCard>{WagonCard("Purple"), WagonCard("Purple"),
+                               WagonCard("Purple"), WagonCard("Purple")};
+    controller.build_path_initialize(61);
+    controller.set_color_to_build_path(WagonCard("Purple"));
+    if (!g.last_path_is_built || g.players[0].wagon_cards.size() != 1) {
+        std::cout << "- FAILED\n";
+        std::cout << "Turn 1\n";
+        return;
+    }
+    g.players[0].wagon_cards.clear();
+    g.players[0].wagon_cards = std::vector<WagonCard>{
+        WagonCard("Purple"), WagonCard("Purple"), WagonCard("Multicolored"),
+        WagonCard("Multicolored")};
+    controller.build_path_initialize(61);
+    controller.set_color_to_build_path(WagonCard("Purple"));
+    if (!g.last_path_is_built || g.players[0].wagon_cards.size() != 1 ||
+        g.players[0].wagon_cards[0].color != "Multicolored") {
+        std::cout << "- FAILED\n";
+        std::cout << "Turn 2\n";
+        return;
+    }
+    g.players[0].wagon_cards.clear();
+    std::cout << "- PASSED\n";
+}
+
+void Test::test_move_build_path_4() {
+    std::cout << "TEST_CASE: test_move_build_path_4 ";
+    TTRController controller;
+    controller.start_game(1);
+    Game &g = *controller.game;
+    g.players[0].wagon_cards =
+        std::vector<WagonCard>{WagonCard("Yellow"), WagonCard("Yellow"),
+                               WagonCard("Yellow"), WagonCard("Yellow")};
+    controller.build_path_initialize(86);
+    controller.set_color_to_build_path(WagonCard("Yellow"));
+    if (g.last_path_is_built) {
+        std::cout << "- FAILED\n";
+        std::cout << "Turn 1\n";
+        return;
+    }
+    g.players[0].wagon_cards.clear();
+    g.players[0].wagon_cards =
+        std::vector<WagonCard>{WagonCard("Yellow"), WagonCard("Yellow"),
+                               WagonCard("Yellow"), WagonCard("Multicolored")};
+    controller.build_path_initialize(86);
+    controller.set_color_to_build_path(WagonCard("Yellow"));
+    if (!g.last_path_is_built) {
+        std::cout << "- FAILED\n";
+        std::cout << "Turn 2\n";
         return;
     }
     g.players[0].wagon_cards.clear();

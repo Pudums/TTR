@@ -19,6 +19,8 @@ struct Test {
     static void test_move_draw_routes();
     static void test_move_build_path_1();
     static void test_move_build_path_2();
+    static void test_move_build_path_3();
+    static void test_move_build_path_4();
 
 };
 
