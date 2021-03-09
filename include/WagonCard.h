@@ -10,7 +10,6 @@
 
 struct WagonCard {
     std::string color;
-
     // drawing
 };
 

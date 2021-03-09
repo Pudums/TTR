@@ -172,6 +172,7 @@ void Game::make_move(Turn *t) {
     if (Turn::num == 0) {
         active_player = (active_player + 1) % number_of_players;
     }
+
 }
 
 void Game::count_players_points() {
