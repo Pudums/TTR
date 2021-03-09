@@ -217,7 +217,7 @@ bool Game::check_if_enough_cards_for_building_path(
     const Path &path,
     const std::vector<WagonCard> &list_of_cards) const {
     for (const auto &elem : list_of_cards) {
-        if (elem.color != "Multicoloed" && path.color != "Uncolored" && path.color != elem.color) {
+        if (elem.color != "Multicolored" && path.color != "Uncolored" && path.color != elem.color) {
             return false;
         }
     }
