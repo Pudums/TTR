@@ -23,4 +23,5 @@ void Path::read_wagon_blocks(std::ifstream &ifs) {
     for (int i = 0; i < length; i++) {
         wagon_blocks.push_back(WagonBlock(ifs));
     }
+    WagonBlock::current_id++;
 }
