@@ -131,22 +131,27 @@ void View::draw_map() {
     scene->addItem(map);
 }
 
-void View::create_wagon(const WagonBlock &wagon) {
+void View::create_wagon(const WagonBlock &wagon, bool is_visible) {
     QVector<QPointF> coords;
     for (const auto &point : wagon.coords.points) {
         coords << QPointF(point.x, point.y);
     }
 
-    Wagon *wagon_to_draw = new Wagon(coords, wagon.color);
+    Wagon *wagon_to_draw = new Wagon(coords, is_visible ? wagon.color : "un_vis");
+
+	connect(wagon_to_draw, &Wagon::clicked, [=]() {
+			Controller->build_path_initialize(wagon.id);
+			std::cout << "number wagon = " << wagon.id << '\n';
+	} );
     scene->addItem(wagon_to_draw);
 }
 
 void View::draw_wagons() {
     const auto &paths = Controller->get_paths();
     for (const auto &path : paths) {
-        for (const auto &wagon : path.wagon_blocks) {
-            create_wagon(wagon);
-        }
+		for (const auto &wagon : path.wagon_blocks) {
+			create_wagon(wagon, path.owner != -1);
+		}
     }
 }
 
@@ -187,6 +192,10 @@ void View::draw_players_cards() {
                << QPointF(width * (color_to_sdvig[card.color] + 1), 1080);
 
         Wagon *wagon_to_draw = new Wagon(coords, card.color);
+		connect(wagon_to_draw, &Wagon::clicked, [=]() {
+				Controller->set_color_to_build_path(card);
+				std::cout << "color = " << card.color << '\n';
+		} );
         scene->addItem(wagon_to_draw);
 
 		QGraphicsTextItem* cur_color_count = new QGraphicsTextItem(QString::number(count[card.color]));

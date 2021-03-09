@@ -9,6 +9,7 @@ Wagon::Wagon(const QVector<QPointF> &points, const std::string &color) {
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
     brush.setColor(Qt::cyan);
+	bool flag = true;
     if (color == "White") {
         brush.setColor(Qt::white);
     } else if (color == "Orange") {
@@ -27,9 +28,17 @@ Wagon::Wagon(const QVector<QPointF> &points, const std::string &color) {
         brush.setColor(Qt::magenta);
     } else if (color == "Uncolored" || color == "Multicolored") {
         brush.setColor(Qt::gray);
+	} else if (color == "un_vis") {
+		flag = false;
     } else {
         std::cout << color << '\n';
     }
 
-    setBrush(brush);
+	if(flag)
+		setBrush(brush);
 }
+
+void Wagon::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+	emit clicked();
+}
+
