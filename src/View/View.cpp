@@ -10,6 +10,19 @@
 #include "WagonCard.h"
 #include <QTextObject>
 
+namespace {
+std::map<std::string, int> color_to_sdvig = {
+    {"White", 0},     {"Orange", 1},      {"Green", 2},  {"Red", 3},
+    {"Black", 4},     {"Blue", 5},        {"Yellow", 6}, {"Purple", 7},
+    {"Uncolored", 8}, {"Multicolored", 8}};
+std::map<int, std::string> color_frow_owner = {
+	{0, "Red"},
+	{1, "Yellow"},
+	{2, "Blue"},
+	{3, "Green"}
+};
+}
+
 View::View(QWidget *parrent) : Controller(new TTRController()) {
     int screen_width = 1920, screen_height = 1080;
 
@@ -131,17 +144,18 @@ void View::draw_map() {
     scene->addItem(map);
 }
 
-void View::create_wagon(const WagonBlock &wagon, bool is_visible) {
+void View::create_wagon(const WagonBlock &wagon, int owner) {
     QVector<QPointF> coords;
     for (const auto &point : wagon.coords.points) {
         coords << QPointF(point.x, point.y);
     }
 
-    Wagon *wagon_to_draw = new Wagon(coords, is_visible ? wagon.color : "un_vis");
+    Wagon *wagon_to_draw = new Wagon(coords, owner != -1? color_frow_owner[owner] : "un_vis");
 
 	connect(wagon_to_draw, &Wagon::clicked, [=]() {
 			Controller->build_path_initialize(wagon.id);
 			std::cout << "number wagon = " << wagon.id << '\n';
+			draw_board();
 	} );
     scene->addItem(wagon_to_draw);
 }
@@ -150,7 +164,7 @@ void View::draw_wagons() {
     const auto &paths = Controller->get_paths();
     for (const auto &path : paths) {
 		for (const auto &wagon : path.wagon_blocks) {
-			create_wagon(wagon, path.owner != -1);
+			create_wagon(wagon, path.owner);
 		}
     }
 }
@@ -172,13 +186,6 @@ void View::get_card_from_deck() {
     draw_board();
 }
 
-namespace {
-std::map<std::string, int> color_to_sdvig = {
-    {"White", 0},     {"Orange", 1},      {"Green", 2},  {"Red", 3},
-    {"Black", 4},     {"Blue", 5},        {"Yellow", 6}, {"Purple", 7},
-    {"Uncolored", 8}, {"Multicolored", 8}};
-}
-
 void View::draw_players_cards() {
     const auto &cards = Controller->get_current_player_cards();
 	std::map<std::string, int> count = Controller->get_count_by_color();
@@ -195,6 +202,7 @@ void View::draw_players_cards() {
 		connect(wagon_to_draw, &Wagon::clicked, [=]() {
 				Controller->set_color_to_build_path(card);
 				std::cout << "color = " << card.color << '\n';
+				draw_board();
 		} );
         scene->addItem(wagon_to_draw);
 
