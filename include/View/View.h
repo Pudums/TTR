@@ -15,6 +15,7 @@ class View : public QGraphicsView {
     void draw_wagons();
     void draw_map();
     void create_wagon(const WagonBlock &wagon, int owner);
+	void draw_active_cards();
     void draw_players_cards();
 
 public:

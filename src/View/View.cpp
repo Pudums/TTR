@@ -131,6 +131,7 @@ void View::draw_board() {
     draw_map();
     draw_wagons();
     draw_players_cards();
+	draw_active_cards();
 }
 
 void View::draw_map() {
@@ -212,4 +213,25 @@ void View::draw_players_cards() {
 		cur_color_count->setPos(width * (color_to_sdvig[card.color] + 0.5), 1080 - height);
 		scene->addItem(cur_color_count);
     }
+}
+
+void View::draw_active_cards() {
+	const auto &cards = Controller->get_active_cards();
+	for(int i = 0; i < cards.size(); ++ i) {
+		const auto & card = cards[i];
+		int height = 176, width = 233;
+        QVector<QPointF> coords;
+        coords << QPointF(1920 - width, height * (i+1))
+               << QPointF(1920 - width, height * (i))
+               << QPointF(1920, height * (i))
+               << QPointF(1920 , height * (i +1));
+		Wagon *wagon_to_draw = new Wagon(coords, card.color);
+
+		connect(wagon_to_draw, &Wagon::clicked, [=]() {
+				Controller->get_card_from_active(i);
+				std::cout << "color_active = " << card.color << '\n';
+				draw_board();
+		} );
+		scene->addItem(wagon_to_draw);
+	}
 }
