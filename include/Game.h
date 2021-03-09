@@ -35,7 +35,7 @@ public:
     void start_game();
     void make_move(Turn *turn);
     void move_get_new_roots();
-    void move_build_path(int position, const std::vector<WagonCard> &cards);
+    bool move_build_path(int position, const std::vector<WagonCard> &cards);
     void get_wagon_card_from_deck();
     void get_wagon_card_from_active_cards(int position);
     void update_state_after_path_building(
