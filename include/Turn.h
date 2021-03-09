@@ -6,6 +6,7 @@
 struct Turn {
 public:
     static inline int num = 0;
+    static void increase_num();
     virtual ~Turn() = default;
 };
 struct DrawCardFromDeck final : virtual Turn {
@@ -34,7 +35,7 @@ private:
 public:
     explicit BuildPath(int);
     void set_wagons(const std::vector<WagonCard> &w);
-    int get_pos();
+    int get_pos() const;
     std::vector<WagonCard> getWagons();
     ~BuildPath() override = default;
 };

@@ -88,6 +88,7 @@ void Game::get_wagon_card_from_deck() {
 void Game::get_wagon_card_from_active_cards(int position) {
     players[active_player].wagon_cards.push_back(
         deck.draw_card_from_active_cards(position));
+
 }
 
 void Game::move_build_path(int position,

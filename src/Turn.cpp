@@ -18,11 +18,12 @@ DrawCardFromActive::DrawCardFromActive(std::size_t id) {
     number = id;
 }
 
-int BuildPath::get_pos() {
+int BuildPath::get_pos() const {
     return pos;
 }
 
-DrawCardFromDeck::DrawCardFromDeck() {
+DrawCardFromDeck::DrawCardFromDeck() = default;
+void Turn::increase_num() {
     num++;
-    num %= 2;
+    num%=2;
 }
