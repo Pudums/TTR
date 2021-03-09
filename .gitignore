@@ -11,3 +11,11 @@ CTestTestfile.cmake
 _deps
 cmake-build-debug
 .idea/
+Project
+Project_autogen/
+QT_VIEW_autogen/
+all_cpp_autogen/
+libQT_VIEW.a
+test_qt
+test_qt_autogen/
+view/
