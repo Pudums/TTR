@@ -13,26 +13,29 @@ void TTRController::get_card_from_deck() {
     current_turn = new DrawCardFromDeck();
     Turn::increase_num();
     game->make_move(current_turn);
-    if(Turn::num == 0)current_turn = nullptr;
+    if (Turn::num == 0)
+        current_turn = nullptr;
 }
 
 void TTRController::get_card_from_active(int num) {
     if (game->deck.active_wagons[num].color == "Multicolored" and
         current_turn != nullptr) {
         return;
-    }else if (game->deck.active_wagons[num].color == "Multicolored"){
+    } else if (game->deck.active_wagons[num].color == "Multicolored") {
         Turn::num = 1;
     }
     current_turn = new DrawCardFromActive(num);
     Turn::increase_num();
     game->make_move(current_turn);
 
-
-    if(Turn::num == 0)current_turn = nullptr;
+    if (Turn::num == 0)
+        current_turn = nullptr;
 }
 
 void TTRController::build_path_initialize(int id) {
-    current_turn = new BuildPath(id);
+    if (Turn::num == 0) {
+        current_turn = new BuildPath(id);
+    }
 }
 
 void TTRController::get_routes() {
