@@ -110,7 +110,7 @@ std::vector<Route> Deck::get_new_routes() {
 bool Deck::check_active_card_set_is_correct() {
     int number_of_locomotives = 0;
     for (const auto &elem : active_wagons) {
-        if (elem.color == "Multicolored") {
+        if (elem.color == Multicolored) {
             number_of_locomotives++;
         }
     }

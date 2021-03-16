@@ -21,11 +21,15 @@ public:
     static const int start_number_of_wagon_cards = 4;
     static const int start_number_of_short_routes = 3;
     static const int start_number_of_long_routes = 1;
+    static const int start_number_of_stations = 3;
     int id;
     std::vector<WagonCard> wagon_cards;
     std::vector<Route> active_routes;
+    std::vector<std::string> stations;
+    std::set<int> station_paths;
     int number_of_wagons_left;
     int points;
+    int number_of_stations_left;
     Algo graph;
     Player();
     void count_points();

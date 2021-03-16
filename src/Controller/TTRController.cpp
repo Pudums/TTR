@@ -18,10 +18,10 @@ void TTRController::get_card_from_deck() {
 }
 
 void TTRController::get_card_from_active(int num) {
-    if (game->deck.active_wagons[num].color == "Multicolored" and
+    if (game->deck.active_wagons[num].color == Multicolored and
         current_turn != nullptr) {
         return;
-    } else if (game->deck.active_wagons[num].color == "Multicolored") {
+    } else if (game->deck.active_wagons[num].color == Multicolored) {
         Turn::num = 1;
     }
     current_turn = new DrawCardFromActive(num);

@@ -29,14 +29,16 @@ public:
     std::vector<Player> players;
     int active_player;
     int number_of_players;
+    std::set<std::string> occupied_stations;
 
     explicit Game(int number_of_players);
 
     void start_game();
     void make_move(Turn *turn);
     void move_get_new_roots();
-    bool move_build_path(int position, const std::vector<WagonCard> &cards);
+    [[nodiscard]] bool move_build_path(int position, const std::vector<WagonCard> &cards);
     void get_wagon_card_from_deck();
+    [[nodiscard]] bool move_build_station(const std::string &city);
     void get_wagon_card_from_active_cards(int position);
     void update_state_after_path_building(
         Path &path,

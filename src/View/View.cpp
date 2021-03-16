@@ -12,14 +12,14 @@
 
 namespace {
 std::map<std::string, int> color_to_sdvig = {
-    {"White", 0},     {"Orange", 1},      {"Green", 2},  {"Red", 3},
-    {"Black", 4},     {"Blue", 5},        {"Yellow", 6}, {"Purple", 7},
-    {"Uncolored", 8}, {"Multicolored", 8}};
+    {White, 0},     {Orange, 1},      {Green, 2},  {Red, 3},
+    {Black, 4},     {Blue, 5},        {Yellow, 6}, {Purple, 7},
+    {Uncolored, 8}, {Multicolored, 8}};
 std::map<int, std::string> color_frow_owner = {
-	{0, "Red"},
-	{1, "Yellow"},
-	{2, "Blue"},
-	{3, "Green"}
+	{0, Red},
+	{1, Yellow},
+	{2, Blue},
+	{3, Green}
 };
 }
 

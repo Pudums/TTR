@@ -19,11 +19,11 @@ void Algo::dfs(const std::string& current, const std::string &t, std::set<std::s
     }
 }
 
-Algo::Algo(const std::vector<Path> &paths, const int &player) {
-    for (const auto& path : paths) {
-        if (path.owner == player) {
-            g[path.start].push_back(path.finish);
-            g[path.finish].push_back(path.start);
+Algo::Algo(const std::vector<Path> &paths, const int &player, const std::set<int> &station_paths) {
+    for (int i = 0; i < paths.size(); i++) {
+        if (paths[i].owner == player || station_paths.find(i) != station_paths.end()) {
+            g[paths[i].start].push_back(paths[i].finish);
+            g[paths[i].finish].push_back(paths[i].start);
         }
     }
 }
