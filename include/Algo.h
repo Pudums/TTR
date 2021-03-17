@@ -15,10 +15,14 @@ struct Algo {
     std::map<std::string, std::vector<std::string>> g;
 
     Algo() = default;
-    Algo(const std::vector<Path>& paths, const int& player, const std::set<int> &station_paths);
+    Algo(const std::vector<Path> &paths,
+         const int &player,
+         const std::set<int> &station_paths);
 
-    bool is_route_exists(const std::string& s, const std::string &t);
-    void dfs(const std::string& current, const std::string &t, std::set<std::string>& used);
+    bool is_route_exists(const std::string &s, const std::string &t);
+    void dfs(const std::string &current,
+             const std::string &t,
+             std::set<std::string> &used);
 };
 
 #endif  // TTR_ALGO_H

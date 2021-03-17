@@ -40,7 +40,8 @@ std::vector<Route> parse_routes_file(std::ifstream &list_of_routes) {
 Deck::Deck(const std::string &wagons_file_name,
            const std::string &short_routes_file_name,
            const std::string &long_routes_file_name,
-           Discharge& discharge_) : discharge(discharge_) {
+           Discharge &discharge_)
+    : discharge(discharge_) {
     std::ifstream list_of_wagons(wagons_file_name);
     std::ifstream list_of_short_routes(short_routes_file_name);
     std::ifstream list_of_long_routes(long_routes_file_name);
@@ -166,7 +167,7 @@ void Deck::check_correctness_of_deck() {
 }
 std::vector<WagonCard> Deck::get_cards_for_tunnel() {
     std::vector<WagonCard> result(number_of_extra_wagons_for_tunnel);
-    for (int i = 0; i < number_of_extra_wagons_for_tunnel; i ++) {
+    for (int i = 0; i < number_of_extra_wagons_for_tunnel; i++) {
         result.push_back(draw_card_from_deck());
     }
     return result;

@@ -99,7 +99,7 @@ bool Game::check_if_enough_cards_for_building_path(
     }
     if (path.length > list_of_cards.size() ||
         path.number_of_locomotives >
-        number_of_cards_with_fixed_color(Multicolored)) {
+            number_of_cards_with_fixed_color(Multicolored)) {
         return false;
     }
     return true;
@@ -108,7 +108,8 @@ bool Game::check_if_enough_cards_for_building_path(
 void Game::add_extra_tunnel_cards(Path &path) {
     std::vector<WagonCard> extra_tunnel_cards = deck.get_cards_for_tunnel();
     for (const auto &extra_card : extra_tunnel_cards) {
-        if (extra_card.color == Multicolored || extra_card.color == path.color) {
+        if (extra_card.color == Multicolored ||
+            extra_card.color == path.color) {
             path.number_of_colored_wagons++;
         }
     }
