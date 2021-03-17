@@ -7,6 +7,7 @@
 struct Turn {
 public:
     static inline int num = 0;
+    static void increase_num();
     virtual ~Turn() = default;
 };
 
@@ -38,9 +39,18 @@ private:
 public:
     explicit BuildPath(int);
     void set_wagons(const std::vector<WagonCard> &w);
-    int get_pos();
+    [[nodiscard]] int get_pos() const;
     std::vector<WagonCard> getWagons();
     ~BuildPath() override = default;
+};
+
+struct BuildStation final : virtual Turn {
+private:
+    std::string city;
+
+public:
+    explicit BuildStation(std::string s);
+    [[nodiscard]] std::string get_city() const;
 };
 
 #endif  // TTR_TURN_H

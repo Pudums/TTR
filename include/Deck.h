@@ -16,7 +16,6 @@
 
 struct Deck {
     std::vector<WagonCard> wagons_deck;
-    std::vector<WagonCard> active_wagons;
     std::vector<Route> short_routes;
     std::vector<Route> long_routes;
     void set_start_active_wagons();
@@ -26,6 +25,8 @@ struct Deck {
     static const int number_of_active_cards = 5;
     static const int number_of_getting_new_routes = 3;
     static const int max_number_of_active_locomotives = 2;
+    static const int number_of_extra_wagons_for_tunnel = 3;
+    std::vector<WagonCard> active_wagons;
     Deck(const std::string &wagons_file_name,
          const std::string &short_routes_file_name,
          const std::string &long_routes_file_name,
@@ -42,6 +43,7 @@ struct Deck {
     [[nodiscard]] std::vector<WagonCard> get_start_wagon_cards();
     [[nodiscard]] std::vector<Route> get_start_route_cards();
     [[nodiscard]] std::vector<Route> get_new_routes();
+    [[nodiscard]] std::vector<WagonCard> get_cards_for_tunnel();
 };
 
 #endif  // PROJECT_DECK_H

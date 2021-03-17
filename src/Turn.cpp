@@ -1,5 +1,7 @@
 #include "Turn.h"
 
+#include <utility>
+
 BuildPath::BuildPath(int id) {
     pos = id;
 }
@@ -20,11 +22,17 @@ DrawCardFromActive::DrawCardFromActive(std::size_t id) {
     num %= 2;
 }
 
-int BuildPath::get_pos() {
+int BuildPath::get_pos() const {
     return pos;
 }
 
-DrawCardFromDeck::DrawCardFromDeck() {
+DrawCardFromDeck::DrawCardFromDeck() = default;
+void Turn::increase_num() {
     num++;
-    num %= 2;
+    num%=2;
+}
+BuildStation::BuildStation(std::string s) : city(std::move(s)) {
+}
+std::string BuildStation::get_city() const {
+    return city;
 }

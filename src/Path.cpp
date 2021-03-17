@@ -21,6 +21,7 @@ int Path::points_for_path(int path_lengths) {
 }
 void Path::read_wagon_blocks(std::ifstream &ifs) {
     for (int i = 0; i < length; i++) {
-        wagon_blocks.emplace_back(ifs);
+        wagon_blocks.push_back(WagonBlock(ifs));
     }
+    WagonBlock::current_id++;
 }

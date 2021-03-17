@@ -94,7 +94,7 @@ std::vector<Route> Deck::get_new_routes() {
 bool Deck::check_active_card_set_is_correct() {
     int number_of_locomotives = 0;
     for (const auto &elem : active_wagons) {
-        if (elem.color == "Multicolored") {
+        if (elem.color == Multicolored) {
             number_of_locomotives++;
         }
     }
@@ -149,4 +149,11 @@ void Deck::check_correctness_of_deck() {
     while (!check_active_card_set_is_correct()) {
         replace_active_cards();
     }
+}
+std::vector<WagonCard> Deck::get_cards_for_tunnel() {
+    std::vector<WagonCard> result(number_of_extra_wagons_for_tunnel);
+    for (int i = 0; i < number_of_extra_wagons_for_tunnel; i++) {
+        result.push_back(draw_card_from_deck());
+    }
+    return result;
 }

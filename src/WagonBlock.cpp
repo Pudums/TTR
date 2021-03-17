@@ -11,5 +11,4 @@ WagonBlock::WagonBlock(std::ifstream &wagon_blocks_info) {
         coords.points.push_back(Point{x, y});
     }
     id = current_id;
-    current_id++;
 }
