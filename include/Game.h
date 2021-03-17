@@ -36,10 +36,12 @@ public:
     void start_game();
     void make_move(Turn *turn);
     void move_get_new_roots();
-    [[nodiscard]] bool move_build_path(int position, const std::vector<WagonCard> &cards);
+    [[nodiscard]] bool move_build_path(int position,
+                                       const std::vector<WagonCard> &cards);
     void get_wagon_card_from_deck();
     [[nodiscard]] bool move_build_station(const std::string &city);
     void get_wagon_card_from_active_cards(int position);
+    void add_extra_tunnel_cards(Path &path);
     void update_state_after_path_building(
         Path &path,
         const std::vector<WagonCard> &list_of_wagon_cards);
