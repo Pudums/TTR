@@ -5,27 +5,57 @@
 #ifndef PROJECT_GAME_H
 #define PROJECT_GAME_H
 
+#include <cassert>
 #include <iostream>
+#include <set>
+#include <string>
 #include <vector>
+#include "Algo.h"
 #include "Board.h"
 #include "Deck.h"
 #include "Discharge.h"
 #include "Player.h"
+#include "Turn.h"
 
 struct Game {
 private:
     static const int number_of_wagons_for_finish = 2;
+    static const int number_of_getting_wagons = 2;
 
 public:
     Board board;
-    Deck deck;
     Discharge discharge;
+    Deck deck;
     std::vector<Player> players;
     int active_player;
+    int number_of_players;
+    std::set<std::string> occupied_stations;
 
-    void start() const;
+    explicit Game(int number_of_players);
+
+    void start_game();
+    void make_move(Turn *turn);
+    void move_get_new_roots();
+    [[nodiscard]] bool move_build_path(int position,
+                                       const std::vector<WagonCard> &cards);
+    void get_wagon_card_from_deck();
+    [[nodiscard]] bool move_build_station(const std::string &city);
+    void get_wagon_card_from_active_cards(int position);
+    void add_extra_tunnel_cards(Path &path);
+    void update_state_after_path_building(
+        Path &path,
+        const std::vector<WagonCard> &list_of_wagon_cards);
     [[nodiscard]] bool check_end_game() const;
-    void end_game() const;
+    [[nodiscard]] std::vector<WagonCard> cards_with_suitable_color(
+        const WagonCard &wagon_card) const;
+    [[nodiscard]] int number_of_cards_with_fixed_color(
+        const std::string &color) const;
+    [[nodiscard]] std::map<std::string, int> color_to_num() const;
+    [[nodiscard]] bool check_if_enough_cards_for_building_path(
+        const Path &path,
+        const std::vector<WagonCard> &list_of_cards) const;
+    void end_game();
+    void count_players_points();
 };
 
 #endif  // PROJECT_GAME_H
