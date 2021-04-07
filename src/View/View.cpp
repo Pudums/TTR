@@ -132,6 +132,43 @@ void View::draw_board() {
     draw_wagons();
     draw_players_cards();
 	draw_active_cards();
+	draw_wagons_count();
+}
+
+void View::draw_wagons_count() {
+	auto counters = Controller->get_number_of_wagons();
+	int height = 20; int width = 20;
+	for(int i = 0; i < counters.size(); ++ i) {
+		QBrush brush;
+		brush.setStyle(Qt::SolidPattern);
+		std::string color = color_frow_owner[i];
+		if (color == White) {
+			brush.setColor(Qt::white);
+		} else if (color == Orange) {
+			brush.setColor(QColor("orange"));
+		} else if (color == Green) {
+			brush.setColor(Qt::green);
+		} else if (color == Red) {
+			brush.setColor(Qt::red);
+		} else if (color == Black) {
+			brush.setColor(Qt::black);
+		} else if (color == Blue) {
+			brush.setColor(Qt::blue);
+		} else if (color == Yellow) {
+			brush.setColor(Qt::yellow);
+		} else if (color == Purple) {
+			brush.setColor(Qt::magenta);
+		} else if (color == Uncolored || color == Multicolored) {
+			brush.setColor(Qt::gray);
+		} else {
+			std::cout << color << '\n';
+		}
+
+		Button *counter = new Button();
+
+		counter->setRect(1320, i * height, width, height);
+		counter->set_clickable(false);
+	}
 }
 
 void View::draw_map() {
