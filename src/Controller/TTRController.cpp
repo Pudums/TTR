@@ -51,6 +51,7 @@ TTRController::~TTRController() {
 
 void TTRController::set_color_to_build_path(const WagonCard &w) {
     if (auto p = dynamic_cast<BuildPath *>(current_turn); p) {
+        std::cout << "Let's make move!";
         p->set_wagons(game->cards_with_suitable_color(w));
         game->make_move(p);
         current_turn = nullptr;
@@ -70,11 +71,4 @@ std::vector<WagonCard> TTRController::get_active_cards() {
 }
 std::map<std::string, int> TTRController::get_count_by_color() {
     return game->color_to_num();
-}
-std::vector<int> TTRController::get_number_of_wagons() {
-    std::vector<int> res;
-    for (auto &player : game->players) {
-        res.push_back(player.number_of_wagons_left);
-    }
-    return res;
 }

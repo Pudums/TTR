@@ -23,7 +23,6 @@ public:
     void get_card_from_deck();
     std::map<std::string, int> get_count_by_color();
     std::vector<WagonCard> get_active_cards();
-    std::vector<int> get_number_of_wagons();
     ~TTRController();
 };
 
