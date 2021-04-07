@@ -72,10 +72,6 @@ std::vector<WagonCard> TTRController::get_active_cards() {
 std::map<std::string, int> TTRController::get_count_by_color() {
     return game->color_to_num();
 }
-std::vector<int> TTRController::get_number_of_wagons() {
-    std::vector<int> res;
-    for (auto &i : game->players){
-        res.push_back(i.number_of_wagons_left);
-    }
-    return res;
+std::vector<Player> TTRController::get_players() {
+    return game->players;
 }
