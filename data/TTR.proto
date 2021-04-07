@@ -1,0 +1,85 @@
+syntax = "proto3";
+
+package ttr;
+
+message Wagon{
+  string color = 1;
+}
+message Route{
+  string begin = 1;
+  string end = 2;
+  int32 points = 3;
+}
+message Player{
+  int32 cards_num = 1;
+  int32 wagons_left = 2;
+  int32 current_score = 3;
+  int32 routes_num = 4;
+  string color = 5;
+}
+message  Path{
+  string start = 1;
+  string finish = 2;
+  string color = 3;
+  int32 number_of_colored_wagons = 4;
+  int32 number_of_locomotives = 5;
+  bool is_tunnel = 6;
+  int32 owner = 7;
+}
+message Card{
+  enum Type{
+    Wagon = 0;
+    Route = 1;
+  }
+  Type type = 1;
+  Wagon wagon_info = 2;
+  Route route = 3;
+}
+message Players{
+  repeated Player all_players = 1;
+}
+
+message Board{
+  repeated Path paths = 1;
+  //some coordinate info?
+}
+message Deck{
+  repeated Card cards_on_table = 1;
+}
+message BoardState{
+  Board board_state = 1;
+  Deck deck_state = 2;
+  Players all_players = 3;
+}
+
+message MakeTurnRequest{
+  string type = 1;
+  PlayerID id = 2;
+}
+message Routes{
+  repeated Route routes = 1;
+}
+message Wagons{
+  repeated Wagon wagons = 1;
+}
+message PrivatePlayerInfo{
+  Wagons player_wagons = 2;
+  Routes player_routes = 3;
+}
+message PlayerState{
+  Player player_general_info = 1;
+  PrivatePlayerInfo private_info = 2;
+}
+message  MakeTurnResponse{
+  bool is_success = 1;
+  BoardState current_state = 2;
+  PlayerState player_state = 3;
+  Deck deck = 4;
+}
+message PlayerID{
+  int32 id = 1;
+}
+service TTRService{
+  rpc get_board_state(PlayerID) returns (BoardState){};
+  rpc make_turn(MakeTurnRequest) returns (MakeTurnResponse);
+}
