@@ -24,7 +24,7 @@ public:
     std::map<std::string, int> get_count_by_color();
     std::vector<WagonCard> get_active_cards();
     std::vector<Player> get_players();
-    bool is_gane_end();
+    bool is_game_end();
     std::vector<int> get_results();
     ~TTRController();
 };
