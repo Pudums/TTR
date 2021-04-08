@@ -15,6 +15,7 @@ std::map<std::string, int> color_to_sdvig = {
     {White, 0},     {Orange, 1},      {Green, 2},  {Red, 3},
     {Black, 4},     {Blue, 5},        {Yellow, 6}, {Purple, 7},
     {Uncolored, 8}, {Multicolored, 8}};
+
 std::map<int, std::string> color_frow_owner = {
 	{0, Red},
 	{1, Yellow},
@@ -127,6 +128,10 @@ void View::start_player_4() {
 
 void View::draw_board() {
     scene->clear();
+	if(Controller->is_game_end()) {
+		end_game();
+		return;
+	}
     draw_deck();
     draw_map();
     draw_wagons();
@@ -168,6 +173,12 @@ void View::draw_wagons_count() {
 		some_text = new QGraphicsTextItem(QString("Stations left: ") 
 				+ QString::number(player.number_of_stations_left));
 		some_text->setPos(1320 + width * 0.3, i * height + 30 * 2);
+		some_text->setFont(font);
+		scene->addItem(some_text);
+
+		some_text = new QGraphicsTextItem(QString("Cards : ") 
+				+ QString::number(player.wagon_cards.size()));
+		some_text->setPos(1320 + width * 0.3, i * height + 30 * 3);
 		some_text->setFont(font);
 		scene->addItem(some_text);
 	}
@@ -269,5 +280,19 @@ void View::draw_active_cards() {
 				draw_board();
 		} );
 		scene->addItem(wagon_to_draw);
+	}
+}
+
+void View::end_game() {
+	int height = 30;
+	const auto &results = Controller->get_results();
+	for(int i = 0; i < results.size(); ++ i) {
+		QGraphicsTextItem* some_text = new QGraphicsTextItem(QString("Player ") 
+				+ QString::number(i) 
+				+ QString(" have: ") 
+				+ QString::number(results[i]));
+		some_text->setFont(QFont("comic sans", 14));
+		some_text->setPos(0, height * i);
+		scene->addItem(some_text);
 	}
 }
