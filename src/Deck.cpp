@@ -70,12 +70,15 @@ Deck::Deck(const std::string &wagons_file_name,
 }
 
 void Deck::set_start_active_wagons() {
+    std::shuffle(wagons_deck.begin(), wagons_deck.end(),
+                 std::mt19937(std::random_device()()));
     active_wagons = std::vector<WagonCard>(Deck::number_of_active_cards);
     for (int i = 0; i < Deck::number_of_active_cards; i++) {
         active_wagons[i] = wagons_deck.back();
         wagons_deck.pop_back();
     }
 }
+
 std::vector<WagonCard> Deck::get_start_wagon_cards() {
     std::vector<WagonCard> result(Player::start_number_of_wagon_cards);
     for (int i = 0; i < Player::start_number_of_wagon_cards; i++) {
