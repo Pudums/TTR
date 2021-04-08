@@ -75,7 +75,7 @@ std::map<std::string, int> TTRController::get_count_by_color() {
 std::vector<Player> TTRController::get_players() {
     return game->players;
 }
-bool TTRController::is_gane_end() {
+bool TTRController::is_game_end() {
     return game->check_end_game();
 }
 std::vector<int> TTRController::get_results() {
