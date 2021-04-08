@@ -53,6 +53,7 @@ Deck::Deck(const std::string &wagons_file_name,
 
 void Deck::set_start_active_wagons() {
     active_wagons = std::vector<WagonCard>(Deck::number_of_active_cards);
+    std::shuffle(wagons_deck.begin(), wagons_deck.end(), std::mt19937(std::random_device()()));
     for (int i = 0; i < Deck::number_of_active_cards; i++) {
         active_wagons[i] = wagons_deck.back();
         wagons_deck.pop_back();
@@ -134,11 +135,19 @@ WagonCard Deck::draw_card_from_deck() {
 }
 
 WagonCard Deck::draw_card_from_active_cards(int card_number) {
+    //std::cout << "draw_card ";
+    //std::cout.flush();
     WagonCard result = active_wagons[card_number];
     active_wagons[card_number] = wagons_deck.back();
     wagons_deck.pop_back();
+    //std::cout << "check_deck_correctness ";
+    //std::cout.flush();
     check_correctness_of_deck();
+    //std::cout << "correctness_checked ";
+    //std::cout.flush();
     last_card = active_wagons[card_number];
+    //std::cout << "card_drawn ";
+    //std::cout.flush();
     return result;
 }
 
@@ -150,6 +159,7 @@ void Deck::check_correctness_of_deck() {
         replace_active_cards();
     }
 }
+
 std::vector<WagonCard> Deck::get_cards_for_tunnel() {
     std::vector<WagonCard> result(number_of_extra_wagons_for_tunnel);
     for (int i = 0; i < number_of_extra_wagons_for_tunnel; i++) {

@@ -75,6 +75,8 @@ void Game::get_wagon_card_from_deck() {
 void Game::get_wagon_card_from_active_cards(int position) {
     players[active_player].wagon_cards.push_back(
         deck.draw_card_from_active_cards(position));
+    //std::cout << "card_added ";
+    //std::cout.flush();
 }
 
 bool Game::move_build_station(const std::string &city) {
@@ -192,11 +194,15 @@ void Game::update_state_after_path_building(
 }
 
 void Game::make_move(Turn *t) {
+    //std::cout << "Move begins ";
+    //std::cout.flush();
     bool flag = true;
     if (auto *p = dynamic_cast<DrawCardFromDeck *>(t); p) {
         get_wagon_card_from_deck();
     }  // OK
     if (auto *p = dynamic_cast<DrawCardFromActive *>(t); p) {
+        //std::cout << "get_active ";
+        //std::cout.flush();
         get_wagon_card_from_active_cards(p->number);
     }  // OK
     if (auto *p = dynamic_cast<TakeRoutes *>(t); p) {
@@ -207,6 +213,8 @@ void Game::make_move(Turn *t) {
             flag = false;
         }
     }
+    //std::cout << "Move finished ";
+    //std::cout.flush();
     if (auto *p = dynamic_cast<BuildPath *>(t); p) {
         if (!move_build_path(p->get_pos(), p->getWagons())) {
             flag = false;
@@ -215,6 +223,8 @@ void Game::make_move(Turn *t) {
     if (Turn::num == 0 && flag) {
         active_player = (active_player + 1) % number_of_players;
     }
+    //std::cout << "Stop ";
+    //std::cout.flush();
 }
 
 void Game::count_players_points() {

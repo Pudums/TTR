@@ -18,6 +18,7 @@ void TTRController::get_card_from_deck() {
 }
 
 void TTRController::get_card_from_active(int num) {
+    //std::cout << "Card_get ";
     if (game->deck.active_wagons[num].color == Multicolored and
         current_turn != nullptr) {
         return;
@@ -52,7 +53,6 @@ TTRController::~TTRController() {
 
 void TTRController::set_color_to_build_path(const WagonCard &w) {
     if (auto p = dynamic_cast<BuildPath *>(current_turn); p) {
-        std::cout << "Let's make move!";
         p->set_wagons(game->cards_with_suitable_color(w));
         game->make_move(p);
         current_turn = nullptr;
