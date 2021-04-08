@@ -75,3 +75,14 @@ std::map<std::string, int> TTRController::get_count_by_color() {
 std::vector<Player> TTRController::get_players() {
     return game->players;
 }
+bool TTRController::is_gane_and() {
+    return game->check_end_game();
+}
+std::vector<int> TTRController::get_results() {
+    game->count_players_points();
+    std::vector<int> res;
+    for(auto& i: game->players){
+        res.push_back(i.points);
+    }
+    return res;
+}
