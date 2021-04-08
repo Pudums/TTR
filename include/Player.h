@@ -27,6 +27,7 @@ public:
     std::vector<Route> active_routes;
     std::vector<std::string> stations;
     std::set<int> station_paths;
+    //(Max) print all integers after this comment(do not know about stations)
     int number_of_wagons_left;
     int points;
     int number_of_stations_left;
