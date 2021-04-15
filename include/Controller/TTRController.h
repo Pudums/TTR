@@ -26,6 +26,8 @@ public:
     std::vector<Player> get_players();
     bool is_game_end();
     std::vector<int> get_results();
+    int get_current_player_id();
+    std::vector<Path> get_all_paths();
     ~TTRController();
 };
 

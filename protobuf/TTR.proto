@@ -55,6 +55,9 @@ message BoardState{
 message MakeTurnRequest{
   string type = 1;
   PlayerID id = 2;
+  int32 active_card_id = 3;
+  int32 path_to_build_id = 4;
+  int32 station_to_build_id = 5;
 }
 message Routes{
   repeated Route routes = 1;

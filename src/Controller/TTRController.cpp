@@ -86,3 +86,9 @@ std::vector<int> TTRController::get_results() {
     }
     return res;
 }
+int TTRController::get_current_player_id() {
+    return game->active_player;
+}
+std::vector<Path> TTRController::get_all_paths() {
+    return game->board.paths;
+}
