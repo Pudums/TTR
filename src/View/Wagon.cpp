@@ -42,3 +42,6 @@ Wagon::Wagon(const QVector<QPointF> &points, const std::string &color) {
 void Wagon::mousePressEvent(QGraphicsSceneMouseEvent *event) {
     emit clicked();
 }
+
+void Wagon::make_step() {
+}
