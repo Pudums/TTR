@@ -245,3 +245,14 @@ std::map<std::string, int> Game::color_to_num() const {
     }
     return result;
 }
+
+void Game::update_station_path(const std::string& station_city, int path_pos) {
+    Path path = board.paths[path_pos];
+    if (path.start == station_city || path.finish == station_city) {
+        players[active_player].station_paths.insert(path_pos);
+        players[active_player].updated_stations++;
+        if (players[active_player].updated_stations == Player::start_number_of_stations - players[active_player].number_of_stations_left) {
+            active_player = (active_player + 1) % number_of_players;
+        }
+    }
+}
