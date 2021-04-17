@@ -4,12 +4,13 @@
 #ifndef TTR_TTRSERVER_H
 #define TTR_TTRSERVER_H
 namespace ttr {
-class TTRServer{
+class TTRServer : virtual ttr::TTRService::Service{
 public:
     TTRServer(TTRController *c);
-    BoardState get_board_state();
-    MakeTurnResponse make_turn_request(const MakeTurnRequest &request);
-
+    ::grpc::Status get_board_state(::grpc::ServerContext* context, const ::ttr::PlayerID* request, ::ttr::BoardState* response) override;
+    ::grpc::Status make_turn(::grpc::ServerContext* context, const ::ttr::MakeTurnRequest* request, ::ttr::MakeTurnResponse* response) override;
+    BoardState local_get_board_state();
+    MakeTurnResponse local_make_turn(const ttr::MakeTurnRequest* request);
 private:
     std::unique_ptr<::ttr::TTRService::Stub> stub_;
     TTRController *controller;

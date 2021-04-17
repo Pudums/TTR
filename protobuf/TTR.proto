@@ -11,11 +11,9 @@ message Route{
   int32 points = 3;
 }
 message Player{
-  int32 cards_num = 1;
-  int32 wagons_left = 2;
-  int32 current_score = 3;
-  int32 routes_num = 4;
-  string color = 5;
+  int32 wagons_left = 1;
+  int32 current_score = 2;
+  int32 routes_num = 3;
 }
 message  Path{
   string start = 1;
@@ -76,8 +74,7 @@ message PlayerState{
 message  MakeTurnResponse{
   bool is_success = 1;
   BoardState current_state = 2;
-  PlayerState player_state = 3;
-  Deck deck = 4;
+  Deck deck = 3;
 }
 message PlayerID{
   int32 id = 1;
@@ -85,4 +82,5 @@ message PlayerID{
 service TTRService{
   rpc get_board_state(PlayerID) returns (BoardState){};
   rpc make_turn(MakeTurnRequest) returns (MakeTurnResponse);
+  rpc make
 }

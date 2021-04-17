@@ -17,7 +17,39 @@ TTRServer::TTRServer(TTRController *c) {
         "localhost:50051", grpc::InsecureChannelCredentials()));
     controller = c;
 }
-BoardState TTRServer::get_board_state() {
+MakeTurnResponse TTRServer::local_make_turn(const ::ttr::MakeTurnRequest* request){
+    MakeTurnResponse response;
+    response.set_is_success(true);
+    if(request->type() == "get board state"){
+        *(response.release_current_state()) = local_get_board_state();
+
+    }
+    if(request->id().id() != controller->get_current_player_id()) {
+        response.set_is_success(false);
+        return response;
+    }
+
+    if (request->type() == "draw from deck"){ //TODO make global constants
+        controller->get_card_from_deck();
+    }
+    if(request->type() == "draw from active"){
+        controller->get_card_from_active(request->active_card_id());
+    }
+    if(request->type() == "build path"){
+        controller->build_path_initialize(request->path_to_build_id());
+    }
+    if(request->type() == "build station"){
+        //TODO
+    }
+    return response;
+}
+::grpc::Status TTRServer::get_board_state(::grpc::ServerContext *context,
+                                          const ::ttr::PlayerID *request,
+                                          ::ttr::BoardState *response) {
+    *response = local_get_board_state();
+    return ::grpc::Status();
+}
+BoardState TTRServer::local_get_board_state() {
     BoardState state;
     Board board;
     Deck deck;
@@ -47,33 +79,22 @@ BoardState TTRServer::get_board_state() {
 
     *state.release_deck_state() = deck;
     *state.release_board_state() = board;
-
+    ttr::Players players;
+    for(int i = 0; i < controller->get_players().size(); i++){
+        auto player = controller->get_players()[i];
+        ttr::Player p;
+        p.set_current_score(controller->get_results()[player.id]);
+        p.set_routes_num(player.active_routes.size());
+        p.set_wagons_left(player.number_of_wagons_left);
+        players.add_all_players()[i] = p;
+    }
+    *state.release_all_players() = players;
     return state;
 }
-MakeTurnResponse TTRServer::make_turn_request(const MakeTurnRequest& request) {
-    MakeTurnResponse response;
-    response.set_is_success(true);
-    if(request.type() == "get board state"){
-        *response.release_current_state() = get_board_state();
-        return response;
-    }
-    if(request.id().id() != controller->get_current_player_id()) {
-        response.set_is_success(false);
-        return response;
-    }
-
-    if (request.type() == "draw from deck"){ //TODO make global constants
-        controller->get_card_from_deck();
-    }
-    if(request.type() == "draw from active"){
-        controller->get_card_from_active(request.active_card_id());
-    }
-    if(request.type() == "build path"){
-        controller->build_path_initialize(request.path_to_build_id());
-    }
-    if(request.type() == "build station"){
-        //TODO
-    }
-    return response;
+::grpc::Status TTRServer::make_turn(::grpc::ServerContext *context,
+                                    const ::ttr::MakeTurnRequest *request,
+                                    ::ttr::MakeTurnResponse *response){
+    *response = local_make_turn(request);
+    return ::grpc::Status();
 }
 }  // namespace ttr
