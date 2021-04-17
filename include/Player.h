@@ -31,6 +31,7 @@ public:
     int number_of_wagons_left;
     int points;
     int number_of_stations_left;
+    int updated_stations = 0;
     Algo graph;
     Player();
     void count_points();
