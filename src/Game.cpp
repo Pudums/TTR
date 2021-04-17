@@ -41,7 +41,7 @@ void Game::start_game() {
 }
 
 int Game::check_end_game() const {
-    if (number_of_players == players.size()) {
+    if (number_updated_players == players.size()) {
         return 2;
     }
     for (const auto &player : players) {

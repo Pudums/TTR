@@ -4,6 +4,7 @@
 #ifndef TTR_TTRSERVER_H
 #define TTR_TTRSERVER_H
 namespace ttr {
+
 class TTRServer{
 public:
     TTRServer(TTRController *c);
