@@ -44,9 +44,9 @@ BoardState TTRServer::get_board_state() {
         *n_card.release_wagon_info() = w;
         deck.add_cards_on_table()[i] = n_card;
     }
+
     *state.release_deck_state() = deck;
     *state.release_board_state() = board;
-
     return state;
 }
 MakeTurnResponse TTRServer::make_turn_request(const MakeTurnRequest& request) {
