@@ -89,4 +89,14 @@ std::vector<int> TTRController::get_results() {
 std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
     return {std::make_pair<std::string, Circle>("Wilno", {{992, 259}, 5})};
 }
+void TTRController::build_station(const std::string& city) {
+    if(!is_game_end()){
+
+    }else{
+
+    }
+}
+void TTRController::end_game() {
+    game->end_game();
+}
 //TODO detect all cities
