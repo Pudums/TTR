@@ -13,6 +13,7 @@
 #include <unistd.h>
 #include "CircleWidget.h"
 #include <QGraphicsProxyWidget>
+#include "Station.h"
 
 namespace {
 unsigned int microseconds = 1000;
@@ -30,20 +31,33 @@ std::map<int, std::string> color_frow_owner = {
 };
 }
 
-//TODO
-//get_stations()
-//vector pair<name, circle>
-//circle = .p.x, .p.y, .r
 void View::draw_stations() {
-	auto stations = Controller->get_stations();
-	CircleWidget *cw = new CircleWidget;
-	cw->setAntialiased(0);
-	cw->setFloatBased(0);
-	QGraphicsProxyWidget *item = scene->addWidget(cw);
-	item->setGeometry(QRect(100, 100, 100, 100));
-	std::cout << "in draw stations\n";
+	const auto &stations = Controller->get_stations();
 	for(auto station: stations) {
-		std::cout << "in draw stations\n";
+		const auto &s = station.second;
+		const auto &name = station.first;
+
+		Station *path = new Station;
+		path->addEllipse(QPointF(s.p.x, s.p.y) , 20, 20);
+		QBrush brush;
+		brush.setStyle(Qt::SolidPattern);
+		brush.setColor(Qt::cyan);
+		QPen *pen = new QPen;
+		pen->setBrush(brush);
+		connect(path, &Station::clicked, [=]() {
+				std::cout << "station " << name << " cliced\n";
+		} );
+		scene->addPath(*path, *pen, brush);
+		/*
+		CircleWidget *cw = new CircleWidget;
+		cw->setAntialiased(0);
+		cw->setFloatBased(0);
+		QGraphicsProxyWidget *item = scene->addWidget(cw);
+		item->setGeometry(QRect(s.p.x - 20, s.p.y - 20, s.r, s.r));
+		connect(cw, &CircleWidget::clicked, [=]() {
+				std::cout << "station " << name << " cliced\n";
+		} );
+		*/
 	}
 }
 

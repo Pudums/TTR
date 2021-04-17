@@ -2,6 +2,9 @@
 #define __CIRCLEWIDGET__H__
 
 #include <QWidget>
+#include <QGraphicsPolygonItem>
+#include <QGraphicsSceneMouseEvent>
+#include <string>
 
 class CircleWidget : public QWidget{
     Q_OBJECT
@@ -14,6 +17,7 @@ public:
 
     QSize minimumSizeHint() const;
     QSize sizeHint() const;
+    void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 public slots:
     void nextAnimationFrame();
@@ -25,6 +29,8 @@ private:
     bool floatBased;
     bool antialiased;
     int frameNo;
+signals:
+	void clicked();
 };
 
 #endif // __CIRCLEWIDGET__H__

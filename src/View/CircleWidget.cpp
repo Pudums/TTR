@@ -22,6 +22,10 @@ void CircleWidget::setFloatBased(bool floatBased)
     update();
 }
 
+void CircleWidget::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+    emit clicked();
+}
+
 
 
 void CircleWidget::setAntialiased(bool antialiased)
