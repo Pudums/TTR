@@ -35,6 +35,7 @@ public:
 
     void start_game();
     void make_move(Turn *turn);
+    void update_station_path(const std::string& station_city, int path_pos);
     void move_get_new_roots();
     [[nodiscard]] bool move_build_path(int position,
                                        const std::vector<WagonCard> &cards);
@@ -54,6 +55,7 @@ public:
     [[nodiscard]] bool check_if_enough_cards_for_building_path(
         const Path &path,
         const std::vector<WagonCard> &list_of_cards) const;
+
     void end_game();
     void count_players_points();
 };

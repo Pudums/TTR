@@ -3,6 +3,7 @@ cmake_minimum_required(VERSION 3.16)
 project(Project)
 
 set(CMAKE_CXX_STANDARD 17)
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOMOC ON)
@@ -23,7 +24,7 @@ file(GLOB H
 find_package(
 		Qt5
 		COMPONENTS Quick
-		QuickCompiler
+		#QuickCompiler
 		Widgets
 		Gui
 		REQUIRED)
