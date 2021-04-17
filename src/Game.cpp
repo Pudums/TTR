@@ -146,6 +146,7 @@ void Game::update_state_after_path_building(
     const std::vector<WagonCard> &list_of_wagon_cards) {
     path.owner = active_player;
     players[active_player].points += Path::points_for_path(path.length);
+    players[active_player].number_of_wagons_left -= path.length;
     ListOfCardsForPath result = comfortable_format(list_of_wagon_cards);
     int remove_colored_cards_left = path.number_of_colored_wagons;
     int remove_locomotives_left = path.number_of_locomotives;

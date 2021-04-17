@@ -13,7 +13,10 @@
 
 struct Algo {
     std::map<std::string, std::vector<std::string>> g;
-
+    static int find_best_way(
+        const std::string &start,
+        const std::set<std::string> &visited_cities,
+        const std::vector<Path> &all_paths);
     Algo() = default;
     Algo(const std::vector<Path> &paths,
          const int &player,
