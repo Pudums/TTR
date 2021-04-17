@@ -174,19 +174,20 @@ void View::start_player_4() {
 
 void View::draw_board() {
     scene->clear();
-	if(Controller->is_game_end()) {
-		//Controller->end_game();
-		//TODO
+	auto status = Controller->is_game_end();
+	if(status == 2) {
+		Controller->end_game();
 		end_game();
 		return;
+	} else {
+		draw_deck();
+		draw_map();
+		draw_wagons();
+		draw_players_cards();
+		draw_active_cards();
+		draw_wagons_count();
+		draw_stations();
 	}
-    draw_deck();
-    draw_map();
-    draw_wagons();
-    draw_players_cards();
-	draw_active_cards();
-	draw_wagons_count();
-	draw_stations();
 }
 
 void View::draw_wagons_count() {
