@@ -44,7 +44,7 @@ MakeTurnResponse TTRServer::local_make_turn(const ::ttr::MakeTurnRequest* reques
     return response;
 }
 ::grpc::Status TTRServer::get_board_state(::grpc::ServerContext *context,
-                                          const ::ttr::PlayerID *request,
+                                          const ::ttr::Nothing* request,
                                           ::ttr::BoardState *response) {
     *response = local_get_board_state();
     return ::grpc::Status();

@@ -1,7 +1,7 @@
 syntax = "proto3";
 
 package ttr;
-
+message Nothing{}
 message Wagon{
   string color = 1;
 }
@@ -80,7 +80,7 @@ message PlayerID{
   int32 id = 1;
 }
 service TTRService{
-  rpc get_board_state(PlayerID) returns (BoardState){};
+  rpc get_board_state(Nothing) returns (BoardState);
   rpc make_turn(MakeTurnRequest) returns (MakeTurnResponse);
-  rpc make
+  rpc get_player_state(PlayerID) returns(PlayerState);
 }
