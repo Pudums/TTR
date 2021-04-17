@@ -40,13 +40,16 @@ void Game::start_game() {
     }
 }
 
-bool Game::check_end_game() const {
+int Game::check_end_game() const {
+    if (number_of_players == players.size()) {
+        return 2;
+    }
     for (const auto &player : players) {
         if (player.number_of_wagons_left <= Game::number_of_wagons_for_finish) {
-            return true;
+            return 1;
         }
     }
-    return false;
+    return 0;
 }
 
 Game::Game(int number_of_players)
@@ -146,6 +149,7 @@ void Game::update_state_after_path_building(
     const std::vector<WagonCard> &list_of_wagon_cards) {
     path.owner = active_player;
     players[active_player].points += Path::points_for_path(path.length);
+    players[active_player].number_of_wagons_left -= path.length;
     ListOfCardsForPath result = comfortable_format(list_of_wagon_cards);
     int remove_colored_cards_left = path.number_of_colored_wagons;
     int remove_locomotives_left = path.number_of_locomotives;
@@ -222,7 +226,6 @@ void Game::count_players_points() {
 void Game::end_game() {
     create_graphs_for_players(players, board.paths);
     count_players_points();
-    // TODO звершение
 }
 
 int Game::number_of_cards_with_fixed_color(const std::string &color) const {
@@ -243,4 +246,19 @@ std::map<std::string, int> Game::color_to_num() const {
         result[color] = number_of_cards_with_fixed_color(color);
     }
     return result;
+}
+
+void Game::update_station_path(const std::string& station_city, int path_pos) {
+    Path path = board.paths[path_pos];
+    if (path.start == station_city || path.finish == station_city) {
+        players[active_player].station_paths.insert(path_pos);
+        players[active_player].updated_stations++;
+    }
+    while (players[active_player].updated_stations == Player::start_number_of_stations - players[active_player].number_of_stations_left) {
+        active_player = (active_player + 1) % number_of_players;
+        number_updated_players++;
+        if (number_of_players == players.size()) {
+            break;
+        }
+    }
 }

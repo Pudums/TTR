@@ -18,6 +18,7 @@ class View : public QGraphicsView {
     void create_wagon(const WagonBlock &wagon, int owner);
 	void draw_active_cards();
     void draw_players_cards();
+	void end_game();
 
 public:
     View(QWidget *parrent = nullptr);

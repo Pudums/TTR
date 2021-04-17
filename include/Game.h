@@ -30,11 +30,12 @@ public:
     int active_player;
     int number_of_players;
     std::set<std::string> occupied_stations;
-
+    int number_updated_players = 0;
     explicit Game(int number_of_players);
 
     void start_game();
     void make_move(Turn *turn);
+    void update_station_path(const std::string& station_city, int path_pos);
     void move_get_new_roots();
     [[nodiscard]] bool move_build_path(int position,
                                        const std::vector<WagonCard> &cards);
@@ -45,7 +46,7 @@ public:
     void update_state_after_path_building(
         Path &path,
         const std::vector<WagonCard> &list_of_wagon_cards);
-    [[nodiscard]] bool check_end_game() const;
+    [[nodiscard]] int check_end_game() const;
     [[nodiscard]] std::vector<WagonCard> cards_with_suitable_color(
         const WagonCard &wagon_card) const;
     [[nodiscard]] int number_of_cards_with_fixed_color(
@@ -54,6 +55,7 @@ public:
     [[nodiscard]] bool check_if_enough_cards_for_building_path(
         const Path &path,
         const std::vector<WagonCard> &list_of_cards) const;
+
     void end_game();
     void count_players_points();
 };
