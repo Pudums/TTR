@@ -23,7 +23,7 @@ public:
     std::map<std::string, int> get_count_by_color();
     std::vector<WagonCard> get_active_cards();
     std::vector<Player> get_players();
-    bool is_game_end();
+    int is_game_end();
     void end_game();
     std::vector<int> get_results();
     std::vector<std::pair<std::string, Circle>> get_stations();
