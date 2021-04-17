@@ -40,13 +40,16 @@ void Game::start_game() {
     }
 }
 
-bool Game::check_end_game() const {
+int Game::check_end_game() const {
+    if (number_of_players == players.size()) {
+        return 2;
+    }
     for (const auto &player : players) {
         if (player.number_of_wagons_left <= Game::number_of_wagons_for_finish) {
-            return true;
+            return 1;
         }
     }
-    return false;
+    return 0;
 }
 
 Game::Game(int number_of_players)
@@ -222,7 +225,6 @@ void Game::count_players_points() {
 void Game::end_game() {
     create_graphs_for_players(players, board.paths);
     count_players_points();
-    // TODO звершение
 }
 
 int Game::number_of_cards_with_fixed_color(const std::string &color) const {
@@ -250,8 +252,12 @@ void Game::update_station_path(const std::string& station_city, int path_pos) {
     if (path.start == station_city || path.finish == station_city) {
         players[active_player].station_paths.insert(path_pos);
         players[active_player].updated_stations++;
-        if (players[active_player].updated_stations == Player::start_number_of_stations - players[active_player].number_of_stations_left) {
-            active_player = (active_player + 1) % number_of_players;
+    }
+    while (players[active_player].updated_stations == Player::start_number_of_stations - players[active_player].number_of_stations_left) {
+        active_player = (active_player + 1) % number_of_players;
+        number_updated_players++;
+        if (number_of_players == players.size()) {
+            break;
         }
     }
 }
