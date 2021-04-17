@@ -18,14 +18,13 @@ public:
     void get_routes();
     const std::vector<WagonCard> &get_current_player_cards();
     std::vector<Path> get_paths();
-    // void end_game();
-    // void make_turn(std::stringstream s);
     void get_card_from_deck();
     std::map<std::string, int> get_count_by_color();
     std::vector<WagonCard> get_active_cards();
     std::vector<Player> get_players();
     bool is_game_end();
     std::vector<int> get_results();
+    std::vector<std::pair<std::string, Circle>> get_stations();
     ~TTRController();
 };
 

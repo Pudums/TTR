@@ -86,3 +86,7 @@ std::vector<int> TTRController::get_results() {
     }
     return res;
 }
+std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
+    return {std::make_pair<std::string, Circle>("Wilno", {{992, 259}, 5})};
+}
+//TODO detect all cities
