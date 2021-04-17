@@ -1,5 +1,5 @@
 #include <QtGui>
-#include "circlewidget.h"
+#include "CircleWidget.h"
 #include <stdlib.h>
 
 

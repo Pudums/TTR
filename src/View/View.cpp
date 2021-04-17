@@ -11,6 +11,8 @@
 #include <QTextObject>
 #include <thread>
 #include <unistd.h>
+#include "CircleWidget.h"
+#include <QGraphicsProxyWidget>
 
 namespace {
 unsigned int microseconds = 1000;
@@ -34,6 +36,11 @@ std::map<int, std::string> color_frow_owner = {
 //circle = .p.x, .p.y, .r
 void View::draw_stations() {
 	auto stations = Controller->get_stations();
+	CircleWidget *cw = new CircleWidget;
+	cw->setAntialiased(0);
+	cw->setFloatBased(0);
+	QGraphicsProxyWidget *item = scene->addWidget(cw);
+	item->setGeometry(QRect(100, 100, 100, 100));
 	std::cout << "in draw stations\n";
 	for(auto station: stations) {
 		std::cout << "in draw stations\n";
@@ -168,6 +175,8 @@ void View::start_player_4() {
 void View::draw_board() {
     scene->clear();
 	if(Controller->is_game_end()) {
+		//Controller->end_game();
+		//TODO
 		end_game();
 		return;
 	}

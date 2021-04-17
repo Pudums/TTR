@@ -3,8 +3,7 @@
 
 #include <QWidget>
 
-class CircleWidget : public QWidget
-{
+class CircleWidget : public QWidget{
     Q_OBJECT
 
 public:
