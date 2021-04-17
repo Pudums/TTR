@@ -47,6 +47,7 @@ BoardState TTRServer::get_board_state() {
 
     *state.release_deck_state() = deck;
     *state.release_board_state() = board;
+
     return state;
 }
 MakeTurnResponse TTRServer::make_turn_request(const MakeTurnRequest& request) {

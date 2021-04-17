@@ -25,6 +25,8 @@ public:
     std::vector<Player> get_players();
     int is_game_end();
     void end_game();
+    int get_current_player_id();
+    std::vector<Path> get_all_paths();
     std::vector<int> get_results();
     std::vector<std::pair<std::string, Circle>> get_stations();
     ~TTRController();

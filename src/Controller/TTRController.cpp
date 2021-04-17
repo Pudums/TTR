@@ -103,4 +103,10 @@ void TTRController::build_station(const std::string& city) {
 void TTRController::end_game() {
     game->end_game();
 }
+int TTRController::get_current_player_id() {
+    return game->active_player;
+}
+std::vector<Path> TTRController::get_all_paths() {
+    return game->board.paths;
+}
 //TODO detect all cities
