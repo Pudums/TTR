@@ -14,6 +14,10 @@ struct Point {
 struct Rectangle {
     std::vector<Point> points;
 };
+struct Circle{
+    Point p;
+    int r;
+};
 
 struct WagonBlock {
     static inline int current_id = 0;
