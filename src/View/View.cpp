@@ -28,17 +28,15 @@ std::map<int, std::string> color_frow_owner = {
 };
 }
 
-namespace {
-	struct Station {
-		int x, y, r, id;
-		bool is_placed;
-	};
-}
-
+//TODO
+//get_stations()
+//vector pair<name, circle>
+//circle = .p.x, .p.y, .r
 void View::draw_stations() {
-	//auto stations = Controller->get_stations();
-	std::vector<Station> stations;
+	auto stations = Controller->get_stations();
+	std::cout << "in draw stations\n";
 	for(auto station: stations) {
+		std::cout << "in draw stations\n";
 	}
 }
 
@@ -179,6 +177,7 @@ void View::draw_board() {
     draw_players_cards();
 	draw_active_cards();
 	draw_wagons_count();
+	draw_stations();
 }
 
 void View::draw_wagons_count() {
@@ -253,6 +252,8 @@ void View::draw_map() {
     map->setRect(0, 0, 1320, 880);
     map->set_clickable(false);
     map->setBrush(brush);
+	//map->setZValue(0);
+	//TODO
     scene->addItem(map);
 }
 
@@ -263,6 +264,8 @@ void View::create_wagon(const WagonBlock &wagon, int owner) {
     }
 
     Wagon *wagon_to_draw = new Wagon(coords, owner != -1? color_frow_owner[owner] : "un_vis");
+	//wagon_to_draw->setZValue(-1);
+	//TODO
 
 	connect(wagon_to_draw, &Wagon::clicked, [=]() {
 			Controller->build_path_initialize(wagon.id);
