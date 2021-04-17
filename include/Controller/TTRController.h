@@ -16,6 +16,7 @@ public:
     void build_path_initialize(int);
     void set_color_to_build_path(const WagonCard &w);
     void get_routes();
+    void build_station(const std::string& city);
     const std::vector<WagonCard> &get_current_player_cards();
     std::vector<Path> get_paths();
     void get_card_from_deck();
@@ -23,6 +24,7 @@ public:
     std::vector<WagonCard> get_active_cards();
     std::vector<Player> get_players();
     bool is_game_end();
+    void end_game();
     std::vector<int> get_results();
     std::vector<std::pair<std::string, Circle>> get_stations();
     ~TTRController();

@@ -33,6 +33,10 @@ void TTRController::get_card_from_active(int num) {
 }
 
 void TTRController::build_path_initialize(int id) {
+    if(auto p = dynamic_cast<BuildStation *>(current_turn); p){
+        game->update_station_path(p->get_city(), id);
+        current_turn = nullptr;
+    }
     if (Turn::num == 0) {
         current_turn = new BuildPath(id);
     }
@@ -51,7 +55,6 @@ TTRController::~TTRController() {
 
 void TTRController::set_color_to_build_path(const WagonCard &w) {
     if (auto p = dynamic_cast<BuildPath *>(current_turn); p) {
-        std::cout << "Let's make move!";
         p->set_wagons(game->cards_with_suitable_color(w));
         game->make_move(p);
         current_turn = nullptr;
@@ -88,5 +91,16 @@ std::vector<int> TTRController::get_results() {
 }
 std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
     return {std::make_pair<std::string, Circle>("Wilno", {{992, 259}, 5})};
+}
+void TTRController::build_station(const std::string& city) {
+    if(!is_game_end()){
+        game->make_move(new BuildStation(city));
+        current_turn = nullptr;
+    }else{
+        current_turn = new BuildStation(city);
+    }
+}
+void TTRController::end_game() {
+    game->end_game();
 }
 //TODO detect all cities
