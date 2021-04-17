@@ -29,7 +29,7 @@ file(GLOB H
 find_package(
 		Qt5
 		COMPONENTS Quick
-		#QuickCompiler
+		QuickCompiler
 		Widgets
 		Gui
 		REQUIRED)
