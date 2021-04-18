@@ -5,11 +5,13 @@
 #include <QGraphicsSceneMouseEvent>
 #include <string>
 
-class Wagon :public QObject, public QGraphicsPolygonItem {
+class Wagon : public QObject, public QGraphicsPolygonItem {
 	Q_OBJECT
 public:
     Wagon(const QVector<QPointF> &points, const std::string &color);
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
+
+	void make_step();
 signals:
 	void clicked();
 };
