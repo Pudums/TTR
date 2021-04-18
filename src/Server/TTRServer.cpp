@@ -111,6 +111,7 @@ LocalServer::LocalServer(TTRController *c) : service(TTRServer(c)) {
 
 void LocalServer::runServer() {
     server->Wait();
+
 }
 
 void LocalServer::terminate() {
@@ -120,6 +121,7 @@ void LocalServer::terminate() {
 void RunServer(LocalServer *serv, bool needRun) {
     if (needRun) {
         serv->runServer();
+        std::cout<<"Server started!!!";
     }
 }
 

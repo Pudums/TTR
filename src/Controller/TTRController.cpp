@@ -4,9 +4,10 @@
 
 #include "TTRController.h"
 
-void TTRController::start_game(int number_of_players) {
+void TTRController::start_game(int number_of_players, bool is_local) {
     game = new Game(number_of_players);
     game->start_game();
+
 }
 
 void TTRController::get_card_from_deck() {

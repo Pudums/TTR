@@ -71,6 +71,7 @@ namespace {
 View::View(QWidget *parrent) : Controller(new TTRController()) {
     int screen_width = 1920, screen_height = 1080;
 
+    //ttr::RunServer(server, true);
     setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     setFixedSize(screen_width, screen_height);
