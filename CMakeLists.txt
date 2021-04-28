@@ -3,21 +3,27 @@ cmake_minimum_required(VERSION 3.16)
 project(Project)
 
 set(CMAKE_CXX_STANDARD 17)
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
+include_directories(/home/megaserg01/grpc/include/)
 file(GLOB CPP
 		"src/*"
 		"src/Controller/*"
 		"src/View/*"
+		"src/Server/*"
+		"src/Server/protobuf/*"
 		)
 
 file(GLOB H
 		"include/*"
 		"include/Controller/*"
 		"include/View/*"
+		"include/Server/*"
+		"include/Server/protobuf/*"
 		)
 
 find_package(
@@ -30,7 +36,6 @@ find_package(
 
 add_library(QT_VIEW ${CPP} ${H})
 target_include_directories(QT_VIEW PUBLIC include include/View include/Controller)
-
 target_link_libraries(QT_VIEW
 		PUBLIC
 		Qt5::Quick
@@ -40,5 +45,4 @@ target_link_libraries(QT_VIEW
 		)
 
 add_executable(${PROJECT_NAME} main.cpp)
-
 target_link_libraries(${PROJECT_NAME} QT_VIEW)

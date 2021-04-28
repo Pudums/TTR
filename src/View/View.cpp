@@ -9,18 +9,63 @@
 #include "Wagon.h"
 #include "WagonCard.h"
 #include <QTextObject>
+#include <thread>
+#include <unistd.h>
+#include "CircleWidget.h"
+#include <QGraphicsProxyWidget>
+#include "Station.h"
 
 namespace {
+unsigned int microseconds = 1000;
+
 std::map<std::string, int> color_to_sdvig = {
     {White, 0},     {Orange, 1},      {Green, 2},  {Red, 3},
     {Black, 4},     {Blue, 5},        {Yellow, 6}, {Purple, 7},
     {Uncolored, 8}, {Multicolored, 8}};
+
 std::map<int, std::string> color_frow_owner = {
 	{0, Red},
 	{1, Yellow},
 	{2, Blue},
 	{3, Green}
 };
+}
+
+void View::draw_stations() {
+	const auto &stations = Controller->get_stations();
+	for(auto station: stations) {
+		const auto &s = station.second;
+		const auto &name = station.first;
+
+		Station *path = new Station;
+		path->addEllipse(QPointF(s.p.x, s.p.y) , 20, 20);
+		QBrush brush;
+		brush.setStyle(Qt::SolidPattern);
+		brush.setColor(Qt::cyan);
+		QPen *pen = new QPen;
+		pen->setBrush(brush);
+		connect(path, &Station::clicked, [=]() {
+				std::cout << "station " << name << " cliced\n";
+		} );
+		scene->addPath(*path, *pen, brush);
+		/*
+		CircleWidget *cw = new CircleWidget;
+		cw->setAntialiased(0);
+		cw->setFloatBased(0);
+		QGraphicsProxyWidget *item = scene->addWidget(cw);
+		item->setGeometry(QRect(s.p.x - 20, s.p.y - 20, s.r, s.r));
+		connect(cw, &CircleWidget::clicked, [=]() {
+				std::cout << "station " << name << " cliced\n";
+		} );
+		*/
+	}
+}
+
+namespace {
+	void locat_while_true(View *view) {
+		return;
+		view->draw_board();
+	}
 }
 
 View::View(QWidget *parrent) : Controller(new TTRController()) {
@@ -38,6 +83,22 @@ View::View(QWidget *parrent) : Controller(new TTRController()) {
     scene = new QGraphicsScene();
     scene->setSceneRect(0, 0, screen_width, screen_height);
     setScene(scene);
+
+	/*std::thread wt([&]() {
+			while_true();
+		});
+		*/
+	std::thread wt(locat_while_true, this);
+	wt.detach();
+}
+
+void View::while_true() {
+	unsigned int counter = 0;
+	while(true) {
+		usleep(microseconds);
+		//draw_board();
+		std::cout << counter++ << '\n';
+	}
 }
 
 void View::display_menu() {
@@ -127,11 +188,84 @@ void View::start_player_4() {
 
 void View::draw_board() {
     scene->clear();
-    draw_deck();
-    draw_map();
-    draw_wagons();
-    draw_players_cards();
-	draw_active_cards();
+	auto status = Controller->is_game_end();
+	if(status == 2) {
+		Controller->end_game();
+		end_game();
+		return;
+	} else {
+		draw_deck();
+		draw_map();
+		draw_wagons();
+		draw_players_cards();
+		draw_active_cards();
+		draw_wagons_count();
+		draw_stations();
+	}
+}
+
+void View::draw_wagons_count() {
+	const auto players = Controller->get_players();
+	int height = 220, width = 367;
+    for (int i = 0; i < players.size(); ++ i) {
+		const auto &player = players[i];
+        QVector<QPointF> coords;
+        coords << QPointF(1320 + width * 0, height * i)
+               << QPointF(1320 + width * 1, height * i)
+               << QPointF(1320 + width * 1, height * (i + 1))
+               << QPointF(1320 + width * 0, height * (i + 1));
+
+        Wagon *wagon_to_draw = new Wagon(coords, 
+				color_frow_owner[player.id]);
+        scene->addItem(wagon_to_draw);
+
+		QFont font("comic sans", 14);
+		QGraphicsTextItem* some_text1 = new QGraphicsTextItem(QString("Wagons left: ") + QString::number(player.number_of_wagons_left));
+		some_text1->setFont(font);
+		some_text1->setPos(1320 + width * 0.3, i * height);
+		scene->addItem(some_text1);
+
+		QGraphicsTextItem* some_text2 = new QGraphicsTextItem(QString("Points: ") 
+				+ QString::number(player.points));
+		some_text2->setPos(1320 + width * 0.3, i * height + 30);
+		some_text2->setFont(font);
+		scene->addItem(some_text2);
+
+		QGraphicsTextItem* some_text3 = new QGraphicsTextItem(QString("Stations left: ") 
+				+ QString::number(player.number_of_stations_left));
+		some_text3->setPos(1320 + width * 0.3, i * height + 30 * 2);
+		some_text3->setFont(font);
+		scene->addItem(some_text3);
+
+		QGraphicsTextItem* some_text4 = new QGraphicsTextItem(QString("Cards : ") 
+				+ QString::number(player.wagon_cards.size()));
+		some_text4->setPos(1320 + width * 0.3, i * height + 30 * 3);
+		some_text4->setFont(font);
+		scene->addItem(some_text4);
+		bool flag = true;
+
+		connect(wagon_to_draw, &Wagon::clicked, [=, flag]() mutable {
+				scene->removeItem(wagon_to_draw);
+				scene->addItem(wagon_to_draw);
+				if(flag) {
+					scene->removeItem(some_text1);
+					scene->removeItem(some_text2);
+					scene->removeItem(some_text3);
+					scene->removeItem(some_text4);
+					QGraphicsTextItem *some_text = new QGraphicsTextItem(QString("Start: ") 
+							+ QString::number(player.wagon_cards.size()));
+					some_text->setPos(1320 + width * 0.3, i * height + 30 * 4);
+					some_text->setFont(font);
+					scene->addItem(some_text);
+				}else {
+					scene->addItem(some_text1);
+					scene->addItem(some_text2);
+					scene->addItem(some_text3);
+					scene->addItem(some_text4);
+				}
+				flag = !flag;
+		} );
+	}
 }
 
 void View::draw_map() {
@@ -142,6 +276,8 @@ void View::draw_map() {
     map->setRect(0, 0, 1320, 880);
     map->set_clickable(false);
     map->setBrush(brush);
+	//map->setZValue(0);
+	//TODO
     scene->addItem(map);
 }
 
@@ -152,10 +288,11 @@ void View::create_wagon(const WagonBlock &wagon, int owner) {
     }
 
     Wagon *wagon_to_draw = new Wagon(coords, owner != -1? color_frow_owner[owner] : "un_vis");
+	//wagon_to_draw->setZValue(-1);
+	//TODO
 
 	connect(wagon_to_draw, &Wagon::clicked, [=]() {
 			Controller->build_path_initialize(wagon.id);
-			std::cout << "number wagon = " << wagon.id << '\n';
 			draw_board();
 	} );
     scene->addItem(wagon_to_draw);
@@ -202,7 +339,6 @@ void View::draw_players_cards() {
         Wagon *wagon_to_draw = new Wagon(coords, card.color);
 		connect(wagon_to_draw, &Wagon::clicked, [=]() {
 				Controller->set_color_to_build_path(card);
-				std::cout << "color = " << card.color << '\n';
 				draw_board();
 		} );
         scene->addItem(wagon_to_draw);
@@ -229,9 +365,22 @@ void View::draw_active_cards() {
 
 		connect(wagon_to_draw, &Wagon::clicked, [=]() {
 				Controller->get_card_from_active(i);
-				std::cout << "color_active = " << card.color << '\n';
 				draw_board();
 		} );
 		scene->addItem(wagon_to_draw);
+	}
+}
+
+void View::end_game() {
+	int height = 30;
+	const auto &results = Controller->get_results();
+	for(int i = 0; i < results.size(); ++ i) {
+		QGraphicsTextItem* some_text = new QGraphicsTextItem(QString("Player ") 
+				+ QString::number(i) 
+				+ QString(" have: ") 
+				+ QString::number(results[i]));
+		some_text->setFont(QFont("comic sans", 14));
+		some_text->setPos(0, height * i);
+		scene->addItem(some_text);
 	}
 }
