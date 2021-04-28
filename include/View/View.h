@@ -23,6 +23,7 @@ class View : public QGraphicsView {
 	void end_game();
 	void draw_stations();			// TODO
 	void while_true();				// TODO
+	void choose_count_of_bots(int count);
 	std::vector<Wagon *> to_draw;	// TODO
 
 public:

@@ -96,7 +96,7 @@ void View::while_true() {
 	unsigned int counter = 0;
 	while(true) {
 		usleep(microseconds);
-		//draw_board();
+		// draw_board();
 		std::cout << counter++ << '\n';
 	}
 }
@@ -141,7 +141,7 @@ void View::start() {
     Button *play_2_player_button = new Button(QString("2 Player"));
     bxPos =
         this->width() / 2 - play_2_player_button->boundingRect().width() / 2;
-    byPos = 275;
+    byPos = 300;
     play_2_player_button->setPos(bxPos, byPos);
     connect(play_2_player_button, SIGNAL(clicked()), this,
             SLOT(start_player_2()));
@@ -150,7 +150,7 @@ void View::start() {
     Button *play_3_player_button = new Button(QString("3 Player"));
     bxPos =
         this->width() / 2 - play_3_player_button->boundingRect().width() / 2;
-    byPos = 400;
+    byPos = 450;
     play_3_player_button->setPos(bxPos, byPos);
     connect(play_3_player_button, SIGNAL(clicked()), this,
             SLOT(start_player_3()));
@@ -159,7 +159,7 @@ void View::start() {
     Button *play_4_player_button = new Button(QString("4 Player"));
     bxPos =
         this->width() / 2 - play_4_player_button->boundingRect().width() / 2;
-    byPos = 525;
+    byPos = 600;
     play_4_player_button->setPos(bxPos, byPos);
     connect(play_4_player_button, SIGNAL(clicked()), this,
             SLOT(start_player_4()));
@@ -167,23 +167,36 @@ void View::start() {
 }
 
 void View::start_player_1() {
-    Controller->start_game(1);
-    draw_board();
+	choose_count_of_bots(1);
 }
 
 void View::start_player_2() {
-    Controller->start_game(2);
-    draw_board();
+	choose_count_of_bots(1);
 }
 
 void View::start_player_3() {
-    Controller->start_game(3);
-    draw_board();
+	choose_count_of_bots(1);
 }
 
 void View::start_player_4() {
-    Controller->start_game(4);
-    draw_board();
+	choose_count_of_bots(1);
+}
+
+void View::choose_count_of_bots(int n) {
+    scene->clear();
+
+	for(int i = 0; i <= n; i++) {
+		Button *bot = new Button(QString::number(i) + QString(" Bots"));
+		int bxPos =
+			this->width() / 2 - bot->boundingRect().width() / 2;
+		int byPos = 150 * (i + 1);
+		bot->setPos(bxPos, byPos);
+		connect(bot, &Button::clicked, [=]() {
+				Controller->start_game(n, i);
+				draw_board();
+		} );
+		scene->addItem(bot);
+	}
 }
 
 void View::draw_board() {
