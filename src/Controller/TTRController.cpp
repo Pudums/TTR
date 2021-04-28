@@ -4,8 +4,8 @@
 
 #include "TTRController.h"
 
-void TTRController::start_game(int number_of_players) {
-    game = new Game(number_of_players);
+void TTRController::start_game(int number_of_players, int number_of_bots=0) {
+    game = new Game(number_of_players, number_of_bots);
     game->start_game();
 }
 

@@ -11,7 +11,7 @@ class TTRController {
 
 public:
     explicit TTRController() = default;
-    void start_game(int num);
+    void start_game(int num, int bots);
     void get_card_from_active(int);
     void build_path_initialize(int);
     void set_color_to_build_path(const WagonCard &w);
