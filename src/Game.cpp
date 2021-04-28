@@ -52,16 +52,21 @@ int Game::check_end_game() const {
     return 0;
 }
 
-Game::Game(int number_of_players)
+Game::Game(int number_of_players, int number_of_bots)
     : board(Board("data/paths.txt", "data/wagon_blocks.txt")),
       discharge(Discharge()),
       deck(Deck("data/wagons.txt",
                 "data/short_routes.txt",
                 "data/long_routes.txt",
                 discharge)),
-      players(std::vector<Player>(number_of_players)),
       active_player(0),
       number_of_players(number_of_players) {
+    for (int i = 0; i < number_of_players - number_of_bots; i++) {
+        players.emplace_back(false);
+    }
+    for (int i = 0; i < number_of_bots; i++) {
+        players.emplace_back(true);
+    }
 }
 
 void Game::move_get_new_roots() {
@@ -87,7 +92,7 @@ bool Game::move_build_station(const std::string &city) {
     }
     players[active_player].number_of_stations_left--;
     players[active_player].stations.push_back(city);
-    occupied_stations.insert(city);
+    occupied_stations[city] = active_player;
     return true;
 }
 

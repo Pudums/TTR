@@ -9,21 +9,16 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOMOC ON)
 set(CMAKE_AUTOUIC ON)
 
-include_directories(/home/megaserg01/grpc/include/)
 file(GLOB CPP
 		"src/*"
 		"src/Controller/*"
 		"src/View/*"
-		"src/Server/*"
-		"src/Server/protobuf/*"
 		)
 
 file(GLOB H
 		"include/*"
 		"include/Controller/*"
 		"include/View/*"
-		"include/Server/*"
-		"include/Server/protobuf/*"
 		)
 
 find_package(
