@@ -11,6 +11,7 @@
 #include "Algo.h"
 #include "Route.h"
 #include "WagonCard.h"
+#include "Turn.h"
 
 struct Player {
 private:

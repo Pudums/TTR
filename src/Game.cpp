@@ -38,6 +38,9 @@ void Game::start_game() {
         player.wagon_cards = deck.get_start_wagon_cards();
         player.active_routes = deck.get_start_route_cards();
     }
+    if (players[active_player].is_bot) {
+        make_move(nullptr);
+    }
 }
 
 int Game::check_end_game() const {
@@ -217,8 +220,19 @@ void Game::make_move(Turn *t) {
             flag = false;
         }
     }  // OK
-    if (Turn::num == 0 && flag) {
+    if (Turn::num == 0 && flag && t) {
         active_player = (active_player + 1) % number_of_players;
+    }
+    while (players[active_player].is_bot) {
+        std::set<std::string> player_cities = players_cities();
+        int path_pos = Algo::find_best_way(players[active_player].active_routes[0].city2, player_cities, board.paths);
+        if (check_if_enough_cards_for_building_path(board.paths[path_pos],
+                                                players[active_player].wagon_cards)) {
+            make_move(new BuildPath(path_pos));
+        }
+        else {
+            make_move(new DrawCardFromDeck());
+        }
     }
 }
 
@@ -266,4 +280,14 @@ void Game::update_station_path(const std::string& station_city, int path_pos) {
             break;
         }
     }
+}
+std::set<std::string> Game::players_cities() {
+    std::set<std::string> visited_cities;
+    for (const auto& elem : board.paths) {
+        if (elem.owner == active_player) {
+            visited_cities.insert(elem.start);
+            visited_cities.insert(elem.finish);
+        }
+    }
+    return visited_cities;
 }
