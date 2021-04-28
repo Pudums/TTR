@@ -29,13 +29,13 @@ public:
     std::vector<Player> players;
     int active_player;
     int number_of_players;
-    std::set<std::string> occupied_stations;
+    std::unordered_map<std::string, int> occupied_stations;
     int number_updated_players = 0;
     explicit Game(int number_of_players);
 
     void start_game();
     void make_move(Turn *turn);
-    void update_station_path(const std::string& station_city, int path_pos);
+    void update_station_path(const std::string &station_city, int path_pos);
     void move_get_new_roots();
     [[nodiscard]] bool move_build_path(int position,
                                        const std::vector<WagonCard> &cards);

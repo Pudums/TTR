@@ -87,7 +87,7 @@ bool Game::move_build_station(const std::string &city) {
     }
     players[active_player].number_of_stations_left--;
     players[active_player].stations.push_back(city);
-    occupied_stations.insert(city);
+    occupied_stations[city] = active_player;
     return true;
 }
 
