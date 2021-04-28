@@ -9,8 +9,6 @@
 #include "Wagon.h"
 #include "WagonCard.h"
 #include <QTextObject>
-#include <thread>
-#include <unistd.h>
 #include "CircleWidget.h"
 #include <QGraphicsProxyWidget>
 #include "Station.h"
@@ -48,23 +46,6 @@ void View::draw_stations() {
 				std::cout << "station " << name << " cliced\n";
 		} );
 		scene->addPath(*path, *pen, brush);
-		/*
-		CircleWidget *cw = new CircleWidget;
-		cw->setAntialiased(0);
-		cw->setFloatBased(0);
-		QGraphicsProxyWidget *item = scene->addWidget(cw);
-		item->setGeometry(QRect(s.p.x - 20, s.p.y - 20, s.r, s.r));
-		connect(cw, &CircleWidget::clicked, [=]() {
-				std::cout << "station " << name << " cliced\n";
-		} );
-		*/
-	}
-}
-
-namespace {
-	void locat_while_true(View *view) {
-		return;
-		view->draw_board();
 	}
 }
 
@@ -83,22 +64,6 @@ View::View(QWidget *parrent) : Controller(new TTRController()) {
     scene = new QGraphicsScene();
     scene->setSceneRect(0, 0, screen_width, screen_height);
     setScene(scene);
-
-	/*std::thread wt([&]() {
-			while_true();
-		});
-		*/
-	std::thread wt(locat_while_true, this);
-	wt.detach();
-}
-
-void View::while_true() {
-	unsigned int counter = 0;
-	while(true) {
-		usleep(microseconds);
-		// draw_board();
-		std::cout << counter++ << '\n';
-	}
 }
 
 void View::display_menu() {
@@ -171,15 +136,15 @@ void View::start_player_1() {
 }
 
 void View::start_player_2() {
-	choose_count_of_bots(1);
+	choose_count_of_bots(2);
 }
 
 void View::start_player_3() {
-	choose_count_of_bots(1);
+	choose_count_of_bots(3);
 }
 
 void View::start_player_4() {
-	choose_count_of_bots(1);
+	choose_count_of_bots(4);
 }
 
 void View::choose_count_of_bots(int n) {
