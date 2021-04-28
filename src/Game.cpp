@@ -64,6 +64,7 @@ Game::Game(int number_of_players, int number_of_bots)
                 discharge)),
       active_player(0),
       number_of_players(number_of_players) {
+    std::cout << number_of_players - number_of_bots << ' ' << number_of_bots << '\n';
     for (int i = 0; i < number_of_players - number_of_bots; i++) {
         players.emplace_back(false);
     }
