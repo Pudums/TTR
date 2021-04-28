@@ -30,9 +30,10 @@ public:
     int number_of_wagons_left;
     int points;
     int number_of_stations_left;
+    bool is_bot;
     int updated_stations = 0;
     Algo graph;
-    Player();
+    explicit Player(bool is_bot);
     void count_points();
     void count_points_for_routes();
 };

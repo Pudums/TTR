@@ -31,7 +31,7 @@ public:
     int number_of_players;
     std::unordered_map<std::string, int> occupied_stations;
     int number_updated_players = 0;
-    explicit Game(int number_of_players);
+    explicit Game(int number_of_players, int number_of_bots);
 
     void start_game();
     void make_move(Turn *turn);
