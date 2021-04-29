@@ -22,6 +22,8 @@ const std::string None = "None";
 
 struct WagonCard {
     std::string color;
+    WagonCard() = default;
+    WagonCard(std::string color_);
 };
 
 #endif  // PROJECT_WAGON_CARD_H

@@ -55,7 +55,7 @@ TTRController::~TTRController() {
 
 void TTRController::set_color_to_build_path(const WagonCard &w) {
     if (auto p = dynamic_cast<BuildPath *>(current_turn); p) {
-        p->set_wagons(game->cards_with_suitable_color(w));
+        p->set_wagons(game->cards_with_suitable_color(w, game->players[game->active_player]));
         game->make_move(p);
         current_turn = nullptr;
     }
