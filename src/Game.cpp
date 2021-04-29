@@ -236,11 +236,12 @@ void Game::make_move(Turn *t) {
         // int path_pos =
         // Algo::find_best_way(players[active_player].active_routes[0].city2,
         // player_cities, board.paths);
-        std::vector<WagonCard> needed_cards = cards_with_suitable_color(WagonCard(board.paths[1].color), players[active_player]);
-        if (check_if_enough_cards_for_building_path(board.paths[1],
+        int path_pos = 1;
+        std::vector<WagonCard> needed_cards = cards_with_suitable_color(WagonCard(board.paths[path_pos].color), players[active_player]);
+        if (check_if_enough_cards_for_building_path(board.paths[path_pos],
                                                     needed_cards)) {
             bool f = move_build_path(
-                1, needed_cards);
+                path_pos, needed_cards);
         } else {
             get_wagon_card_from_deck();
             get_wagon_card_from_deck();

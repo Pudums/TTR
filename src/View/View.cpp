@@ -295,6 +295,7 @@ void View::draw_wagons() {
     }
 }
 
+/*
 void View::mousePressEvent(QMouseEvent *event) {
 	int x = event->pos().x();
 	int y = event->pos().y();
@@ -312,6 +313,7 @@ void View::mousePressEvent(QMouseEvent *event) {
 		}
 	}
 }
+*/
 
 void View::draw_deck() {
     QBrush q;
