@@ -64,7 +64,8 @@ Game::Game(int number_of_players, int number_of_bots)
                 discharge)),
       active_player(0),
       number_of_players(number_of_players) {
-    std::cout << number_of_players - number_of_bots << ' ' << number_of_bots << '\n';
+    std::cout << "players " << number_of_players - number_of_bots << " bots "
+              << number_of_bots << std::endl;
     for (int i = 0; i < number_of_players - number_of_bots; i++) {
         players.emplace_back(false);
     }
@@ -143,9 +144,9 @@ bool Game::move_build_path(int position,
 }
 
 std::vector<WagonCard> Game::cards_with_suitable_color(
-    const WagonCard &wagon_card) const {
+    const WagonCard &wagon_card, const Player& player) const {
     std::vector<WagonCard> result;
-    for (const auto &elem : players[active_player].wagon_cards) {
+    for (const auto &elem : player.wagon_cards) {
         if (elem.color == wagon_card.color || elem.color == Multicolored) {
             result.push_back(elem);
         }
@@ -221,19 +222,30 @@ void Game::make_move(Turn *t) {
             flag = false;
         }
     }  // OK
-    if (Turn::num == 0 && flag && t) {
+    if (Turn::num == 0 && flag) {
         active_player = (active_player + 1) % number_of_players;
     }
     while (players[active_player].is_bot) {
+        std::cout << board.paths[1].color << ' ' << board.paths[1].length
+                  << std::endl;
+        for (int i = 0; i < players[active_player].wagon_cards.size(); i++) {
+            std::cout << players[active_player].wagon_cards[i].color << ' ';
+        }
+        std::cout << std::endl;
         std::set<std::string> player_cities = players_cities();
-        int path_pos = Algo::find_best_way(players[active_player].active_routes[0].city2, player_cities, board.paths);
-        if (check_if_enough_cards_for_building_path(board.paths[path_pos],
-                                                players[active_player].wagon_cards)) {
-            make_move(new BuildPath(path_pos));
+        // int path_pos =
+        // Algo::find_best_way(players[active_player].active_routes[0].city2,
+        // player_cities, board.paths);
+        std::vector<WagonCard> needed_cards = cards_with_suitable_color(WagonCard(board.paths[1].color), players[active_player]);
+        if (check_if_enough_cards_for_building_path(board.paths[1],
+                                                    needed_cards)) {
+            bool f = move_build_path(
+                1, needed_cards);
+        } else {
+            get_wagon_card_from_deck();
+            get_wagon_card_from_deck();
         }
-        else {
-            make_move(new DrawCardFromDeck());
-        }
+        active_player = (active_player + 1) % number_of_players;
     }
 }
 
@@ -268,13 +280,15 @@ std::map<std::string, int> Game::color_to_num() const {
     return result;
 }
 
-void Game::update_station_path(const std::string& station_city, int path_pos) {
+void Game::update_station_path(const std::string &station_city, int path_pos) {
     Path path = board.paths[path_pos];
     if (path.start == station_city || path.finish == station_city) {
         players[active_player].station_paths.insert(path_pos);
         players[active_player].updated_stations++;
     }
-    while (players[active_player].updated_stations == Player::start_number_of_stations - players[active_player].number_of_stations_left) {
+    while (players[active_player].updated_stations ==
+           Player::start_number_of_stations -
+               players[active_player].number_of_stations_left) {
         active_player = (active_player + 1) % number_of_players;
         number_updated_players++;
         if (number_of_players == players.size()) {
@@ -282,9 +296,10 @@ void Game::update_station_path(const std::string& station_city, int path_pos) {
         }
     }
 }
+
 std::set<std::string> Game::players_cities() {
     std::set<std::string> visited_cities;
-    for (const auto& elem : board.paths) {
+    for (const auto &elem : board.paths) {
         if (elem.owner == active_player) {
             visited_cities.insert(elem.start);
             visited_cities.insert(elem.finish);
