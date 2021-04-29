@@ -234,13 +234,13 @@ void View::draw_wagons_count() {
 					for(auto &path: player.active_routes) {
 						QGraphicsTextItem *some_text = new QGraphicsTextItem(QString("From: ") 
 							+ QString(path.city1.c_str()) + QString(" to ") + QString(path.city2.c_str()));
-						some_text->setPos(1320 + width * 0.05, i * height + 30 * (2 * j+1));
+						some_text->setPos(1320 + width * 0.05, i * height + 25 * (2 * j));
 						some_text->setFont(font);
 						scene->addItem(some_text);
 
-						some_text = new QGraphicsTextItem(QString("From: ") 
+						some_text = new QGraphicsTextItem(QString("Left to build: ") 
 							+ QString::number(path.points_for_passing));
-						some_text->setPos(1320 + width * 0.05, i * height + 30 * (2 * j + 2));
+						some_text->setPos(1320 + width * 0.05, i * height + 25 * (2 * j + 1));
 						some_text->setFont(font);
 						scene->addItem(some_text);
 						j++;
