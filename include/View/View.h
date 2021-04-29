@@ -25,6 +25,7 @@ class View : public QGraphicsView {
 	void while_true();				// TODO
 	void choose_count_of_bots(int count);
 	std::vector<Wagon *> to_draw;	// TODO
+	void mousePressEvent(QMouseEvent *event);
 
 public:
     void draw_board();

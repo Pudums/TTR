@@ -230,11 +230,21 @@ void View::draw_wagons_count() {
 					scene->removeItem(some_text2);
 					scene->removeItem(some_text3);
 					scene->removeItem(some_text4);
-					QGraphicsTextItem *some_text = new QGraphicsTextItem(QString("Start: ") 
-							+ QString::number(player.wagon_cards.size()));
-					some_text->setPos(1320 + width * 0.3, i * height + 30 * 4);
-					some_text->setFont(font);
-					scene->addItem(some_text);
+					int j = 0;
+					for(auto &path: player.active_routes) {
+						QGraphicsTextItem *some_text = new QGraphicsTextItem(QString("From: ") 
+							+ QString(path.city1.c_str()) + QString(" to ") + QString(path.city2.c_str()));
+						some_text->setPos(1320 + width * 0.05, i * height + 25 * (2 * j));
+						some_text->setFont(font);
+						scene->addItem(some_text);
+
+						some_text = new QGraphicsTextItem(QString("Left to build: ") 
+							+ QString::number(path.points_for_passing));
+						some_text->setPos(1320 + width * 0.05, i * height + 25 * (2 * j + 1));
+						some_text->setFont(font);
+						scene->addItem(some_text);
+						j++;
+					}
 				}else {
 					scene->addItem(some_text1);
 					scene->addItem(some_text2);
@@ -283,6 +293,24 @@ void View::draw_wagons() {
 			create_wagon(wagon, path.owner);
 		}
     }
+}
+
+void View::mousePressEvent(QMouseEvent *event) {
+	int x = event->pos().x();
+	int y = event->pos().y();
+	const auto &stations = Controller->get_stations();
+	for(auto station: stations) {
+		const auto &s = station.second;
+		const auto &name = station.first;
+		int cx = s.p.x;
+		int cy = s.p.y;
+		int r = 20;
+
+		if(r * r > (cx - x) * (cx - x) + (cy - y) * (cy - y)){
+			std::cout << name << '\n';
+			Controller->build_station(name);
+		}
+	}
 }
 
 void View::draw_deck() {
