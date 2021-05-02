@@ -264,8 +264,8 @@ void View::draw_map() {
     map->setRect(0, 0, 1320, 880);
     map->set_clickable(false);
     map->setBrush(brush);
-	//map->setZValue(0);
-	//TODO
+	// map->setZValue(0);
+	// TODO
     scene->addItem(map);
 }
 
@@ -295,8 +295,7 @@ void View::draw_wagons() {
     }
 }
 
-/*
-void View::mousePressEvent(QMouseEvent *event) {
+void View::mouseDoubleClickEvent(QMouseEvent *event) {
 	int x = event->pos().x();
 	int y = event->pos().y();
 	const auto &stations = Controller->get_stations();
@@ -313,7 +312,6 @@ void View::mousePressEvent(QMouseEvent *event) {
 		}
 	}
 }
-*/
 
 void View::draw_deck() {
     QBrush q;

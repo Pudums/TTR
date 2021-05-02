@@ -22,10 +22,8 @@ class View : public QGraphicsView {
     void draw_players_cards();
 	void end_game();
 	void draw_stations();			// TODO
-	void while_true();				// TODO
 	void choose_count_of_bots(int count);
-	std::vector<Wagon *> to_draw;	// TODO
-//	void mousePressEvent(QMouseEvent *event);
+	void mouseDoubleClickEvent(QMouseEvent *event);
 
 public:
     void draw_board();
@@ -35,7 +33,6 @@ public:
 
     void display_menu();
 
-    // signals:
 public slots:
     void start();
     void start_player_1();
