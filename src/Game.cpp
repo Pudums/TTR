@@ -31,6 +31,20 @@ void create_graphs_for_players(std::vector<Player> &players,
         player.graph = Algo(paths, player.id, player.station_paths);
     }
 }
+
+std::vector<std::pair<Point, std::string>> read_cities(
+    const std::string &filename) {
+    std::vector<std::pair<Point, std::string>> cities;
+    std::ifstream is(filename);
+    for (int i = 0; i < 47; i++) {
+        std::string name;
+        int x, y;
+        is >> name >> x >> y;
+        cities.push_back({{x, y}, name});
+    }
+    return cities;
+}
+
 }  // namespace
 
 void Game::start_game() {
@@ -61,7 +75,8 @@ Game::Game(int number_of_players)
                 discharge)),
       players(std::vector<Player>(number_of_players)),
       active_player(0),
-      number_of_players(number_of_players) {
+      number_of_players(number_of_players),
+      cities(read_cities("data/cities.txt")) {
 }
 
 void Game::move_get_new_roots() {
@@ -248,13 +263,15 @@ std::map<std::string, int> Game::color_to_num() const {
     return result;
 }
 
-void Game::update_station_path(const std::string& station_city, int path_pos) {
+void Game::update_station_path(const std::string &station_city, int path_pos) {
     Path path = board.paths[path_pos];
     if (path.start == station_city || path.finish == station_city) {
         players[active_player].station_paths.insert(path_pos);
         players[active_player].updated_stations++;
     }
-    while (players[active_player].updated_stations == Player::start_number_of_stations - players[active_player].number_of_stations_left) {
+    while (players[active_player].updated_stations ==
+           Player::start_number_of_stations -
+               players[active_player].number_of_stations_left) {
         active_player = (active_player + 1) % number_of_players;
         number_updated_players++;
         if (number_of_players == players.size()) {

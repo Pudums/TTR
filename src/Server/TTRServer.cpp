@@ -1,4 +1,4 @@
-#include "../../include/Server/TTRServer.h"
+#include "Server/TTRServer.h"
 #include <grpc/grpc.h>
 #include <grpcpp/channel.h>
 #include <grpcpp/client_context.h>
@@ -19,7 +19,7 @@ TTRServer::TTRServer(TTRController *c) {
 
 MakeTurnResponse TTRServer::local_make_turn(
     const ::ttr::MakeTurnRequest *request) {
-    /*MakeTurnResponse response;
+    MakeTurnResponse response;
     response.set_is_success(true);
     if (request->type() == "get board state") {
         *(response.release_current_state()) = local_get_board_state();
@@ -41,7 +41,7 @@ MakeTurnResponse TTRServer::local_make_turn(
     if (request->type() == "build station") {
         // TODO
     }
-    return response;*/
+    return response;
 }
 
 ::grpc::Status TTRServer::get_board_state(::grpc::ServerContext *context,
@@ -52,7 +52,7 @@ MakeTurnResponse TTRServer::local_make_turn(
 }
 
 BoardState TTRServer::local_get_board_state() {
-    /*BoardState state;
+    BoardState state;
     Board board;
     Deck deck;
     std::vector<::Path> all_paths = controller->get_all_paths();
@@ -93,7 +93,7 @@ BoardState TTRServer::local_get_board_state() {
         players.add_all_players()[i] = p;
     }
     *state.release_all_players() = players;
-    return state;*/
+    return state;
 }
 
 ::grpc::Status TTRServer::make_turn(::grpc::ServerContext *context,
@@ -104,25 +104,24 @@ BoardState TTRServer::local_get_board_state() {
 }
 
 LocalServer::LocalServer(TTRController *c) : service(TTRServer(c)) {
-  //  builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
-// builder.RegisterService(&service);
-  //  server = builder.BuildAndStart();
+    builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
+    builder.RegisterService(&service);
+    server = builder.BuildAndStart();
 }
 
 void LocalServer::runServer() {
-   // server->Wait();
-
+    server->Wait();
 }
 
 void LocalServer::terminate() {
-  //  server->Shutdown();
+    server->Shutdown();
 }
 
 void RunServer(LocalServer *serv, bool needRun) {
-    /*if (needRun) {
+    if (needRun) {
+        std::cout << "Server started!!!";
         serv->runServer();
-        std::cout<<"Server started!!!";
-    }*/
+    }
 }
 
 }  // namespace ttr

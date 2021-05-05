@@ -3,9 +3,9 @@
 #include <grpcpp/server.h>
 #include <grpcpp/server_builder.h>
 #include <grpcpp/server_context.h>
+#include "TTR.grpc.pb.h"
+#include "TTR.pb.h"
 #include "TTRController.h"
-#include "protobuf/TTR.grpc.pb.h"
-#include "protobuf/TTR.pb.h"
 #ifndef TTR_TTRSERVER_H
 #define TTR_TTRSERVER_H
 

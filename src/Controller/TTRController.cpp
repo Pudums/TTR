@@ -91,7 +91,11 @@ std::vector<int> TTRController::get_results() {
     return res;
 }
 std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
-    return {std::make_pair<std::string, Circle>("Wilno", {{992, 259}, 5})};
+    std::vector<std::pair<std::string, Circle>> stations;
+    for(const auto& i : game->cities){
+        stations.push_back({i.second, {i.first.x, i.first.y, 3}});
+    }
+    return stations;
 }
 void TTRController::build_station(const std::string& city) {
     if(!is_game_end()){

@@ -30,6 +30,7 @@ public:
     int active_player;
     int number_of_players;
     std::set<std::string> occupied_stations;
+    std::vector<std::pair<Point, std::string>> cities;
     int number_updated_players = 0;
     explicit Game(int number_of_players);
 
