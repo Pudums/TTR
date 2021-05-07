@@ -53,13 +53,12 @@ MakeTurnResponse TTRServer::local_make_turn(
 }
 
 BoardState TTRServer::local_get_board_state() {
+
     ::ttr::BoardState state;
     Board board;
     Deck deck;
     std::vector<::Path> all_paths = controller->get_all_paths();
-
-    for (int i = 0; i < all_paths.size(); i++) {
-        const ::Path &path = all_paths[i];
+    for (auto & path : all_paths) {
         ttr::Path n_path;
         n_path.set_color(path.color);
         n_path.set_finish(path.finish);
@@ -68,32 +67,28 @@ BoardState TTRServer::local_get_board_state() {
         n_path.set_number_of_locomotives(path.number_of_locomotives);
         n_path.set_is_tunnel(path.is_tunnel);
         n_path.set_owner(path.owner);
-        board.add_paths()[i] = n_path;
+        *(board.add_paths()) = n_path;
     }
 
     std::vector<WagonCard> active_cards = controller->get_active_cards();
-    for (int i = 0; i < active_cards.size(); i++) {
+    for (auto & active_card : active_cards) {
         Card n_card;
         n_card.set_type(::ttr::Card_Type_Wagon);
-        Wagon w;
-        w.set_color(active_cards[i].color);
-        *n_card.release_wagon_info() = w;
-        deck.add_cards_on_table()[i] = n_card;
+        n_card.set_allocated_wagon_info(new ::ttr::Wagon());
+        n_card.release_wagon_info()->set_color(active_card.color);
+        *(deck.add_cards_on_table()) = n_card;
     }
-
-    *state.release_deck_state() = deck;
-    *state.release_board_state() = board;
-    ttr::Players players;
-
+    *state.mutable_board_state() = board;
+    *state.mutable_deck_state() = deck;
+    state.set_allocated_all_players(new Players());
     for (int i = 0; i < controller->get_players().size(); i++) {
         auto player = controller->get_players()[i];
         ttr::Player p;
         p.set_current_score(controller->get_results()[player.id]);
         p.set_routes_num(player.active_routes.size());
         p.set_wagons_left(player.number_of_wagons_left);
-        players.add_all_players()[i] = p;
+        *(state.mutable_all_players()->add_all_players()) = p;
     }
-    *state.release_all_players() = players;
     return state;
 }
 

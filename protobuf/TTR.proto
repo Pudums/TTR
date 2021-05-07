@@ -15,6 +15,19 @@ message Player{
   int32 current_score = 2;
   int32 routes_num = 3;
 }
+message Point {
+  int32 x = 1;
+  int32 y = 2;
+};
+
+message Rectangle {
+  repeated Point points = 1;
+};
+message WagonBlock {
+  string color = 1;
+  Rectangle coords = 2;
+  int32 id = 3;
+};
 message  Path{
   string start = 1;
   string finish = 2;
@@ -23,6 +36,8 @@ message  Path{
   int32 number_of_locomotives = 5;
   bool is_tunnel = 6;
   int32 owner = 7;
+  repeated WagonBlock wagon_blocks = 8;
+  int32 length = 9;
 }
 message Card{
   enum Type{
@@ -39,7 +54,6 @@ message Players{
 
 message Board{
   repeated Path paths = 1;
-  //some coordinate info?
 }
 message Deck{
   repeated Card cards_on_table = 1;
@@ -79,8 +93,17 @@ message  MakeTurnResponse{
 message PlayerID{
   int32 id = 1;
 }
+message BOOL{
+  bool value = 1;
+}
+message INT_ARRAY{
+  repeated int32 values = 1;
+}
 service TTRService{
   rpc get_board_state(Nothing) returns (BoardState);
   rpc make_turn(MakeTurnRequest) returns (MakeTurnResponse);
   rpc get_player_state(PlayerID) returns(PlayerState);
+  rpc check_end_game(Nothing) returns(BOOL);
+  rpc get_player_id(Nothing) returns(PlayerID);
+  rpc get_score(Nothing) returns(INT_ARRAY);
 }
