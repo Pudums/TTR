@@ -8,7 +8,7 @@
 void TTRController::start_game(int number_of_players, bool is_local_) {
     is_local = is_local_;
     if (is_local) {
-        server = new ttr::LocalServer(this);
+        server = new ttr::LocalServer();
     }
     client = new GameClient();
     game = new Game(number_of_players);

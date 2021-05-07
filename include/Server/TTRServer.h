@@ -1,4 +1,5 @@
-#pragma once
+#ifndef TTR_SERVER_H
+#define TTR_SERVER_H
 #include <grpc/grpc.h>
 #include <grpcpp/security/server_credentials.h>
 #include <grpcpp/server.h>
@@ -44,3 +45,4 @@ private:
 
 void RunServer(LocalServer *serv, bool needRun);
 }  // namespace ttr
+#endif
