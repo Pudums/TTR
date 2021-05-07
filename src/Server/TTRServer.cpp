@@ -47,12 +47,12 @@ MakeTurnResponse TTRServer::local_make_turn(
 ::grpc::Status TTRServer::get_board_state(::grpc::ServerContext *context,
                                           const ::ttr::Nothing *request,
                                           ::ttr::BoardState *response) {
-    /**response = local_get_board_state();*/
+    *response = local_get_board_state();
     return ::grpc::Status();
 }
 
 BoardState TTRServer::local_get_board_state() {
-    BoardState state;
+    ::ttr::BoardState state;
     Board board;
     Deck deck;
     std::vector<::Path> all_paths = controller->get_all_paths();

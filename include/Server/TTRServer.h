@@ -1,3 +1,4 @@
+#pragma once
 #include <grpc/grpc.h>
 #include <grpcpp/security/server_credentials.h>
 #include <grpcpp/server.h>
@@ -6,14 +7,10 @@
 #include "TTR.grpc.pb.h"
 #include "TTR.pb.h"
 #include "TTRController.h"
-#ifndef TTR_TTRSERVER_H
-#define TTR_TTRSERVER_H
-
 namespace ttr {
-
 class TTRServer : public ttr::TTRService::Service {
 public:
-    TTRServer(TTRController *c);
+    explicit TTRServer(TTRController *c);
 
     ::grpc::Status get_board_state(::grpc::ServerContext *context,
                                    const ::ttr::Nothing *request,
@@ -32,7 +29,7 @@ private:
 
 class LocalServer {
 public:
-    LocalServer(TTRController *c);
+    explicit LocalServer(TTRController *c);
 
     void runServer();
 
@@ -47,5 +44,3 @@ private:
 
 void RunServer(LocalServer *serv, bool needRun);
 }  // namespace ttr
-
-#endif  // TTR_TTRSERVER_H

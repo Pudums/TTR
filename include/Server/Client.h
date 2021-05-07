@@ -10,8 +10,10 @@
 #include <utility>
 #include "TTR.grpc.pb.h"
 class GameClient {
-
     std::unique_ptr<::ttr::TTRService::Stub> stub_;
+
+public:
     explicit GameClient();
+    ttr::BoardState *get_board_state();
 };
 #endif  // TTR_CLIENT_H

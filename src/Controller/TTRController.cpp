@@ -3,11 +3,16 @@
 //
 
 #include "TTRController.h"
+#include "Server/TTRServer.h"
 
-void TTRController::start_game(int number_of_players, bool is_local) {
+void TTRController::start_game(int number_of_players, bool is_local_) {
+    is_local = is_local_;
+    if (is_local) {
+        server = new ttr::LocalServer(this);
+    }
+    client = new GameClient();
     game = new Game(number_of_players);
     game->start_game();
-
 }
 
 void TTRController::get_card_from_deck() {
@@ -34,7 +39,7 @@ void TTRController::get_card_from_active(int num) {
 }
 
 void TTRController::build_path_initialize(int id) {
-    if(auto p = dynamic_cast<BuildStation *>(current_turn); p){
+    if (auto p = dynamic_cast<BuildStation *>(current_turn); p) {
         game->update_station_path(p->get_city(), id);
         current_turn = nullptr;
     }
@@ -85,23 +90,23 @@ int TTRController::is_game_end() {
 std::vector<int> TTRController::get_results() {
     game->count_players_points();
     std::vector<int> res;
-    for(auto& i: game->players){
+    for (auto &i : game->players) {
         res.push_back(i.points);
     }
     return res;
 }
 std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
     std::vector<std::pair<std::string, Circle>> stations;
-    for(const auto& i : game->cities){
+    for (const auto &i : game->cities) {
         stations.push_back({i.second, {i.first.x, i.first.y, 3}});
     }
     return stations;
 }
-void TTRController::build_station(const std::string& city) {
-    if(!is_game_end()){
+void TTRController::build_station(const std::string &city) {
+    if (!is_game_end()) {
         game->make_move(new BuildStation(city));
         current_turn = nullptr;
-    }else{
+    } else {
         current_turn = new BuildStation(city);
     }
 }
@@ -114,4 +119,4 @@ int TTRController::get_current_player_id() {
 std::vector<Path> TTRController::get_all_paths() {
     return game->board.paths;
 }
-//TODO detect all cities
+// TODO detect all cities
