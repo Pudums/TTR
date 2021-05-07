@@ -45,3 +45,13 @@ void Wagon::mousePressEvent(QGraphicsSceneMouseEvent *event) {
 
 void Wagon::make_step() {
 }
+
+/*
+QPointF Wagon::pos() const {
+	return QGraphicsObject::pos(); 
+}
+
+void Wagon::setPos(QPointF& pos) { 
+	QGraphicsObject::setPos(pos); 
+}
+*/

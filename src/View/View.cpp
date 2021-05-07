@@ -1,4 +1,10 @@
 #include "View.h"
+#include <QPalette>
+#include <QTimeLine>
+#include <QGraphicsItemAnimation>
+#include <QPushButton>
+#include <Animated.h>
+#include <QPropertyAnimation>
 #include <QApplication>
 #include <string>
 #include <QBrush>
@@ -322,6 +328,7 @@ void View::draw_deck() {
     deck->setRect(1920 - width, 1080 - hight, width, hight);
     deck->setBrush(q);
     connect(deck, SIGNAL(clicked()), this, SLOT(get_card_from_deck()));
+
     scene->addItem(deck);
 }
 
@@ -357,6 +364,10 @@ void View::draw_players_cards() {
     }
 }
 
+namespace{
+	Wagon *w;
+}
+
 void View::draw_active_cards() {
 	const auto &cards = Controller->get_active_cards();
 	for(int i = 0; i < cards.size(); ++ i) {
@@ -372,6 +383,54 @@ void View::draw_active_cards() {
 		connect(wagon_to_draw, &Wagon::clicked, [=]() {
 				Controller->get_card_from_active(i);
 				draw_board();
+
+				// Wagon *w = new Wagon(coords, card.color);
+				Wagon *w = new Wagon(coords, card.color);
+				auto *wid = qobject_cast<QWidget *>(w);
+				wid->setAutoFillBackground(true);
+				QPalette Pal(palette());
+				Pal.setColor(QPalette::Background, Qt::red);
+				wid->setPalette(Pal);
+				// wid->setStyleSheet("background-color:black;");
+				// wid->setBackgroundRole();
+				std::cout << "begin\n";
+				QPropertyAnimation *animation = new QPropertyAnimation(w, "geometry");
+				std::cout << "animated created\n";
+				animation->setDuration(10000);
+				std::cout << "seted duration\n";
+
+				animation->setKeyValueAt(0, QRect(0, 0, 100, 30));
+				std::cout << "seted v1\n";
+				animation->setKeyValueAt(0.8, QRect(250, 250, 100, 30));
+				std::cout << "seted v2\n";
+				animation->setKeyValueAt(1, QRect(100, 100, 100, 30));
+				std::cout << "seted v3\n";
+
+				scene->addWidget(w);
+				animation->start(QAbstractAnimation::DeleteWhenStopped);
+				std::cout << "started\n";
+
+				// animation:
+				/*
+				 QGraphicsItem *ball = new QGraphicsEllipseItem(0, 0, 20, 20);
+
+				 QTimeLine *timer = new QTimeLine(5000);
+				 timer->setFrameRange(0, 100);
+
+				 QGraphicsItemAnimation *animation = new QGraphicsItemAnimation;
+				 animation->setItem(ball);
+				 animation->setTimeLine(timer);
+
+				 for (int i = 0; i < 200; ++i)
+					 animation->setPosAt(i / 200.0, QPointF(i, i));
+
+				 scene->addItem(ball);
+
+				 //QGraphicsView *view = new QGraphicsView(scene);
+				 //view->show();
+
+				 timer->start();
+				 */
 		} );
 		scene->addItem(wagon_to_draw);
 	}
