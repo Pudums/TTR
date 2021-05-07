@@ -1,4 +1,5 @@
 #include "Server/TTRServer.h"
+#include "TTRController.h"
 #include <grpc/grpc.h>
 #include <grpcpp/channel.h>
 #include <grpcpp/client_context.h>

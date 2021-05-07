@@ -1,6 +1,7 @@
 #ifndef TTR_TTRCONTROLLER_H
 #define TTR_TTRCONTROLLER_H
 #include <QPixmap>
+#include "TTRController.h.h"
 #include "Game.h"
 #include "Server/Client.h"
 #include "Server/TTRServer.h"

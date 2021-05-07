@@ -6,7 +6,7 @@
 #include <grpcpp/server_context.h>
 #include "TTR.grpc.pb.h"
 #include "TTR.pb.h"
-#include "TTRController.h"
+#include "TTRController.h.h"
 namespace ttr {
 class TTRServer : public ttr::TTRService::Service {
 public:
