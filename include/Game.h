@@ -29,6 +29,7 @@ public:
     std::vector<Player> players;
     int active_player;
     int number_of_players;
+    std::vector<std::pair<Point, std::string>> cities;
     std::unordered_map<std::string, int> occupied_stations;
     int number_updated_players = 0;
     explicit Game(int number_of_players, int number_of_bots);

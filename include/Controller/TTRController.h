@@ -2,21 +2,25 @@
 #define TTR_TTRCONTROLLER_H
 #include <QPixmap>
 #include "Game.h"
+#include "Server/Client.h"
+#include "Server/TTRServer.h"
+#include "TTRController_fwd.h"
 #include "Turn.h"
 
 class TTRController {
-    // bool is_server_ = false;
+    bool is_local = false;
     Game *game = nullptr;
     Turn *current_turn = nullptr;
-
+    GameClient *client = nullptr;
+    ttr::LocalServer* server = nullptr;
 public:
     explicit TTRController() = default;
-    void start_game(int num, int bots);
+    void start_game(int number_of_players, int number_of_bots = 0, bool is_local_ = true);
     void get_card_from_active(int);
     void build_path_initialize(int);
     void set_color_to_build_path(const WagonCard &w);
     void get_routes();
-    void build_station(const std::string& city);
+    void build_station(const std::string &city);
     const std::vector<WagonCard> &get_current_player_cards();
     std::vector<Path> get_paths();
     void get_card_from_deck();

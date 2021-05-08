@@ -8,10 +8,13 @@
 #include <memory>
 #include "Wagon.h"
 #include "TTRController.h"
+#include "Server/TTRServer.h"
 
 class View : public QGraphicsView {
     Q_OBJECT
     TTRController *Controller;
+    ttr::LocalServer* server;
+
     void create_count_of_players();
     void draw_deck();
     void draw_wagons();

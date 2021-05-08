@@ -31,6 +31,20 @@ void create_graphs_for_players(std::vector<Player> &players,
         player.graph = Algo(paths, player.id, player.station_paths);
     }
 }
+
+std::vector<std::pair<Point, std::string>> read_cities(
+    const std::string &filename) {
+    std::vector<std::pair<Point, std::string>> cities;
+    std::ifstream is(filename);
+    for (int i = 0; i < 47; i++) {
+        std::string name;
+        int x, y;
+        is >> name >> x >> y;
+        cities.push_back({{x, y}, name});
+    }
+    return cities;
+}
+
 }  // namespace
 
 void Game::start_game() {
@@ -63,7 +77,8 @@ Game::Game(int number_of_players, int number_of_bots)
                 "data/long_routes.txt",
                 discharge)),
       active_player(0),
-      number_of_players(number_of_players) {
+      number_of_players(number_of_players),
+      cities(read_cities("data/cities.txt")) {
     std::cout << "players " << number_of_players - number_of_bots << " bots "
               << number_of_bots << std::endl;
     for (int i = 0; i < number_of_players - number_of_bots; i++) {
