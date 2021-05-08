@@ -5,7 +5,7 @@
 #include "TTRController.h"
 #include "Server/TTRServer.h"
 
-void TTRController::start_game(int number_of_players, int number_of_bots = 0, bool is_local_ = true) {
+void TTRController::start_game(int number_of_players, int number_of_bots, bool is_local_) {
     is_local = is_local_;
     if (is_local) {
         server = new ttr::LocalServer(this);
@@ -79,7 +79,7 @@ TTRController::~TTRController() {
 void TTRController::set_color_to_build_path(const WagonCard &w) {
     if (is_local) {
         if (auto p = dynamic_cast<BuildPath *>(current_turn); p) {
-            p->set_wagons(game->cards_with_suitable_color(w));
+            p->set_wagons(game->cards_with_suitable_color(w, game->players[game->active_player]));
             game->make_move(p);
             current_turn = nullptr;
         }
