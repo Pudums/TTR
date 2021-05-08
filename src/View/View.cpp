@@ -285,7 +285,7 @@ void View::draw_map() {
     map->setRect(0, 0, 1320, 880);
     map->set_clickable(false);
     map->setBrush(brush);
-	//map->setZValue(map_z_value);
+	map->setZValue(map_z_value);
 	// TODO
     scene->addItem(map);
 }
@@ -297,14 +297,14 @@ void View::create_wagon(const WagonBlock &wagon, int owner) {
     }
 
     Wagon *wagon_to_draw = new Wagon(coords, owner != -1? color_frow_owner[owner] : "un_vis");
-	// wagon_to_draw->setZValue(-1);
+	wagon_to_draw->setZValue(-1);
 	//TODO
 
 	connect(wagon_to_draw, &Wagon::clicked, [=]() {
 			Controller->build_path_initialize(wagon.id);
 			draw_board();
 	} );
-	// wagon_to_draw->setZValue( owner != -1 ? wagons_visible_z_value : wagons_invisible_z_value);
+	wagon_to_draw->setZValue( owner != -1 ? wagons_visible_z_value : wagons_invisible_z_value);
     scene->addItem(wagon_to_draw);
 }
 
@@ -345,7 +345,7 @@ void View::draw_deck() {
     deck->setBrush(q);
     connect(deck, SIGNAL(clicked()), this, SLOT(get_card_from_deck()));
 
-	//deck->setZValue(deck_z_vzlue);
+	deck->setZValue(deck_z_vzlue);
 
     scene->addItem(deck);
 }
@@ -353,6 +353,53 @@ void View::draw_deck() {
 void View::get_card_from_deck() {
 	Controller->get_card_from_deck();
     draw_board();
+
+	/*
+	// Wagon *w = new Wagon(coords, card.color);
+	Wagon *w = new Wagon(coords, card.color);
+	const auto &color = card.color;
+	int index = color_to_sdvig[card.color];
+	// w->setZValue(animation_z_value);
+	w->setZValue(-1);
+	auto *wid = qobject_cast<QWidget *>(w);
+	wid->setAutoFillBackground(true);
+	QPalette Pal(palette());
+
+	if (color == White) {
+		Pal.setColor(QPalette::Background, Qt::white);
+	} else if (color == Orange) {
+		Pal.setColor(QPalette::Background, QColor("orange"));
+	} else if (color == Green) {
+		Pal.setColor(QPalette::Background, Qt::green);
+	} else if (color == Red) {
+		Pal.setColor(QPalette::Background, Qt::red);
+	} else if (color == Black) {
+		Pal.setColor(QPalette::Background, Qt::black);
+	} else if (color == Blue) {
+		Pal.setColor(QPalette::Background, Qt::blue);
+	} else if (color == Yellow) {
+		Pal.setColor(QPalette::Background, Qt::yellow);
+	} else if (color == Purple) {
+		Pal.setColor(QPalette::Background, Qt::magenta);
+	} else if (color == Uncolored || color == Multicolored) {
+		Pal.setColor(QPalette::Background, Qt::gray);
+	} else {
+		std::cout << color << '\n';
+	}
+
+	wid->setPalette(Pal);
+	QPropertyAnimation *animation = new QPropertyAnimation(w, "geometry");
+	animation->setDuration(100);
+
+	animation->setKeyValueAt(0, 
+	QRect(1920 - width, height * (i), width, height));
+	animation->setKeyValueAt(1, 
+			QRect(177 * color_to_sdvig[card.color], 1080 - 150, 177, 150));
+
+	scene->addWidget(w);
+	// animation->start(QAbstractAnimation::DeleteWhenStopped);
+	animation->start(QAbstractAnimation::DeleteWhenStopped);
+	*/
 }
 
 void View::draw_players_cards() {
@@ -372,7 +419,7 @@ void View::draw_players_cards() {
 				Controller->set_color_to_build_path(card);
 				draw_board();
 		} );
-		//wagon_to_draw->setZValue(players_cards_z_value);
+		wagon_to_draw->setZValue(players_cards_z_value);
         scene->addItem(wagon_to_draw);
 
 		QGraphicsTextItem* cur_color_count = new QGraphicsTextItem(QString::number(count[card.color]));
@@ -401,29 +448,54 @@ void View::draw_active_cards() {
 
 				// Wagon *w = new Wagon(coords, card.color);
 				Wagon *w = new Wagon(coords, card.color);
+				const auto &color = card.color;
+				int index = color_to_sdvig[card.color];
 				// w->setZValue(animation_z_value);
-				// w->setZValue(0.5);
+				w->setZValue(-1);
 				auto *wid = qobject_cast<QWidget *>(w);
 				wid->setAutoFillBackground(true);
 				QPalette Pal(palette());
-				Pal.setColor(QPalette::Background, Qt::red);
+
+				if (color == White) {
+					Pal.setColor(QPalette::Background, Qt::white);
+				} else if (color == Orange) {
+					Pal.setColor(QPalette::Background, QColor("orange"));
+				} else if (color == Green) {
+					Pal.setColor(QPalette::Background, Qt::green);
+				} else if (color == Red) {
+					Pal.setColor(QPalette::Background, Qt::red);
+				} else if (color == Black) {
+					Pal.setColor(QPalette::Background, Qt::black);
+				} else if (color == Blue) {
+					Pal.setColor(QPalette::Background, Qt::blue);
+				} else if (color == Yellow) {
+					Pal.setColor(QPalette::Background, Qt::yellow);
+				} else if (color == Purple) {
+					Pal.setColor(QPalette::Background, Qt::magenta);
+				} else if (color == Uncolored || color == Multicolored) {
+					Pal.setColor(QPalette::Background, Qt::gray);
+				} else {
+					std::cout << color << '\n';
+				}
+
 				wid->setPalette(Pal);
 				QPropertyAnimation *animation = new QPropertyAnimation(w, "geometry");
 				animation->setDuration(100);
 
-				/*
 				animation->setKeyValueAt(0, 
 				QRect(1920 - width, height * (i), width, height));
-				*/
+				/*
 				animation->setKeyValueAt(0, 
 				QRect(0, 0, 200, 200));
-				animation->setKeyValueAt(1, QRect(250, 250, 100, 30));
+				*/
+				animation->setKeyValueAt(1, 
+						QRect(177 * color_to_sdvig[card.color], 1080 - 150, 177, 150));
 
-				scene->addItem(w);
-				//animation->start(QAbstractAnimation::DeleteWhenStopped);
+				scene->addWidget(w);
+				// animation->start(QAbstractAnimation::DeleteWhenStopped);
 				animation->start(QAbstractAnimation::DeleteWhenStopped);
 		} );
-		//wagon_to_draw->setZValue(active_card_z_value);
+		wagon_to_draw->setZValue(active_card_z_value);
 		scene->addItem(wagon_to_draw);
 	}
 }
