@@ -11,9 +11,9 @@ void TTRController::start_game(int number_of_players, int number_of_bots, bool i
         server = new ttr::LocalServer(this);
         game = new Game(number_of_players, number_of_bots);
         game->start_game();
-    }
+    }else{
         client = new GameClient();
-        client->get_paths();
+     }
 }
 
 void TTRController::get_card_from_deck() {
