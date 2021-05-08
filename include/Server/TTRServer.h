@@ -23,7 +23,8 @@ public:
     BoardState local_get_board_state();
     ::grpc::Status get_score(::grpc::ServerContext *context, const ::ttr::Nothing* request, ::ttr::INT_ARRAY *result) override;
     MakeTurnResponse local_make_turn(const ttr::MakeTurnRequest *request);
-
+    ::grpc::Status get_player_id(::grpc::ServerContext *context, const ::ttr::Nothing* request, ::ttr::PlayerID* response) override;
+    ::grpc::Status start_game(::grpc::ServerContext *context, const ::ttr::Nothing* request, ::ttr::Nothing *result) override;
 private:
     TTRController *controller;
 };

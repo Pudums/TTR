@@ -18,5 +18,7 @@ public:
     explicit GameClient();
     ttr::BoardState *get_board_state();
     std::vector<Path> get_paths();
+    int get_id();
+    void start_game();
 };
 #endif  // TTR_CLIENT_H
