@@ -33,6 +33,14 @@ std::map<int, std::string> color_frow_owner = {
 	{2, Blue},
 	{3, Green}
 };
+
+qreal deck_z_vzlue = 0,
+	  map_z_value = 0,
+	  wagons_invisible_z_value= 1, // don't work, cause lay under map and become unclicable
+	  wagons_visible_z_value = 1,
+	  players_cards_z_value = 0,
+	  active_card_z_value = 0,
+	  animation_z_value = -1;
 }
 
 void View::draw_stations() {
@@ -89,9 +97,17 @@ void View::display_menu() {
     connect(playButton, SIGNAL(clicked()), this, SLOT(start()));
     scene->addItem(playButton);
 
+    Button *playOnlineButton = new Button(QString("Play Online"));
+    bxPos = this->width() / 2 - playOnlineButton->boundingRect().width() / 2;
+    byPos = 350;
+    playOnlineButton->setPos(bxPos, byPos);
+    connect(playOnlineButton, &Button::clicked, [=](){
+			});
+    scene->addItem(playOnlineButton);
+
     Button *quitButton = new Button(QString("Quit"));
     int qxPos = this->width() / 2 - quitButton->boundingRect().width() / 2;
-    int qyPos = 350;
+    int qyPos = 350 + 125;
     quitButton->setPos(qxPos, qyPos);
     connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
     scene->addItem(quitButton);
@@ -270,7 +286,7 @@ void View::draw_map() {
     map->setRect(0, 0, 1320, 880);
     map->set_clickable(false);
     map->setBrush(brush);
-	// map->setZValue(0);
+	//map->setZValue(map_z_value);
 	// TODO
     scene->addItem(map);
 }
@@ -282,13 +298,14 @@ void View::create_wagon(const WagonBlock &wagon, int owner) {
     }
 
     Wagon *wagon_to_draw = new Wagon(coords, owner != -1? color_frow_owner[owner] : "un_vis");
-	//wagon_to_draw->setZValue(-1);
+	// wagon_to_draw->setZValue(-1);
 	//TODO
 
 	connect(wagon_to_draw, &Wagon::clicked, [=]() {
 			Controller->build_path_initialize(wagon.id);
 			draw_board();
 	} );
+	// wagon_to_draw->setZValue( owner != -1 ? wagons_visible_z_value : wagons_invisible_z_value);
     scene->addItem(wagon_to_draw);
 }
 
@@ -329,6 +346,8 @@ void View::draw_deck() {
     deck->setBrush(q);
     connect(deck, SIGNAL(clicked()), this, SLOT(get_card_from_deck()));
 
+	//deck->setZValue(deck_z_vzlue);
+
     scene->addItem(deck);
 }
 
@@ -354,6 +373,7 @@ void View::draw_players_cards() {
 				Controller->set_color_to_build_path(card);
 				draw_board();
 		} );
+		//wagon_to_draw->setZValue(players_cards_z_value);
         scene->addItem(wagon_to_draw);
 
 		QGraphicsTextItem* cur_color_count = new QGraphicsTextItem(QString::number(count[card.color]));
@@ -362,10 +382,6 @@ void View::draw_players_cards() {
 		cur_color_count->setPos(width * (color_to_sdvig[card.color] + 0.5), 1080 - height);
 		scene->addItem(cur_color_count);
     }
-}
-
-namespace{
-	Wagon *w;
 }
 
 void View::draw_active_cards() {
@@ -386,52 +402,29 @@ void View::draw_active_cards() {
 
 				// Wagon *w = new Wagon(coords, card.color);
 				Wagon *w = new Wagon(coords, card.color);
+				// w->setZValue(animation_z_value);
+				// w->setZValue(0.5);
 				auto *wid = qobject_cast<QWidget *>(w);
 				wid->setAutoFillBackground(true);
 				QPalette Pal(palette());
 				Pal.setColor(QPalette::Background, Qt::red);
 				wid->setPalette(Pal);
-				// wid->setStyleSheet("background-color:black;");
-				// wid->setBackgroundRole();
-				std::cout << "begin\n";
 				QPropertyAnimation *animation = new QPropertyAnimation(w, "geometry");
-				std::cout << "animated created\n";
-				animation->setDuration(10000);
-				std::cout << "seted duration\n";
+				animation->setDuration(100);
 
-				animation->setKeyValueAt(0, QRect(0, 0, 100, 30));
-				std::cout << "seted v1\n";
-				animation->setKeyValueAt(0.8, QRect(250, 250, 100, 30));
-				std::cout << "seted v2\n";
-				animation->setKeyValueAt(1, QRect(100, 100, 100, 30));
-				std::cout << "seted v3\n";
-
-				scene->addWidget(w);
-				animation->start(QAbstractAnimation::DeleteWhenStopped);
-				std::cout << "started\n";
-
-				// animation:
 				/*
-				 QGraphicsItem *ball = new QGraphicsEllipseItem(0, 0, 20, 20);
+				animation->setKeyValueAt(0, 
+				QRect(1920 - width, height * (i), width, height));
+				*/
+				animation->setKeyValueAt(0, 
+				QRect(0, 0, 200, 200));
+				animation->setKeyValueAt(1, QRect(250, 250, 100, 30));
 
-				 QTimeLine *timer = new QTimeLine(5000);
-				 timer->setFrameRange(0, 100);
-
-				 QGraphicsItemAnimation *animation = new QGraphicsItemAnimation;
-				 animation->setItem(ball);
-				 animation->setTimeLine(timer);
-
-				 for (int i = 0; i < 200; ++i)
-					 animation->setPosAt(i / 200.0, QPointF(i, i));
-
-				 scene->addItem(ball);
-
-				 //QGraphicsView *view = new QGraphicsView(scene);
-				 //view->show();
-
-				 timer->start();
-				 */
+				scene->addItem(w);
+				//animation->start(QAbstractAnimation::DeleteWhenStopped);
+				animation->start(QAbstractAnimation::DeleteWhenStopped);
 		} );
+		//wagon_to_draw->setZValue(active_card_z_value);
 		scene->addItem(wagon_to_draw);
 	}
 }
