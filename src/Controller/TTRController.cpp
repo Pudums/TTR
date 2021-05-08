@@ -5,11 +5,11 @@
 #include "TTRController.h"
 #include "Server/TTRServer.h"
 
-void TTRController::start_game(int number_of_players, bool is_local_) {
+void TTRController::start_game(int number_of_players, int number_of_bots = 0, bool is_local_ = true) {
     is_local = is_local_;
     if (is_local) {
         server = new ttr::LocalServer(this);
-        game = new Game(number_of_players);
+        game = new Game(number_of_players, number_of_bots);
         game->start_game();
     }
         client = new GameClient();

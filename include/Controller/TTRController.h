@@ -6,6 +6,7 @@
 #include "Server/TTRServer.h"
 #include "TTRController_fwd.h"
 #include "Turn.h"
+
 class TTRController {
     bool is_local = false;
     Game *game = nullptr;
@@ -14,7 +15,7 @@ class TTRController {
     ttr::LocalServer* server = nullptr;
 public:
     explicit TTRController() = default;
-    void start_game(int num, bool is_local_ = true);
+    void start_game(int number_of_players, int number_of_bots = 0, bool is_local_ = true);
     void get_card_from_active(int);
     void build_path_initialize(int);
     void set_color_to_build_path(const WagonCard &w);

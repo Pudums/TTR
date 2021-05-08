@@ -29,15 +29,16 @@ public:
     std::vector<Player> players;
     int active_player;
     int number_of_players;
-    std::set<std::string> occupied_stations;
     std::vector<std::pair<Point, std::string>> cities;
+    std::unordered_map<std::string, int> occupied_stations;
     int number_updated_players = 0;
-    explicit Game(int number_of_players);
+    explicit Game(int number_of_players, int number_of_bots);
 
     void start_game();
     void make_move(Turn *turn);
-    void update_station_path(const std::string& station_city, int path_pos);
+    void update_station_path(const std::string &station_city, int path_pos);
     void move_get_new_roots();
+    std::set<std::string> players_cities();
     [[nodiscard]] bool move_build_path(int position,
                                        const std::vector<WagonCard> &cards);
     void get_wagon_card_from_deck();
@@ -49,7 +50,7 @@ public:
         const std::vector<WagonCard> &list_of_wagon_cards);
     [[nodiscard]] int check_end_game() const;
     [[nodiscard]] std::vector<WagonCard> cards_with_suitable_color(
-        const WagonCard &wagon_card) const;
+        const WagonCard &wagon_card, const Player& player) const;
     [[nodiscard]] int number_of_cards_with_fixed_color(
         const std::string &color) const;
     [[nodiscard]] std::map<std::string, int> color_to_num() const;

@@ -1,4 +1,10 @@
 #include "View.h"
+#include <QPalette>
+#include <QTimeLine>
+#include <QGraphicsItemAnimation>
+#include <QPushButton>
+#include <Animated.h>
+#include <QPropertyAnimation>
 #include <QApplication>
 #include <string>
 #include <QBrush>
@@ -9,8 +15,6 @@
 #include "Wagon.h"
 #include "WagonCard.h"
 #include <QTextObject>
-#include <thread>
-#include <unistd.h>
 #include "CircleWidget.h"
 #include <QGraphicsProxyWidget>
 #include "Station.h"
@@ -29,6 +33,14 @@ std::map<int, std::string> color_frow_owner = {
 	{2, Blue},
 	{3, Green}
 };
+
+qreal deck_z_vzlue = 0,
+	  map_z_value = 0,
+	  wagons_invisible_z_value= 1, // don't work, cause lay under map and become unclicable
+	  wagons_visible_z_value = 1,
+	  players_cards_z_value = 0,
+	  active_card_z_value = 0,
+	  animation_z_value = -1;
 }
 
 void View::draw_stations() {
@@ -48,23 +60,6 @@ void View::draw_stations() {
 				std::cout << "station " << name << " cliced\n";
 		} );
 		scene->addPath(*path, *pen, brush);
-		/*
-		CircleWidget *cw = new CircleWidget;
-		cw->setAntialiased(0);
-		cw->setFloatBased(0);
-		QGraphicsProxyWidget *item = scene->addWidget(cw);
-		item->setGeometry(QRect(s.p.x - 20, s.p.y - 20, s.r, s.r));
-		connect(cw, &CircleWidget::clicked, [=]() {
-				std::cout << "station " << name << " cliced\n";
-		} );
-		*/
-	}
-}
-
-namespace {
-	void locat_while_true(View *view) {
-		return;
-		view->draw_board();
 	}
 }
 
@@ -82,22 +77,6 @@ View::View(QWidget *parrent) : Controller(new TTRController()) {
     scene = new QGraphicsScene();
     scene->setSceneRect(0, 0, screen_width, screen_height);
     setScene(scene);
-
-	/*std::thread wt([&]() {
-			while_true();
-		});
-		*/
-	std::thread wt(locat_while_true, this);
-	wt.detach();
-}
-
-void View::while_true() {
-	unsigned int counter = 0;
-	while(true) {
-		usleep(microseconds);
-		//draw_board();
-		std::cout << counter++ << '\n';
-	}
 }
 
 void View::display_menu() {
@@ -117,9 +96,17 @@ void View::display_menu() {
     connect(playButton, SIGNAL(clicked()), this, SLOT(start()));
     scene->addItem(playButton);
 
+    Button *playOnlineButton = new Button(QString("Play Online"));
+    bxPos = this->width() / 2 - playOnlineButton->boundingRect().width() / 2;
+    byPos = 350;
+    playOnlineButton->setPos(bxPos, byPos);
+    connect(playOnlineButton, &Button::clicked, [=](){
+			});
+    scene->addItem(playOnlineButton);
+
     Button *quitButton = new Button(QString("Quit"));
     int qxPos = this->width() / 2 - quitButton->boundingRect().width() / 2;
-    int qyPos = 350;
+    int qyPos = 350 + 125;
     quitButton->setPos(qxPos, qyPos);
     connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
     scene->addItem(quitButton);
@@ -140,7 +127,7 @@ void View::start() {
     Button *play_2_player_button = new Button(QString("2 Player"));
     bxPos =
         this->width() / 2 - play_2_player_button->boundingRect().width() / 2;
-    byPos = 275;
+    byPos = 300;
     play_2_player_button->setPos(bxPos, byPos);
     connect(play_2_player_button, SIGNAL(clicked()), this,
             SLOT(start_player_2()));
@@ -149,7 +136,7 @@ void View::start() {
     Button *play_3_player_button = new Button(QString("3 Player"));
     bxPos =
         this->width() / 2 - play_3_player_button->boundingRect().width() / 2;
-    byPos = 400;
+    byPos = 450;
     play_3_player_button->setPos(bxPos, byPos);
     connect(play_3_player_button, SIGNAL(clicked()), this,
             SLOT(start_player_3()));
@@ -158,7 +145,7 @@ void View::start() {
     Button *play_4_player_button = new Button(QString("4 Player"));
     bxPos =
         this->width() / 2 - play_4_player_button->boundingRect().width() / 2;
-    byPos = 525;
+    byPos = 600;
     play_4_player_button->setPos(bxPos, byPos);
     connect(play_4_player_button, SIGNAL(clicked()), this,
             SLOT(start_player_4()));
@@ -166,23 +153,36 @@ void View::start() {
 }
 
 void View::start_player_1() {
-    Controller->start_game(1);
-    draw_board();
+	choose_count_of_bots(1);
 }
 
 void View::start_player_2() {
-    Controller->start_game(2);
-    draw_board();
+	choose_count_of_bots(2);
 }
 
 void View::start_player_3() {
-    Controller->start_game(3);
-    draw_board();
+	choose_count_of_bots(3);
 }
 
 void View::start_player_4() {
-    Controller->start_game(4);
-    draw_board();
+	choose_count_of_bots(4);
+}
+
+void View::choose_count_of_bots(int n) {
+    scene->clear();
+
+	for(int i = 0; i <= n; i++) {
+		Button *bot = new Button(QString::number(i) + QString(" Bots"));
+		int bxPos =
+			this->width() / 2 - bot->boundingRect().width() / 2;
+		int byPos = 150 * (i + 1);
+		bot->setPos(bxPos, byPos);
+		connect(bot, &Button::clicked, [=]() {
+				Controller->start_game(n, i);
+				draw_board();
+		} );
+		scene->addItem(bot);
+	}
 }
 
 void View::draw_board() {
@@ -251,11 +251,21 @@ void View::draw_wagons_count() {
 					scene->removeItem(some_text2);
 					scene->removeItem(some_text3);
 					scene->removeItem(some_text4);
-					QGraphicsTextItem *some_text = new QGraphicsTextItem(QString("Start: ") 
-							+ QString::number(player.wagon_cards.size()));
-					some_text->setPos(1320 + width * 0.3, i * height + 30 * 4);
-					some_text->setFont(font);
-					scene->addItem(some_text);
+					int j = 0;
+					for(auto &path: player.active_routes) {
+						QGraphicsTextItem *some_text = new QGraphicsTextItem(QString("From: ") 
+							+ QString(path.city1.c_str()) + QString(" to ") + QString(path.city2.c_str()));
+						some_text->setPos(1320 + width * 0.05, i * height + 25 * (2 * j));
+						some_text->setFont(font);
+						scene->addItem(some_text);
+
+						some_text = new QGraphicsTextItem(QString("Left to build: ") 
+							+ QString::number(path.points_for_passing));
+						some_text->setPos(1320 + width * 0.05, i * height + 25 * (2 * j + 1));
+						some_text->setFont(font);
+						scene->addItem(some_text);
+						j++;
+					}
 				}else {
 					scene->addItem(some_text1);
 					scene->addItem(some_text2);
@@ -275,8 +285,8 @@ void View::draw_map() {
     map->setRect(0, 0, 1320, 880);
     map->set_clickable(false);
     map->setBrush(brush);
-	//map->setZValue(0);
-	//TODO
+	//map->setZValue(map_z_value);
+	// TODO
     scene->addItem(map);
 }
 
@@ -287,13 +297,14 @@ void View::create_wagon(const WagonBlock &wagon, int owner) {
     }
 
     Wagon *wagon_to_draw = new Wagon(coords, owner != -1? color_frow_owner[owner] : "un_vis");
-	//wagon_to_draw->setZValue(-1);
+	// wagon_to_draw->setZValue(-1);
 	//TODO
 
 	connect(wagon_to_draw, &Wagon::clicked, [=]() {
 			Controller->build_path_initialize(wagon.id);
 			draw_board();
 	} );
+	// wagon_to_draw->setZValue( owner != -1 ? wagons_visible_z_value : wagons_invisible_z_value);
     scene->addItem(wagon_to_draw);
 }
 
@@ -306,6 +317,24 @@ void View::draw_wagons() {
     }
 }
 
+void View::mouseDoubleClickEvent(QMouseEvent *event) {
+	int x = event->pos().x();
+	int y = event->pos().y();
+	const auto &stations = Controller->get_stations();
+	for(auto station: stations) {
+		const auto &s = station.second;
+		const auto &name = station.first;
+		int cx = s.p.x;
+		int cy = s.p.y;
+		int r = 20;
+
+		if(r * r > (cx - x) * (cx - x) + (cy - y) * (cy - y)){
+			std::cout << name << '\n';
+			Controller->build_station(name);
+		}
+	}
+}
+
 void View::draw_deck() {
     QBrush q;
     q.setTextureImage(QImage("data/deck.jpeg"));
@@ -315,6 +344,9 @@ void View::draw_deck() {
     deck->setRect(1920 - width, 1080 - hight, width, hight);
     deck->setBrush(q);
     connect(deck, SIGNAL(clicked()), this, SLOT(get_card_from_deck()));
+
+	//deck->setZValue(deck_z_vzlue);
+
     scene->addItem(deck);
 }
 
@@ -340,6 +372,7 @@ void View::draw_players_cards() {
 				Controller->set_color_to_build_path(card);
 				draw_board();
 		} );
+		//wagon_to_draw->setZValue(players_cards_z_value);
         scene->addItem(wagon_to_draw);
 
 		QGraphicsTextItem* cur_color_count = new QGraphicsTextItem(QString::number(count[card.color]));
@@ -365,7 +398,32 @@ void View::draw_active_cards() {
 		connect(wagon_to_draw, &Wagon::clicked, [=]() {
 				Controller->get_card_from_active(i);
 				draw_board();
+
+				// Wagon *w = new Wagon(coords, card.color);
+				Wagon *w = new Wagon(coords, card.color);
+				// w->setZValue(animation_z_value);
+				// w->setZValue(0.5);
+				auto *wid = qobject_cast<QWidget *>(w);
+				wid->setAutoFillBackground(true);
+				QPalette Pal(palette());
+				Pal.setColor(QPalette::Background, Qt::red);
+				wid->setPalette(Pal);
+				QPropertyAnimation *animation = new QPropertyAnimation(w, "geometry");
+				animation->setDuration(100);
+
+				/*
+				animation->setKeyValueAt(0, 
+				QRect(1920 - width, height * (i), width, height));
+				*/
+				animation->setKeyValueAt(0, 
+				QRect(0, 0, 200, 200));
+				animation->setKeyValueAt(1, QRect(250, 250, 100, 30));
+
+				scene->addItem(w);
+				//animation->start(QAbstractAnimation::DeleteWhenStopped);
+				animation->start(QAbstractAnimation::DeleteWhenStopped);
 		} );
+		//wagon_to_draw->setZValue(active_card_z_value);
 		scene->addItem(wagon_to_draw);
 	}
 }

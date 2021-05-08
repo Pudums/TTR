@@ -52,6 +52,9 @@ void Game::start_game() {
         player.wagon_cards = deck.get_start_wagon_cards();
         player.active_routes = deck.get_start_route_cards();
     }
+    if (players[active_player].is_bot) {
+        make_move(nullptr);
+    }
 }
 
 int Game::check_end_game() const {
@@ -66,17 +69,24 @@ int Game::check_end_game() const {
     return 0;
 }
 
-Game::Game(int number_of_players)
+Game::Game(int number_of_players, int number_of_bots)
     : board(Board("data/paths.txt", "data/wagon_blocks.txt")),
       discharge(Discharge()),
       deck(Deck("data/wagons.txt",
                 "data/short_routes.txt",
                 "data/long_routes.txt",
                 discharge)),
-      players(std::vector<Player>(number_of_players)),
       active_player(0),
       number_of_players(number_of_players),
       cities(read_cities("data/cities.txt")) {
+    std::cout << "players " << number_of_players - number_of_bots << " bots "
+              << number_of_bots << std::endl;
+    for (int i = 0; i < number_of_players - number_of_bots; i++) {
+        players.emplace_back(false);
+    }
+    for (int i = 0; i < number_of_bots; i++) {
+        players.emplace_back(true);
+    }
 }
 
 void Game::move_get_new_roots() {
@@ -102,7 +112,7 @@ bool Game::move_build_station(const std::string &city) {
     }
     players[active_player].number_of_stations_left--;
     players[active_player].stations.push_back(city);
-    occupied_stations.insert(city);
+    occupied_stations[city] = active_player;
     return true;
 }
 
@@ -149,9 +159,9 @@ bool Game::move_build_path(int position,
 }
 
 std::vector<WagonCard> Game::cards_with_suitable_color(
-    const WagonCard &wagon_card) const {
+    const WagonCard &wagon_card, const Player& player) const {
     std::vector<WagonCard> result;
-    for (const auto &elem : players[active_player].wagon_cards) {
+    for (const auto &elem : player.wagon_cards) {
         if (elem.color == wagon_card.color || elem.color == Multicolored) {
             result.push_back(elem);
         }
@@ -230,6 +240,28 @@ void Game::make_move(Turn *t) {
     if (Turn::num == 0 && flag) {
         active_player = (active_player + 1) % number_of_players;
     }
+    while (players[active_player].is_bot) {
+        std::cout << board.paths[1].color << ' ' << board.paths[1].length
+                  << std::endl;
+        for (int i = 0; i < players[active_player].wagon_cards.size(); i++) {
+            std::cout << players[active_player].wagon_cards[i].color << ' ';
+        }
+        std::cout << std::endl;
+        std::set<std::string> player_cities = players_cities();
+        // int path_pos =
+        // Algo::find_best_way(players[active_player].active_routes[0].city2,
+        // player_cities, board.paths);
+        std::vector<WagonCard> needed_cards = cards_with_suitable_color(WagonCard(board.paths[1].color), players[active_player]);
+        if (check_if_enough_cards_for_building_path(board.paths[1],
+                                                    needed_cards)) {
+            bool f = move_build_path(
+                1, needed_cards);
+        } else {
+            get_wagon_card_from_deck();
+            get_wagon_card_from_deck();
+        }
+        active_player = (active_player + 1) % number_of_players;
+    }
 }
 
 void Game::count_players_points() {
@@ -278,4 +310,15 @@ void Game::update_station_path(const std::string &station_city, int path_pos) {
             break;
         }
     }
+}
+
+std::set<std::string> Game::players_cities() {
+    std::set<std::string> visited_cities;
+    for (const auto &elem : board.paths) {
+        if (elem.owner == active_player) {
+            visited_cities.insert(elem.start);
+            visited_cities.insert(elem.finish);
+        }
+    }
+    return visited_cities;
 }
