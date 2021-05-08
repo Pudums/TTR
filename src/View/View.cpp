@@ -1,9 +1,13 @@
 #include "View.h"
+#include "CircleWidget.h"
+#include "Station.h"
+#include "Button.h"
+#include "Wagon.h"
+#include "WagonCard.h"
 #include <QPalette>
 #include <QTimeLine>
 #include <QGraphicsItemAnimation>
 #include <QPushButton>
-#include <Animated.h>
 #include <QPropertyAnimation>
 #include <QApplication>
 #include <string>
@@ -11,13 +15,8 @@
 #include <QDesktopWidget>
 #include <QGraphicsTextItem>
 #include <iostream>
-#include "Button.h"
-#include "Wagon.h"
-#include "WagonCard.h"
 #include <QTextObject>
-#include "CircleWidget.h"
 #include <QGraphicsProxyWidget>
-#include "Station.h"
 
 namespace {
 unsigned int microseconds = 1000;
@@ -120,8 +119,9 @@ void View::start(bool is_server) {
         this->width() / 2 - play_1_player_button->boundingRect().width() / 2;
     int byPos = 150;
     play_1_player_button->setPos(bxPos, byPos);
-    connect(play_1_player_button, SIGNAL(clicked()), this,
-            SLOT(start_player_1(is_server)));
+    connect(play_1_player_button, &Button::clicked, [=]() {
+			start_player_1(is_server);
+		});
     scene->addItem(play_1_player_button);
 
     Button *play_2_player_button = new Button(QString("2 Player"));
@@ -129,8 +129,9 @@ void View::start(bool is_server) {
         this->width() / 2 - play_2_player_button->boundingRect().width() / 2;
     byPos = 300;
     play_2_player_button->setPos(bxPos, byPos);
-    connect(play_2_player_button, SIGNAL(clicked()), this,
-            SLOT(start_player_2(is_server)));
+    connect(play_2_player_button, &Button::clicked, [=]() {
+			start_player_2(is_server);
+		});
     scene->addItem(play_2_player_button);
 
     Button *play_3_player_button = new Button(QString("3 Player"));
@@ -138,8 +139,9 @@ void View::start(bool is_server) {
         this->width() / 2 - play_3_player_button->boundingRect().width() / 2;
     byPos = 450;
     play_3_player_button->setPos(bxPos, byPos);
-    connect(play_3_player_button, SIGNAL(clicked()), this,
-            SLOT(start_player_3(is_server)));
+    connect(play_3_player_button, &Button::clicked, [=]() {
+			start_player_3(is_server);
+		});
     scene->addItem(play_3_player_button);
 
     Button *play_4_player_button = new Button(QString("4 Player"));
@@ -147,8 +149,9 @@ void View::start(bool is_server) {
         this->width() / 2 - play_4_player_button->boundingRect().width() / 2;
     byPos = 600;
     play_4_player_button->setPos(bxPos, byPos);
-    connect(play_4_player_button, SIGNAL(clicked()), this,
-            SLOT(start_player_4(is_server)));
+    connect(play_4_player_button, &Button::clicked, [=]() {
+			start_player_4(is_server);
+		});
     scene->addItem(play_4_player_button);
 }
 
