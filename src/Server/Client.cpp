@@ -1,4 +1,14 @@
 #include "Server/Client.h"
+namespace{
+    Rectangle parse_grpc_rectangle(const ::ttr::Rectangle& r){
+        Rectangle ans;
+        for(int i = 0; i < 4; i++){
+            const ::ttr::Point& current_point = r.points(i);
+            ans.points.push_back({current_point.x(), current_point.y()});
+        }
+        return ans;
+    }
+}
 GameClient::GameClient() {
     stub_ = ::ttr::TTRService::NewStub(grpc::CreateChannel(
         "localhost:50051", grpc::InsecureChannelCredentials()));
@@ -9,6 +19,32 @@ ttr::BoardState *GameClient::get_board_state() {
     ttr::Nothing request;
     auto *client_context = new ::grpc::ClientContext();
     stub_->get_board_state(client_context, request, state);
-    //maybe parse result here?
     return state;
+}
+std::vector<Path> GameClient::get_paths() {
+    auto state = get_board_state();
+    auto board = *(state->release_board_state());
+    std::vector<Path> paths;
+    for (int i = 0; i < board.paths_size(); i++) {
+        const auto &path = board.paths(i);
+        Path new_path;
+        new_path.color = path.color();
+        new_path.number_of_colored_wagons = path.number_of_colored_wagons();
+        new_path.number_of_locomotives = path.number_of_locomotives();
+        new_path.owner = path.owner();
+        new_path.is_tunnel = path.is_tunnel();
+        new_path.start = path.start();
+        new_path.finish = path.finish();
+        new_path.length = path.length();
+        for(int j = 0; j < path.wagon_blocks_size();j++){
+            WagonBlock n_block;
+            const auto& wagon_to_parse = path.wagon_blocks(j);
+            n_block.coords = parse_grpc_rectangle(wagon_to_parse.coords());
+            n_block.color = wagon_to_parse.color();
+            n_block.id = wagon_to_parse.id();
+            new_path.wagon_blocks.push_back(n_block);
+        }
+        paths.push_back(new_path);
+    }
+    return paths;
 }

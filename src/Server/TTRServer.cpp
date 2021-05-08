@@ -11,7 +11,18 @@ using grpc::ClientReader;
 using grpc::ClientReaderWriter;
 using grpc::ClientWriter;
 using grpc::Status;
-
+namespace {
+    ttr::Rectangle parse_to_grpc_rectangle(const Rectangle& r){
+        ttr::Rectangle ans;
+        for(auto point: r.points){
+            ttr::Point n_point;
+            n_point.set_x(point.x);
+            n_point.set_y(point.y);
+            (*ans.add_points()) = n_point;
+        }
+        return ans;
+    }
+}
 namespace ttr {
 
 TTRServer::TTRServer(TTRController *c) {
@@ -67,6 +78,15 @@ BoardState TTRServer::local_get_board_state() {
         n_path.set_number_of_locomotives(path.number_of_locomotives);
         n_path.set_is_tunnel(path.is_tunnel);
         n_path.set_owner(path.owner);
+        for(const auto& w: path.wagon_blocks){
+            ttr::WagonBlock n_block;
+            n_block.set_id(w.id);
+            n_block.set_color(w.color);
+            n_block.set_allocated_coords(new ttr::Rectangle());
+            *(n_block.mutable_coords()) = parse_to_grpc_rectangle(w.coords);
+            *(n_path.add_wagon_blocks()) = n_block;
+        }
+        n_path.set_length(path.length);
         *(board.add_paths()) = n_path;
     }
 
@@ -95,8 +115,14 @@ BoardState TTRServer::local_get_board_state() {
 ::grpc::Status TTRServer::make_turn(::grpc::ServerContext *context,
                                     const ::ttr::MakeTurnRequest *request,
                                     ::ttr::MakeTurnResponse *response) {
-    //*response = local_make_turn(request);
+    *response = local_make_turn(request);
     return ::grpc::Status();
+}
+::grpc::Status TTRServer::get_score(::grpc::ServerContext *context,
+                                    const Nothing *request,
+                                    ::ttr::INT_ARRAY *result) {
+    //TODO
+    return grpc::Status();
 }
 
 LocalServer::LocalServer(TTRController *c) : service(TTRServer(c)) {

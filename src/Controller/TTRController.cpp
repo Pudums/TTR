@@ -11,9 +11,9 @@ void TTRController::start_game(int number_of_players, bool is_local_) {
         server = new ttr::LocalServer(this);
         game = new Game(number_of_players);
         game->start_game();
-    } else {
-        client = new GameClient();
     }
+        client = new GameClient();
+        client->get_paths();
 }
 
 void TTRController::get_card_from_deck() {
@@ -98,25 +98,9 @@ const std::vector<WagonCard> &TTRController::get_current_player_cards() {
 
 std::vector<Path> TTRController::get_paths() {
     if (is_local) {
-        return game->board.paths;
+        return game->board.paths;  // WTF???!!!!
     } else {
-        auto state = client->get_board_state();
-        auto board = *(state->release_board_state());
-        std::vector<Path> paths;
-        for (int i = 0; i < board.paths_size(); i++) {
-            const auto &path = board.paths(i);
-            Path new_path;
-            new_path.color = path.color();
-            new_path.number_of_colored_wagons = path.number_of_colored_wagons();
-            new_path.number_of_locomotives = path.number_of_locomotives();
-            new_path.owner = path.owner();
-            new_path.is_tunnel = path.is_tunnel();
-            new_path.start = path.start();
-            new_path.finish = path.finish();
-            // TODO recompile proto and add some info
-            paths.push_back(new_path);
-        }
-        return paths;
+        return client->get_paths();
     }
 }
 
@@ -153,17 +137,16 @@ int TTRController::is_game_end() {
     }
 }
 std::vector<int> TTRController::get_results() {
-    if(is_local){
+    if (is_local) {
         game->count_players_points();
         std::vector<int> res;
         for (auto &i : game->players) {
             res.push_back(i.points);
         }
         return res;
-    }else{
-        //TODO also....
+    } else {
+        // TODO also....
     }
-
 }
 std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
     std::vector<std::pair<std::string, Circle>> stations;
@@ -186,13 +169,17 @@ void TTRController::end_game() {
     }
 }
 int TTRController::get_current_player_id() {
-    if(is_local){
-        return game->active_player;}
-    else{
-        //TODO recompile proto and implement
+    if (is_local) {
+        return game->active_player;
+    } else {
+        // TODO recompile proto and implement
     }
     return 0;
 }
 std::vector<Path> TTRController::get_all_paths() {
-    return game->board.paths;//WTF???!!!!
+    if (is_local) {
+        return game->board.paths;  // WTF???!!!!
+    } else {
+        return client->get_paths();
+    }
 }

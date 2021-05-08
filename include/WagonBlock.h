@@ -23,8 +23,9 @@ struct WagonBlock {
     static inline int current_id = 0;
     std::string color;
     Rectangle coords;
-    int id;
+    int id=0;
     explicit WagonBlock(std::ifstream &wagon_blocks_info);
+    WagonBlock() = default;
     // drawing
 };
 

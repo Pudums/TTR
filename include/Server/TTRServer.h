@@ -21,7 +21,7 @@ public:
                              const ::ttr::MakeTurnRequest *request,
                              ::ttr::MakeTurnResponse *response) override;
     BoardState local_get_board_state();
-
+    ::grpc::Status get_score(::grpc::ServerContext *context, const ::ttr::Nothing* request, ::ttr::INT_ARRAY *result) override;
     MakeTurnResponse local_make_turn(const ttr::MakeTurnRequest *request);
 
 private:
