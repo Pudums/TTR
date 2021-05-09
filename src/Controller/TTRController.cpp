@@ -12,8 +12,10 @@ void TTRController::start_game(int number_of_players,
         if (typeOfGame == type_of_game::LOCAL_SERVER) {
             game = new Game(number_of_players, number_of_bots);
         }
+        std::cout<< "try to create client\n";
         client = new GameClient();
         my_id = client->get_id();
+        std::cout<<"got id:"<<my_id<<'\n';
         if (my_id + 1 ==
             client->get_all_players().size()) {
             client->start_game();
@@ -141,7 +143,7 @@ int TTRController::is_game_end() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         return game->check_end_game();
     } else {
-        // TODO after recompilation and implementation
+        return 0;
     }
 }
 std::vector<int> TTRController::get_results() {
