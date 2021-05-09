@@ -164,20 +164,19 @@ BoardState TTRServer::local_get_board_state() {
 ::grpc::Status TTRServer::get_player_state(::grpc::ServerContext *context,
                                            const ::ttr::PlayerID *request,
                                            ::ttr::PlayerState *result) {
-    auto general_info = result->mutable_player_general_info();
+    std::cout<<"try to got state\n";
     auto current_player = controller->get_players()[request->id()];
-    general_info->set_routes_num(current_player.active_routes.size());
-    general_info->set_wagons_left(current_player.number_of_wagons_left);
-    general_info->set_current_score(current_player.points);
-    auto private_info = result->mutable_private_info();
-    private_info->set_allocated_player_routes(new ttr::Routes());
+    result->mutable_player_general_info()->set_routes_num(current_player.active_routes.size());
+    result->mutable_player_general_info()->set_wagons_left(current_player.number_of_wagons_left);
+    result->mutable_player_general_info()->set_current_score(current_player.points);
+    std::cout<<"set some info\n";
     for(const auto &route: current_player.active_routes){
-        *(private_info->mutable_player_routes()->add_routes()) = parse_to_grpc_route(route);
+        *(result->mutable_private_info()->mutable_player_routes()->add_routes()) = parse_to_grpc_route(route);
     }
-    private_info->set_allocated_player_wagons(new ttr::Wagons());
     for(const auto& wagon: current_player.wagon_cards){
-        *(private_info->mutable_player_wagons()->add_wagons()) = parse_to_grpc_wagon(wagon);
+        *(result->mutable_private_info()->mutable_player_wagons()->add_wagons()) = parse_to_grpc_wagon(wagon);
     }
+    std::cout<<"all got\n";
     return grpc::Status::OK;
 }
 
