@@ -94,7 +94,7 @@ void View::display_menu() {
     playButton->setPos(bxPos, byPos);
     // connect(playButton, SIGNAL(clicked()), this, SLOT(start(false)));
     connect(playButton, &Button::clicked, [=](){
-			start(false);
+			host_or_not(false);
 			});
     scene->addItem(playButton);
 
@@ -103,6 +103,7 @@ void View::display_menu() {
     byPos = 350;
     playOnlineButton->setPos(bxPos, byPos);
     connect(playOnlineButton, &Button::clicked, [=](){
+			host_or_not(true);
 			});
     scene->addItem(playOnlineButton);
 
@@ -114,8 +115,13 @@ void View::display_menu() {
     scene->addItem(quitButton);
 }
 
-void View::start(bool is_server) {
+void View::start(bool is_server, bool is_host) {
     scene->clear();
+	if(is_server && !is_host) {
+		Controller->start_game(-1,
+				-1, type_of_game::LOCAL_CLIENT);
+		return;
+	}
 	std::cout << "start " << is_server << '\n';
 
     Button *play_1_player_button = new Button(QString("1 Player"));
@@ -124,7 +130,7 @@ void View::start(bool is_server) {
     int byPos = 150;
     play_1_player_button->setPos(bxPos, byPos);
     connect(play_1_player_button, &Button::clicked, [=]() {
-			start_players(1, is_server);
+			start_players(1, is_server, is_host);
 		});
     scene->addItem(play_1_player_button);
 
@@ -135,7 +141,7 @@ void View::start(bool is_server) {
     play_2_player_button->setPos(bxPos, byPos);
     connect(play_2_player_button, &Button::clicked, [=]() {
 			//start_player_2(is_server);
-			start_players(2, is_server);
+			start_players(2, is_server, is_host);
 		});
     scene->addItem(play_2_player_button);
 
@@ -145,7 +151,7 @@ void View::start(bool is_server) {
     byPos = 450;
     play_3_player_button->setPos(bxPos, byPos);
     connect(play_3_player_button, &Button::clicked, [=]() {
-			start_players(3, is_server);
+			start_players(3, is_server, is_host);
 			// start_player_3(is_server);
 		});
     scene->addItem(play_3_player_button);
@@ -156,24 +162,23 @@ void View::start(bool is_server) {
     byPos = 600;
     play_4_player_button->setPos(bxPos, byPos);
     connect(play_4_player_button, &Button::clicked, [=]() {
-			start_players(4, is_server);
+			start_players(4, is_server, is_host);
 			// start_player_4(is_server);
 		});
     scene->addItem(play_4_player_button);
 }
 
-void View::start_players(int players, bool is_server) {
+void View::start_players(int players, bool is_server, bool is_host) {
 	std::cout << "start_players " << is_server << '\n';
-	host_or_not(players, is_server);
+	choose_count_of_bots(players, is_server, is_server);
 }
 
-void View::host_or_not(int players, bool is_server) {
-	std::cout << "host_or_not " << players << 
+void View::host_or_not(bool is_server) {
+	std::cout << "host_or_not " << 
 		" " << is_server << '\n';
 	// choose_count_of_bots(players, is_server);
 	if(!is_server) {
-			choose_count_of_bots(players, 
-					is_server, false);
+			start(is_server, false);
 			return;
 	}
     scene->clear();
@@ -183,7 +188,7 @@ void View::host_or_not(int players, bool is_server) {
     int byPos = 150;
     host->setPos(bxPos, byPos);
     connect(host, &Button::clicked, [=]() {
-			choose_count_of_bots(players, is_server, true);
+			start(is_server, true);
 			// start_players(4, is_server);
 			// start_player_4(is_server);
 		});
@@ -195,7 +200,7 @@ void View::host_or_not(int players, bool is_server) {
     byPos = 300;
 	client->setPos(bxPos, byPos);
     connect(client, &Button::clicked, [=]() {
-			choose_count_of_bots(players, is_server, false);
+			start(is_server, false);
 			// start_players(4, is_server);
 			// start_player_4(is_server);
 		});
@@ -239,6 +244,7 @@ void View::choose_count_of_bots(int n, bool is_server, bool is_host) {
 
 void View::draw_board() {
     scene->clear();
+	std::cout << "draw_board " << "\n";
 	auto status = Controller->is_game_end();
 	if(status == 2) {
 		Controller->end_game();
