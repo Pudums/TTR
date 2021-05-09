@@ -17,6 +17,7 @@ void TTRController::start_game(int number_of_players,
         if (my_id + 1 ==
             client->get_all_players().size()) {
             client->start_game();
+            std::cout<<"game started, connected players: "<<my_id;
         }
     } else {
         game = new Game(number_of_players, number_of_bots);
@@ -25,7 +26,7 @@ void TTRController::start_game(int number_of_players,
 }
 
 void TTRController::get_card_from_deck() {
-    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
+    if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         current_turn = new DrawCardFromDeck();
         Turn::increase_num();
         game->make_move(current_turn);
