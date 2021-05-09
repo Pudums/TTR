@@ -92,7 +92,10 @@ void View::display_menu() {
     int bxPos = this->width() / 2 - playButton->boundingRect().width() / 2;
     int byPos = 275;
     playButton->setPos(bxPos, byPos);
-    connect(playButton, SIGNAL(clicked()), this, SLOT(start()));
+    // connect(playButton, SIGNAL(clicked()), this, SLOT(start(false)));
+    connect(playButton, &Button::clicked, [=](){
+			start(false);
+			});
     scene->addItem(playButton);
 
     Button *playOnlineButton = new Button(QString("Play Online"));
@@ -113,6 +116,7 @@ void View::display_menu() {
 
 void View::start(bool is_server) {
     scene->clear();
+	std::cout << "start " << is_server << '\n';
 
     Button *play_1_player_button = new Button(QString("1 Player"));
     int bxPos =
@@ -120,7 +124,7 @@ void View::start(bool is_server) {
     int byPos = 150;
     play_1_player_button->setPos(bxPos, byPos);
     connect(play_1_player_button, &Button::clicked, [=]() {
-			start_player_1(is_server);
+			start_players(1, is_server);
 		});
     scene->addItem(play_1_player_button);
 
@@ -130,7 +134,8 @@ void View::start(bool is_server) {
     byPos = 300;
     play_2_player_button->setPos(bxPos, byPos);
     connect(play_2_player_button, &Button::clicked, [=]() {
-			start_player_2(is_server);
+			//start_player_2(is_server);
+			start_players(2, is_server);
 		});
     scene->addItem(play_2_player_button);
 
@@ -140,7 +145,8 @@ void View::start(bool is_server) {
     byPos = 450;
     play_3_player_button->setPos(bxPos, byPos);
     connect(play_3_player_button, &Button::clicked, [=]() {
-			start_player_3(is_server);
+			start_players(3, is_server);
+			// start_player_3(is_server);
 		});
     scene->addItem(play_3_player_button);
 
@@ -150,37 +156,69 @@ void View::start(bool is_server) {
     byPos = 600;
     play_4_player_button->setPos(bxPos, byPos);
     connect(play_4_player_button, &Button::clicked, [=]() {
-			start_player_4(is_server);
+			start_players(4, is_server);
+			// start_player_4(is_server);
 		});
     scene->addItem(play_4_player_button);
 }
 
-void View::start_player_1(bool is_server) {
-	choose_count_of_bots(1, is_server);
+void View::start_players(int players, bool is_server) {
+	std::cout << "start_players " << is_server << '\n';
+	host_or_not(players, is_server);
 }
 
-void View::start_player_2(bool is_server) {
-	choose_count_of_bots(2, is_server);
-}
-
-void View::start_player_3(bool is_server) {
-	choose_count_of_bots(3, is_server);
-}
-
-void View::start_player_4(bool is_server) {
-	choose_count_of_bots(4, is_server);
-}
-
-void View::choose_count_of_bots(int n, bool is_server) {
+void View::host_or_not(int players, bool is_server) {
+	std::cout << "host_or_not " << players << 
+		" " << is_server << '\n';
+	// choose_count_of_bots(players, is_server);
+	if(!is_server) {
+			choose_count_of_bots(players, 
+					is_server, false);
+			return;
+	}
     scene->clear();
+    Button *host = new Button(QString("Host"));
+    int bxPos =
+        this->width() / 2 - host->boundingRect().width() / 2;
+    int byPos = 150;
+    host->setPos(bxPos, byPos);
+    connect(host, &Button::clicked, [=]() {
+			choose_count_of_bots(players, is_server, true);
+			// start_players(4, is_server);
+			// start_player_4(is_server);
+		});
+    scene->addItem(host);
+
+    Button *client = new Button(QString("Connect"));
+    bxPos =
+        this->width() / 2 - client->boundingRect().width() / 2;
+    byPos = 300;
+	client->setPos(bxPos, byPos);
+    connect(client, &Button::clicked, [=]() {
+			choose_count_of_bots(players, is_server, false);
+			// start_players(4, is_server);
+			// start_player_4(is_server);
+		});
+    scene->addItem(client);
+}
+
+void View::choose_count_of_bots(int n, bool is_server, bool is_host) {
+    scene->clear();
+	std::cout << "choose_count_of_bots " << n << 
+		" " << is_server << " " <<
+		is_host << '\n';
 
 	for(int i = 0; i <= n; i++) {
-		Button *bot = new Button(QString::number(i) + QString(" Bots"));
+		Button *bot = new Button(QString::number(i) + QString("Bots"));
 		int bxPos =
 			this->width() / 2 - bot->boundingRect().width() / 2;
 		int byPos = 150 * (i + 1);
 		bot->setPos(bxPos, byPos);
 		connect(bot, &Button::clicked, [=]() {
+				std::cout << "clicked bots " <<
+				n << 
+				" " << i << " " <<
+				is_server << '\n';
 				Controller->start_game(n, i, is_server);
 				draw_board();
 		} );
