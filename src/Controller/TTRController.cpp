@@ -10,7 +10,7 @@ void TTRController::start_game(int number_of_players,
     typeOfGame = type;
     if (typeOfGame != type_of_game::SINGLE_COMPUTER) {
         if (typeOfGame == type_of_game::LOCAL_SERVER) {
-            game = new Game(number_of_bots, number_of_bots);
+            game = new Game(number_of_players, number_of_bots);
         }
         client = new GameClient();
         my_id = client->get_id();
