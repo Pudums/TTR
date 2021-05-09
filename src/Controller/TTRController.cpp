@@ -97,14 +97,14 @@ void TTRController::set_color_to_build_path(const WagonCard &w) {
     }
 }
 
-std::vector<WagonCard> TTRController::get_current_player_cards(int id) {
+std::vector<WagonCard> TTRController::get_current_player_cards() {
     if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         return game->players[game->active_player].wagon_cards;
     } else {
         if (typeOfGame == type_of_game::LOCAL_SERVER) {
-            return game->players[id].wagon_cards;
+            return game->players[my_id].wagon_cards;
         } else {
-            return client->get_player_cards(id);
+            return client->get_player_cards(my_id);
         }
     }
 }
