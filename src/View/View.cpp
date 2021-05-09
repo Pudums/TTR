@@ -117,12 +117,15 @@ void View::display_menu() {
 
 void View::start(bool is_server, bool is_host) {
     scene->clear();
+	std::cout << "start " << is_server << '\n';
 	if(is_server && !is_host) {
+		/*
 		Controller->start_game(-1,
 				-1, type_of_game::LOCAL_CLIENT);
+		*/
+		start_players(-1, is_server, is_host);
 		return;
 	}
-	std::cout << "start " << is_server << '\n';
 
     Button *play_1_player_button = new Button(QString("1 Player"));
     int bxPos =
@@ -200,6 +203,7 @@ void View::host_or_not(bool is_server) {
     byPos = 300;
 	client->setPos(bxPos, byPos);
     connect(client, &Button::clicked, [=]() {
+			std::cout << "cliend clicked " << "\n";
 			start(is_server, false);
 			// start_players(4, is_server);
 			// start_player_4(is_server);
@@ -212,6 +216,13 @@ void View::choose_count_of_bots(int n, bool is_server, bool is_host) {
 	std::cout << "choose_count_of_bots " << n << 
 		" " << is_server << " " <<
 		is_host << '\n';
+	if(is_server && !is_host) {
+		Controller->start_game(-1,
+				-1, 
+				type_of_game::LOCAL_CLIENT);
+				draw_board();
+		return;
+	}
 
 	for(int i = 0; i <= n; i++) {
 		Button *bot = new Button(QString::number(i) + QString("Bots"));
@@ -245,8 +256,11 @@ void View::choose_count_of_bots(int n, bool is_server, bool is_host) {
 void View::draw_board() {
     scene->clear();
 	std::cout << "draw_board " << "\n";
+	std::cout << "start controller.is_game_end\n";
 	auto status = Controller->is_game_end();
+	std::cout << "end controller.is_game_end\n";
 	if(status == 2) {
+		std::cout << "status = 2\n";
 		Controller->end_game();
 		end_game();
 		return;
@@ -273,7 +287,7 @@ void View::draw_wagons_count() {
                << QPointF(1320 + width * 0, height * (i + 1));
 
         Wagon *wagon_to_draw = new Wagon(coords, 
-				color_frow_owner[player.id]);
+				color_frow_owner[i]);
         scene->addItem(wagon_to_draw);
 
 		QFont font("comic sans", 14);
