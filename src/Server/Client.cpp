@@ -68,22 +68,16 @@ std::vector<WagonCard> GameClient::get_active_cards() {
         n_card.color = deck->cards_on_table(i).wagon_info().color();
         active_cards.push_back(n_card);
     }
-    std::cout<<"got active cards: "<< active_cards.size()<<'\n';
     return active_cards;
 }
 std::vector<WagonCard> GameClient::get_player_cards(int id) {
-    std::cout<<"try to get players cards "<<id<<std::endl;
     auto player_state = get_state(id);
     std::vector<WagonCard> cards;
-    std::cout<<"got player state"<<std::endl;
     for(int i = 0; i < player_state.mutable_private_info()->mutable_player_wagons()->wagons_size();i++){
         auto wagon = player_state.mutable_private_info()->mutable_player_wagons()->wagons(i);
-        std::cout<<"try to copy card"<<std::endl;
         WagonCard n_card(wagon.color());
-        std::cout<<"copied"<<std::endl;
         cards.push_back(n_card);
     }
-    std::cout<<"got player cards:"<<cards.size()<<std::endl;
     return cards;
 }
 ttr::PlayerState GameClient::get_state(int id) {
@@ -92,7 +86,6 @@ ttr::PlayerState GameClient::get_state(int id) {
     player_id.set_id(id);
     auto state = new ttr::PlayerState();
     stub_->get_player_state(context, player_id, state);
-    std::cout<<"got info\n";
     return *state;
 }
 std::vector<Player> GameClient::get_all_players() {
