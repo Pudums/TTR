@@ -265,12 +265,19 @@ void View::draw_board() {
 		end_game();
 		return;
 	} else {
+		std::cout << "draw_deck\n";
 		draw_deck();
+		std::cout << "draw_map\n";
 		draw_map();
+		std::cout << "draw_wagons\n";
 		draw_wagons();
+		std::cout << "draw_players_cards\n";
 		draw_players_cards();
+		std::cout << "draw_active_cards\n";
 		draw_active_cards();
+		std::cout << "draw_wagons_count\n";
 		draw_wagons_count();
+		std::cout << "draw_stations\n";
 		draw_stations();
 	}
 }
