@@ -106,4 +106,5 @@ service TTRService{
   rpc check_end_game(Nothing) returns(BOOL);
   rpc get_player_id(Nothing) returns(PlayerID);
   rpc get_score(Nothing) returns(INT_ARRAY);
+  rpc start_game(Nothing) returns(Nothing);
 }

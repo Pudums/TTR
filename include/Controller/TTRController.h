@@ -6,16 +6,24 @@
 #include "Server/TTRServer.h"
 #include "TTRController_fwd.h"
 #include "Turn.h"
-
+struct Game_info{
+    int number_of_players = 0;
+    int number_of_bots = 0;
+};
 class TTRController {
     bool is_local = false;
     Game *game = nullptr;
     Turn *current_turn = nullptr;
     GameClient *client = nullptr;
     ttr::LocalServer* server = nullptr;
+    int my_id = 0;
+    bool single_computer = true;
+    bool started = false;
+    Game_info info;
 public:
     explicit TTRController() = default;
-    void start_game(int number_of_players, int number_of_bots = 0, bool is_local_ = true);
+    void start_game(int number_of_players, int number_of_bots = 0, bool is_local_ = true, bool single_computer_ = true);
+    void start_game_server();
     void get_card_from_active(int);
     void build_path_initialize(int);
     void set_color_to_build_path(const WagonCard &w);
@@ -28,6 +36,7 @@ public:
     std::vector<WagonCard> get_active_cards();
     std::vector<Player> get_players();
     int is_game_end();
+    bool is_game_started() const;
     void end_game();
     int get_current_player_id();
     std::vector<Path> get_all_paths();

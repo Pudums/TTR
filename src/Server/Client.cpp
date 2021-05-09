@@ -48,3 +48,14 @@ std::vector<Path> GameClient::get_paths() {
     }
     return paths;
 }
+int GameClient::get_id() {
+    auto* id = new ::ttr::PlayerID;
+    ttr::Nothing request;
+    auto *client_context = new ::grpc::ClientContext();
+    stub_->get_player_id(client_context, request, id);
+    return id->id();
+}
+void GameClient::start_game() {
+    ::ttr::Nothing req;
+    stub_->start_game(nullptr, req, nullptr);
+}

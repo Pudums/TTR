@@ -5,15 +5,24 @@
 #include "TTRController.h"
 #include "Server/TTRServer.h"
 
-void TTRController::start_game(int number_of_players, int number_of_bots, bool is_local_) {
+void TTRController::start_game(int number_of_players, int number_of_bots, bool is_local_, bool is_single) {
     is_local = is_local_;
+    single_computer = is_single;
     if (is_local) {
-        server = new ttr::LocalServer(this);
         game = new Game(number_of_players, number_of_bots);
-        game->start_game();
-    }else{
-        client = new GameClient();
-     }
+        if(!is_single){
+            server = new ttr::LocalServer(this);
+            info.number_of_players = number_of_players;
+            info.number_of_bots = number_of_bots;
+        }else{
+            game->start_game();
+        }
+    }
+    client = new GameClient();
+    my_id = client->get_id();
+    if(my_id + 1 == client->get_board_state()->all_players().all_players_size()){
+        client->start_game();
+    }
 }
 
 void TTRController::get_card_from_deck() {
@@ -89,9 +98,14 @@ void TTRController::set_color_to_build_path(const WagonCard &w) {
 }
 
 const std::vector<WagonCard> &TTRController::get_current_player_cards() {
-    if (is_local) {
+    if (single_computer) {
         return game->players[game->active_player].wagon_cards;
     } else {
+        if(is_local){
+
+        } else{
+
+        }
         // get response from server
     }
 }
@@ -182,4 +196,9 @@ std::vector<Path> TTRController::get_all_paths() {
     } else {
         return client->get_paths();
     }
+}
+bool TTRController::is_game_started() const {
+    return started;
+}
+void TTRController::start_game_server() {
 }

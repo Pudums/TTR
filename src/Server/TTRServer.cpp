@@ -124,6 +124,24 @@ BoardState TTRServer::local_get_board_state() {
     //TODO
     return grpc::Status();
 }
+::grpc::Status TTRServer::get_player_id(::grpc::ServerContext *context,
+                                        const ::ttr::Nothing *request,
+                                        ::ttr::PlayerID *response) {
+    static int last_id = 0;
+    if(!controller->is_game_started()){
+        response->set_id(last_id);
+        last_id++;
+    }else{
+        response->set_id(controller->get_current_player_id());
+    }
+    return ::grpc::Status::OK;
+}
+::grpc::Status TTRServer::start_game(::grpc::ServerContext *context,
+                                     const ::ttr::Nothing *request,
+                                     ::ttr::Nothing *result) {
+    controller->start_game_server();
+    return ::grpc::Status::OK;
+}
 
 LocalServer::LocalServer(TTRController *c) : service(TTRServer(c)) {
     builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
