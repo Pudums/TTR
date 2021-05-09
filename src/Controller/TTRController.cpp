@@ -167,6 +167,7 @@ std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
         }
         return stations;
     } else {
+        return {};
         // TODO
     }
 }
