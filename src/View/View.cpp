@@ -1,22 +1,23 @@
 #include "View.h"
-#include "CircleWidget.h"
-#include "Station.h"
-#include "Button.h"
 #include "Wagon.h"
+#include "Button.h"
+#include "Station.h"
 #include "WagonCard.h"
-#include <QPalette>
-#include <QTimeLine>
-#include <QGraphicsItemAnimation>
-#include <QPushButton>
-#include <QPropertyAnimation>
-#include <QApplication>
+#include "CircleWidget.h"
+
 #include <string>
 #include <QBrush>
+#include <QPalette>
+#include <iostream>
+#include <QTimeLine>
+#include <QTextObject>
+#include <QPushButton>
+#include <QApplication>
 #include <QDesktopWidget>
 #include <QGraphicsTextItem>
-#include <iostream>
-#include <QTextObject>
+#include <QPropertyAnimation>
 #include <QGraphicsProxyWidget>
+#include <QGraphicsItemAnimation>
 
 namespace {
 unsigned int microseconds = 1000;
@@ -173,7 +174,7 @@ void View::start(bool is_server, bool is_host) {
 
 void View::start_players(int players, bool is_server, bool is_host) {
 	std::cout << "start_players " << is_server << '\n';
-	choose_count_of_bots(players, is_server, is_server);
+	choose_count_of_bots(players, is_server, is_host);
 }
 
 void View::host_or_not(bool is_server) {
