@@ -219,7 +219,18 @@ void View::choose_count_of_bots(int n, bool is_server, bool is_host) {
 				n << 
 				" " << i << " " <<
 				is_server << '\n';
-				Controller->start_game(n, i, is_server);
+				if(!is_server) 
+					Controller->start_game(n,
+						   	i, type_of_game::SINGLE_COMPUTER);
+				else if(is_host) {
+					Controller->start_game(n,
+						   	i,
+						   	type_of_game::LOCAL_SERVER);
+				} else {
+					Controller->start_game(n,
+						   	i, 
+							type_of_game::LOCAL_CLIENT);
+				}
 				draw_board();
 		} );
 		scene->addItem(bot);
