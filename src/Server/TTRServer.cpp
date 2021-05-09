@@ -60,7 +60,7 @@ MakeTurnResponse TTRServer::local_make_turn(
                                           const ::ttr::Nothing *request,
                                           ::ttr::BoardState *response) {
     *response = local_get_board_state();
-    return ::grpc::Status();
+    return ::grpc::Status::OK;
 }
 
 BoardState TTRServer::local_get_board_state() {

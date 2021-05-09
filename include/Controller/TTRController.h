@@ -10,19 +10,23 @@ struct Game_info{
     int number_of_players = 0;
     int number_of_bots = 0;
 };
+enum class type_of_game{
+    LOCAL_SERVER,
+    SINGLE_COMPUTER,
+    LOCAL_CLIENT
+};
 class TTRController {
-    bool is_local = false;
     Game *game = nullptr;
     Turn *current_turn = nullptr;
     GameClient *client = nullptr;
     ttr::LocalServer* server = nullptr;
     int my_id = 0;
-    bool single_computer = true;
     bool started = false;
+    type_of_game typeOfGame = type_of_game::SINGLE_COMPUTER;
     Game_info info;
 public:
     explicit TTRController() = default;
-    void start_game(int number_of_players, int number_of_bots = 0, bool is_local_ = true, bool single_computer_ = true);
+    void start_game(int number_of_players, int number_of_bots = 0, type_of_game type=type_of_game::SINGLE_COMPUTER);
     void start_game_server();
     void get_card_from_active(int);
     void build_path_initialize(int);

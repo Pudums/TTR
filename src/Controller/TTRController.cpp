@@ -4,29 +4,25 @@
 
 #include "TTRController.h"
 #include "Server/TTRServer.h"
-
-void TTRController::start_game(int number_of_players, int number_of_bots, bool is_local_, bool is_single) {
-    is_local = is_local_;
-    single_computer = is_single;
-    if (is_local) {
-        game = new Game(number_of_players, number_of_bots);
-        if(!is_single){
-            server = new ttr::LocalServer(this);
-            info.number_of_players = number_of_players;
-            info.number_of_bots = number_of_bots;
-        }else{
-            game->start_game();
-        }
+void TTRController::start_game(int number_of_players, int number_of_bots, type_of_game type) {
+    typeOfGame = type;
+    if(typeOfGame != type_of_game::SINGLE_COMPUTER){
+    if(typeOfGame == type_of_game::LOCAL_SERVER){
+        game = new Game(number_of_bots, number_of_bots);
     }
     client = new GameClient();
     my_id = client->get_id();
     if(my_id + 1 == client->get_board_state()->all_players().all_players_size()){
         client->start_game();
     }
+    }else{
+        game = new Game(number_of_players, number_of_bots);
+        game->start_game();
+    }
 }
 
 void TTRController::get_card_from_deck() {
-    if (is_local) {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         current_turn = new DrawCardFromDeck();
         Turn::increase_num();
         game->make_move(current_turn);
@@ -38,7 +34,7 @@ void TTRController::get_card_from_deck() {
 }
 
 void TTRController::get_card_from_active(int num) {
-    if (is_local) {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         if (game->deck.active_wagons[num].color == Multicolored and
             current_turn != nullptr) {
             return;
@@ -57,7 +53,7 @@ void TTRController::get_card_from_active(int num) {
 }
 
 void TTRController::build_path_initialize(int id) {
-    if (is_local) {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         if (auto p = dynamic_cast<BuildStation *>(current_turn); p) {
             game->update_station_path(p->get_city(), id);
             current_turn = nullptr;
@@ -71,7 +67,7 @@ void TTRController::build_path_initialize(int id) {
 }
 
 void TTRController::get_routes() {
-    if (is_local) {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         current_turn = new TakeRoutes();
         game->make_move(current_turn);
         current_turn = nullptr;
@@ -86,7 +82,7 @@ TTRController::~TTRController() {
 }
 
 void TTRController::set_color_to_build_path(const WagonCard &w) {
-    if (is_local) {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         if (auto p = dynamic_cast<BuildPath *>(current_turn); p) {
             p->set_wagons(game->cards_with_suitable_color(w, game->players[game->active_player]));
             game->make_move(p);
@@ -98,10 +94,10 @@ void TTRController::set_color_to_build_path(const WagonCard &w) {
 }
 
 const std::vector<WagonCard> &TTRController::get_current_player_cards() {
-    if (single_computer) {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         return game->players[game->active_player].wagon_cards;
     } else {
-        if(is_local){
+        if(typeOfGame == type_of_game::SINGLE_COMPUTER){
 
         } else{
 
@@ -111,7 +107,7 @@ const std::vector<WagonCard> &TTRController::get_current_player_cards() {
 }
 
 std::vector<Path> TTRController::get_paths() {
-    if (is_local) {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         return game->board.paths;  // WTF???!!!!
     } else {
         return client->get_paths();
@@ -119,7 +115,7 @@ std::vector<Path> TTRController::get_paths() {
 }
 
 std::vector<WagonCard> TTRController::get_active_cards() {
-    if (is_local) {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         return game->deck.active_wagons;
     } else {
         auto state = client->get_board_state();
@@ -137,21 +133,21 @@ std::map<std::string, int> TTRController::get_count_by_color() {
     return game->color_to_num();
 }
 std::vector<Player> TTRController::get_players() {
-    if (is_local) {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         return game->players;
     } else {
         // TODO get players state and parse it
     }
 }
 int TTRController::is_game_end() {
-    if (is_local) {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         return game->check_end_game();
     } else {
         // TODO after recompilation and implementation
     }
 }
 std::vector<int> TTRController::get_results() {
-    if (is_local) {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         game->count_players_points();
         std::vector<int> res;
         for (auto &i : game->players) {
@@ -178,12 +174,12 @@ void TTRController::build_station(const std::string &city) {
     }
 }
 void TTRController::end_game() {
-    if (is_local) {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         game->end_game();
     }
 }
 int TTRController::get_current_player_id() {
-    if (is_local) {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         return game->active_player;
     } else {
         // TODO recompile proto and implement
@@ -191,7 +187,7 @@ int TTRController::get_current_player_id() {
     return 0;
 }
 std::vector<Path> TTRController::get_all_paths() {
-    if (is_local) {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         return game->board.paths;  // WTF???!!!!
     } else {
         return client->get_paths();
