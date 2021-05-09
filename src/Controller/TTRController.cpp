@@ -10,6 +10,7 @@ void TTRController::start_game(int number_of_players,
     typeOfGame = type;
     if (typeOfGame != type_of_game::SINGLE_COMPUTER) {
         if (typeOfGame == type_of_game::LOCAL_SERVER) {
+            server = new ttr::LocalServer(this);
             game = new Game(number_of_players, number_of_bots);
         }
         std::cout<< "try to create client\n";
@@ -204,4 +205,5 @@ bool TTRController::is_game_started() const {
 void TTRController::start_game_server() {
     assert(typeOfGame == type_of_game::LOCAL_SERVER);
     game->start_game();
+    started = true;
 }
