@@ -12,6 +12,7 @@ void TTRController::start_game(int number_of_players,
         if (typeOfGame == type_of_game::LOCAL_SERVER) {
             server = new ttr::LocalServer(this);
             game = new Game(number_of_players, number_of_bots);
+            game->start_game();
         }
         std::cout<< "try to create client\n";
         client = new GameClient();
@@ -19,7 +20,6 @@ void TTRController::start_game(int number_of_players,
         std::cout<<"got id:"<<my_id<<'\n';
         if (my_id + 1 ==
             client->get_all_players().size()) {
-            client->start_game();
             std::cout<<"game started, connected players: "<<my_id;
         }
     } else {
