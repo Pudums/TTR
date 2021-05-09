@@ -15,7 +15,7 @@ void TTRController::start_game(int number_of_players,
         client = new GameClient();
         my_id = client->get_id();
         if (my_id + 1 ==
-            client->get_board_state()->all_players().all_players_size()) {
+            client->get_all_players().size()) {
             client->start_game();
         }
     } else {
@@ -97,21 +97,21 @@ void TTRController::set_color_to_build_path(const WagonCard &w) {
     }
 }
 
-const std::vector<WagonCard> &TTRController::get_current_player_cards(int id) {
+std::vector<WagonCard> TTRController::get_current_player_cards(int id) {
     if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         return game->players[game->active_player].wagon_cards;
     } else {
         if (typeOfGame == type_of_game::LOCAL_SERVER) {
             return game->players[id].wagon_cards;
         } else {
-            // TODO
+            return client->get_player_cards(id);
         }
     }
 }
 
 std::vector<Path> TTRController::get_paths() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
-        return game->board.paths;  // WTF???!!!!
+        return game->board.paths;
     } else {
         return client->get_paths();
     }
@@ -133,7 +133,7 @@ std::vector<Player> TTRController::get_players() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         return game->players;
     } else {
-        // TODO get players state and parse it
+        return client->get_all_players();
     }
 }
 int TTRController::is_game_end() {
@@ -199,5 +199,6 @@ bool TTRController::is_game_started() const {
     return started;
 }
 void TTRController::start_game_server() {
+    assert(typeOfGame == type_of_game::LOCAL_SERVER);
     game->start_game();
 }

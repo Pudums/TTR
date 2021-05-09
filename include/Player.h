@@ -34,7 +34,7 @@ public:
     bool is_bot;
     int updated_stations = 0;
     Algo graph;
-    explicit Player(bool is_bot);
+    explicit Player(bool is_bot=false);
     void count_points();
     void count_points_for_routes();
 };

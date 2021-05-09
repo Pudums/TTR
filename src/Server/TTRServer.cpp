@@ -22,6 +22,34 @@ namespace {
         }
         return ans;
     }
+    ttr::Card parse_card_to_grpc(const WagonCard& active_card){
+        ttr::Card n_card;
+        n_card.set_type(::ttr::Card_Type_Wagon);
+        n_card.set_allocated_wagon_info(new ::ttr::Wagon());
+        n_card.release_wagon_info()->set_color(active_card.color);
+        return n_card;
+    }
+    ttr::Route parse_to_grpc_route(const Route& route){
+        ttr::Route n_route;
+        n_route.set_begin(route.city1);
+        n_route.set_end(route.city2);
+        n_route.set_points(route.points_for_passing);
+        return n_route;
+    }
+    ttr::WagonBlock parse_to_grpc_wagon_block(const WagonBlock& w){
+        ttr::WagonBlock n_block;
+        n_block.set_id(w.id);
+        n_block.set_color(w.color);
+        n_block.set_allocated_coords(new ttr::Rectangle());
+        *(n_block.mutable_coords()) = parse_to_grpc_rectangle(w.coords);
+        return n_block;
+    }
+
+ttr::Wagon parse_to_grpc_wagon(const WagonCard& w){
+    ttr::Wagon n_card;
+    n_card.set_color(w.color);
+    return n_card;
+}
 }
 namespace ttr {
 
@@ -79,12 +107,7 @@ BoardState TTRServer::local_get_board_state() {
         n_path.set_is_tunnel(path.is_tunnel);
         n_path.set_owner(path.owner);
         for(const auto& w: path.wagon_blocks){
-            ttr::WagonBlock n_block;
-            n_block.set_id(w.id);
-            n_block.set_color(w.color);
-            n_block.set_allocated_coords(new ttr::Rectangle());
-            *(n_block.mutable_coords()) = parse_to_grpc_rectangle(w.coords);
-            *(n_path.add_wagon_blocks()) = n_block;
+            *(n_path.add_wagon_blocks()) = parse_to_grpc_wagon_block(w);
         }
         n_path.set_length(path.length);
         *(board.add_paths()) = n_path;
@@ -92,11 +115,7 @@ BoardState TTRServer::local_get_board_state() {
 
     std::vector<WagonCard> active_cards = controller->get_active_cards();
     for (auto & active_card : active_cards) {
-        Card n_card;
-        n_card.set_type(::ttr::Card_Type_Wagon);
-        n_card.set_allocated_wagon_info(new ::ttr::Wagon());
-        n_card.release_wagon_info()->set_color(active_card.color);
-        *(deck.add_cards_on_table()) = n_card;
+        *(deck.add_cards_on_table()) = parse_card_to_grpc(active_card);
     }
     *state.mutable_board_state() = board;
     *state.mutable_deck_state() = deck;
@@ -141,6 +160,25 @@ BoardState TTRServer::local_get_board_state() {
                                      ::ttr::Nothing *result) {
     controller->start_game_server();
     return ::grpc::Status::OK;
+}
+::grpc::Status TTRServer::get_player_state(::grpc::ServerContext *context,
+                                           const ::ttr::PlayerID *request,
+                                           ::ttr::PlayerState *result) {
+    auto general_info = result->mutable_player_general_info();
+    auto current_player = controller->get_players()[request->id()];
+    general_info->set_routes_num(current_player.active_routes.size());
+    general_info->set_wagons_left(current_player.number_of_wagons_left);
+    general_info->set_current_score(current_player.points);
+    auto private_info = result->mutable_private_info();
+    private_info->set_allocated_player_routes(new ttr::Routes());
+    for(const auto &route: current_player.active_routes){
+        *(private_info->mutable_player_routes()->add_routes()) = parse_to_grpc_route(route);
+    }
+    private_info->set_allocated_player_wagons(new ttr::Wagons());
+    for(const auto& wagon: current_player.wagon_cards){
+        *(private_info->mutable_player_wagons()->add_wagons()) = parse_to_grpc_wagon(wagon);
+    }
+    return grpc::Status::OK;
 }
 
 LocalServer::LocalServer(TTRController *c) : service(TTRServer(c)) {

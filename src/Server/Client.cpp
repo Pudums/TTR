@@ -70,3 +70,35 @@ std::vector<WagonCard> GameClient::get_active_cards() {
     }
     return active_cards;
 }
+std::vector<WagonCard> GameClient::get_player_cards(int id) {
+    auto player_state = get_state(id);
+    std::vector<WagonCard> cards;
+    for(int i = 0; i < player_state.release_private_info()->release_player_wagons()->wagons_size();i++){
+        auto wagon = player_state.release_private_info()->release_player_wagons()->wagons(i);
+        WagonCard n_card;
+        n_card.color = wagon.color();
+        cards.push_back(n_card);
+    }
+    return cards;
+}
+ttr::PlayerState GameClient::get_state(int id) {
+    auto context = new ::grpc::ClientContext();
+    ::ttr::PlayerID player_id;
+    player_id.set_id(id);
+    auto state = new ttr::PlayerState();
+    stub_->get_player_state(context, player_id, state);
+    return *state;
+}
+std::vector<Player> GameClient::get_all_players() {
+    auto board_state = get_board_state();
+    std::vector<Player> player_general_info(board_state->all_players().all_players_size());
+    for(int i = 0; i < board_state->all_players().all_players_size();i++){
+        auto curr_player = board_state->all_players().all_players(i);
+        player_general_info[i].points = curr_player.current_score();
+        player_general_info[i].number_of_wagons_left = curr_player.wagons_left();
+        auto private_info = get_state(i);//tssss it's a secret
+        player_general_info[i].wagon_cards.resize(private_info.release_private_info()->release_player_wagons()->wagons_size());
+        player_general_info[i].number_of_stations_left = 5;//TODO redo
+    }
+    return player_general_info;
+}

@@ -33,7 +33,7 @@ public:
     void set_color_to_build_path(const WagonCard &w);
     void get_routes();
     void build_station(const std::string &city);
-    const std::vector<WagonCard> &get_current_player_cards(int id = -1);
+    std::vector<WagonCard> get_current_player_cards(int id = -1);
     std::vector<Path> get_paths();
     void get_card_from_deck();
     std::map<std::string, int> get_count_by_color();
