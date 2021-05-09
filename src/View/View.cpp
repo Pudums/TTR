@@ -1,9 +1,13 @@
 #include "View.h"
+#include "CircleWidget.h"
+#include "Station.h"
+#include "Button.h"
+#include "Wagon.h"
+#include "WagonCard.h"
 #include <QPalette>
 #include <QTimeLine>
 #include <QGraphicsItemAnimation>
 #include <QPushButton>
-#include <Animated.h>
 #include <QPropertyAnimation>
 #include <QApplication>
 #include <string>
@@ -11,13 +15,8 @@
 #include <QDesktopWidget>
 #include <QGraphicsTextItem>
 #include <iostream>
-#include "Button.h"
-#include "Wagon.h"
-#include "WagonCard.h"
 #include <QTextObject>
-#include "CircleWidget.h"
 #include <QGraphicsProxyWidget>
-#include "Station.h"
 
 namespace {
 unsigned int microseconds = 1000;
@@ -93,7 +92,10 @@ void View::display_menu() {
     int bxPos = this->width() / 2 - playButton->boundingRect().width() / 2;
     int byPos = 275;
     playButton->setPos(bxPos, byPos);
-    connect(playButton, SIGNAL(clicked()), this, SLOT(start()));
+    // connect(playButton, SIGNAL(clicked()), this, SLOT(start(false)));
+    connect(playButton, &Button::clicked, [=](){
+			host_or_not(false);
+			});
     scene->addItem(playButton);
 
     Button *playOnlineButton = new Button(QString("Play Online"));
@@ -101,6 +103,7 @@ void View::display_menu() {
     byPos = 350;
     playOnlineButton->setPos(bxPos, byPos);
     connect(playOnlineButton, &Button::clicked, [=](){
+			host_or_not(true);
 			});
     scene->addItem(playOnlineButton);
 
@@ -112,16 +115,23 @@ void View::display_menu() {
     scene->addItem(quitButton);
 }
 
-void View::start() {
+void View::start(bool is_server, bool is_host) {
     scene->clear();
+	if(is_server && !is_host) {
+		Controller->start_game(-1,
+				-1, type_of_game::LOCAL_CLIENT);
+		return;
+	}
+	std::cout << "start " << is_server << '\n';
 
     Button *play_1_player_button = new Button(QString("1 Player"));
     int bxPos =
         this->width() / 2 - play_1_player_button->boundingRect().width() / 2;
     int byPos = 150;
     play_1_player_button->setPos(bxPos, byPos);
-    connect(play_1_player_button, SIGNAL(clicked()), this,
-            SLOT(start_player_1()));
+    connect(play_1_player_button, &Button::clicked, [=]() {
+			start_players(1, is_server, is_host);
+		});
     scene->addItem(play_1_player_button);
 
     Button *play_2_player_button = new Button(QString("2 Player"));
@@ -129,8 +139,10 @@ void View::start() {
         this->width() / 2 - play_2_player_button->boundingRect().width() / 2;
     byPos = 300;
     play_2_player_button->setPos(bxPos, byPos);
-    connect(play_2_player_button, SIGNAL(clicked()), this,
-            SLOT(start_player_2()));
+    connect(play_2_player_button, &Button::clicked, [=]() {
+			//start_player_2(is_server);
+			start_players(2, is_server, is_host);
+		});
     scene->addItem(play_2_player_button);
 
     Button *play_3_player_button = new Button(QString("3 Player"));
@@ -138,8 +150,10 @@ void View::start() {
         this->width() / 2 - play_3_player_button->boundingRect().width() / 2;
     byPos = 450;
     play_3_player_button->setPos(bxPos, byPos);
-    connect(play_3_player_button, SIGNAL(clicked()), this,
-            SLOT(start_player_3()));
+    connect(play_3_player_button, &Button::clicked, [=]() {
+			start_players(3, is_server, is_host);
+			// start_player_3(is_server);
+		});
     scene->addItem(play_3_player_button);
 
     Button *play_4_player_button = new Button(QString("4 Player"));
@@ -147,38 +161,81 @@ void View::start() {
         this->width() / 2 - play_4_player_button->boundingRect().width() / 2;
     byPos = 600;
     play_4_player_button->setPos(bxPos, byPos);
-    connect(play_4_player_button, SIGNAL(clicked()), this,
-            SLOT(start_player_4()));
+    connect(play_4_player_button, &Button::clicked, [=]() {
+			start_players(4, is_server, is_host);
+			// start_player_4(is_server);
+		});
     scene->addItem(play_4_player_button);
 }
 
-void View::start_player_1() {
-	choose_count_of_bots(1);
+void View::start_players(int players, bool is_server, bool is_host) {
+	std::cout << "start_players " << is_server << '\n';
+	choose_count_of_bots(players, is_server, is_server);
 }
 
-void View::start_player_2() {
-	choose_count_of_bots(2);
-}
-
-void View::start_player_3() {
-	choose_count_of_bots(3);
-}
-
-void View::start_player_4() {
-	choose_count_of_bots(4);
-}
-
-void View::choose_count_of_bots(int n) {
+void View::host_or_not(bool is_server) {
+	std::cout << "host_or_not " << 
+		" " << is_server << '\n';
+	// choose_count_of_bots(players, is_server);
+	if(!is_server) {
+			start(is_server, false);
+			return;
+	}
     scene->clear();
+    Button *host = new Button(QString("Host"));
+    int bxPos =
+        this->width() / 2 - host->boundingRect().width() / 2;
+    int byPos = 150;
+    host->setPos(bxPos, byPos);
+    connect(host, &Button::clicked, [=]() {
+			start(is_server, true);
+			// start_players(4, is_server);
+			// start_player_4(is_server);
+		});
+    scene->addItem(host);
+
+    Button *client = new Button(QString("Connect"));
+    bxPos =
+        this->width() / 2 - client->boundingRect().width() / 2;
+    byPos = 300;
+	client->setPos(bxPos, byPos);
+    connect(client, &Button::clicked, [=]() {
+			start(is_server, false);
+			// start_players(4, is_server);
+			// start_player_4(is_server);
+		});
+    scene->addItem(client);
+}
+
+void View::choose_count_of_bots(int n, bool is_server, bool is_host) {
+    scene->clear();
+	std::cout << "choose_count_of_bots " << n << 
+		" " << is_server << " " <<
+		is_host << '\n';
 
 	for(int i = 0; i <= n; i++) {
-		Button *bot = new Button(QString::number(i) + QString(" Bots"));
+		Button *bot = new Button(QString::number(i) + QString("Bots"));
 		int bxPos =
 			this->width() / 2 - bot->boundingRect().width() / 2;
 		int byPos = 150 * (i + 1);
 		bot->setPos(bxPos, byPos);
 		connect(bot, &Button::clicked, [=]() {
-				Controller->start_game(n, i);
+				std::cout << "clicked bots " <<
+				n << 
+				" " << i << " " <<
+				is_server << '\n';
+				if(!is_server) 
+					Controller->start_game(n,
+						   	i, type_of_game::SINGLE_COMPUTER);
+				else if(is_host) {
+					Controller->start_game(n,
+						   	i,
+						   	type_of_game::LOCAL_SERVER);
+				} else {
+					Controller->start_game(n,
+						   	i, 
+							type_of_game::LOCAL_CLIENT);
+				}
 				draw_board();
 		} );
 		scene->addItem(bot);
@@ -187,6 +244,7 @@ void View::choose_count_of_bots(int n) {
 
 void View::draw_board() {
     scene->clear();
+	std::cout << "draw_board " << "\n";
 	auto status = Controller->is_game_end();
 	if(status == 2) {
 		Controller->end_game();
@@ -430,6 +488,21 @@ void View::draw_players_cards() {
     }
 }
 
+namespace {
+	void delay(int seconds) {
+	std::cout << "delay(" << seconds << ")\n";
+    time_t start, current;
+
+    time(&start);
+
+    do
+    {
+        time(&current);
+    }
+    while ((current - start) < seconds);
+}
+}
+
 void View::draw_active_cards() {
 	const auto &cards = Controller->get_active_cards();
 	for(int i = 0; i < cards.size(); ++ i) {
@@ -457,23 +530,23 @@ void View::draw_active_cards() {
 				QPalette Pal(palette());
 
 				if (color == White) {
-					Pal.setColor(QPalette::Background, Qt::white);
+					Pal.setColor(QPalette::Window, Qt::white);
 				} else if (color == Orange) {
-					Pal.setColor(QPalette::Background, QColor("orange"));
+					Pal.setColor(QPalette::Window, QColor("orange"));
 				} else if (color == Green) {
-					Pal.setColor(QPalette::Background, Qt::green);
+					Pal.setColor(QPalette::Window, Qt::green);
 				} else if (color == Red) {
-					Pal.setColor(QPalette::Background, Qt::red);
+					Pal.setColor(QPalette::Window, Qt::red);
 				} else if (color == Black) {
-					Pal.setColor(QPalette::Background, Qt::black);
+					Pal.setColor(QPalette::Window, Qt::black);
 				} else if (color == Blue) {
-					Pal.setColor(QPalette::Background, Qt::blue);
+					Pal.setColor(QPalette::Window, Qt::blue);
 				} else if (color == Yellow) {
-					Pal.setColor(QPalette::Background, Qt::yellow);
+					Pal.setColor(QPalette::Window, Qt::yellow);
 				} else if (color == Purple) {
-					Pal.setColor(QPalette::Background, Qt::magenta);
+					Pal.setColor(QPalette::Window, Qt::magenta);
 				} else if (color == Uncolored || color == Multicolored) {
-					Pal.setColor(QPalette::Background, Qt::gray);
+					Pal.setColor(QPalette::Window, Qt::gray);
 				} else {
 					std::cout << color << '\n';
 				}
@@ -490,10 +563,12 @@ void View::draw_active_cards() {
 				*/
 				animation->setKeyValueAt(1, 
 						QRect(177 * color_to_sdvig[card.color], 1080 - 150, 177, 150));
-
 				scene->addWidget(w);
+				connect(animation, &QPropertyAnimation::finished, [&](){
+						// scene->removeItem(w->graphicsProxyWidget());
+					});
 				// animation->start(QAbstractAnimation::DeleteWhenStopped);
-				animation->start(QAbstractAnimation::DeleteWhenStopped);
+				animation->start();
 		} );
 		wagon_to_draw->setZValue(active_card_z_value);
 		scene->addItem(wagon_to_draw);

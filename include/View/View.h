@@ -25,8 +25,9 @@ class View : public QGraphicsView {
     void draw_players_cards();
 	void end_game();
 	void draw_stations();			// TODO
-	void choose_count_of_bots(int count);
+	void choose_count_of_bots(int count, bool is_server = true, bool is_host = true);
 	void mouseDoubleClickEvent(QMouseEvent *event);
+	void host_or_not(bool is_server = true);
 
 public:
     void draw_board();
@@ -37,11 +38,8 @@ public:
     void display_menu();
 
 public slots:
-    void start();
-    void start_player_1();
-    void start_player_2();
-    void start_player_3();
-    void start_player_4();
+    void start(bool is_server = true, bool is_host = true);
+    void start_players(int players = 0, bool is_server = true, bool is_host = true);
     void get_card_from_deck();
 };
 
