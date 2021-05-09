@@ -4,6 +4,18 @@
 
 #include "TTRController.h"
 #include "Server/TTRServer.h"
+namespace{
+int number_of_cards_with_fixed_color(const std::string &color, const std::vector<WagonCard>& cards) {
+    int result = 0;
+    for (const auto &wagon_card : cards) {
+        if (wagon_card.color == color) {
+            result++;
+        }
+    }
+    return result;
+}
+
+}
 void TTRController::start_game(int number_of_players,
                                int number_of_bots,
                                type_of_game type) {
@@ -131,6 +143,14 @@ std::vector<WagonCard> TTRController::get_active_cards() {
 std::map<std::string, int> TTRController::get_count_by_color() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         return game->color_to_num();
+    }else{
+        std::map<std::string, int> result;
+        std::vector<std::string> colors{White, Orange, Green,  Red,         Black,
+                                        Blue,  Yellow, Purple, Multicolored};
+        for (const auto &color : colors) {
+            result[color] = number_of_cards_with_fixed_color(color, get_current_player_cards());
+        }
+        return result;
     }
 }
 std::vector<Player> TTRController::get_players() {

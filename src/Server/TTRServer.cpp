@@ -26,7 +26,7 @@ namespace {
         ttr::Card n_card;
         n_card.set_type(::ttr::Card_Type_Wagon);
         n_card.set_allocated_wagon_info(new ::ttr::Wagon());
-        n_card.release_wagon_info()->set_color(active_card.color);
+        n_card.mutable_wagon_info()->set_color(active_card.color);
         return n_card;
     }
     ttr::Route parse_to_grpc_route(const Route& route){
