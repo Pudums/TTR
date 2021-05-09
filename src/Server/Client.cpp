@@ -59,3 +59,14 @@ void GameClient::start_game() {
     ::ttr::Nothing req;
     stub_->start_game(nullptr, req, nullptr);
 }
+std::vector<WagonCard> GameClient::get_active_cards() {
+    auto state = get_board_state();
+    auto deck = state->release_deck_state();
+    std::vector<WagonCard> active_cards;
+    for (int i = 0; i < deck->cards_on_table_size(); i++) {
+        WagonCard n_card;
+        n_card.color = deck->cards_on_table(i).wagon_info().color();
+        active_cards.push_back(n_card);
+    }
+    return active_cards;
+}

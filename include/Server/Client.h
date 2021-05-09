@@ -20,5 +20,6 @@ public:
     std::vector<Path> get_paths();
     int get_id();
     void start_game();
+    std::vector<WagonCard> get_active_cards();
 };
 #endif  // TTR_CLIENT_H
