@@ -57,15 +57,11 @@ TTRServer::TTRServer(TTRController *c) {
     controller = c;
 }
 
-MakeTurnResponse TTRServer::local_make_turn(
+Nothing TTRServer::local_make_turn(
     const ::ttr::MakeTurnRequest *request) {
-    MakeTurnResponse response;
-    response.set_is_success(true);
-    if (request->type() == "get board state") {
-        *(response.release_current_state()) = local_get_board_state();
-    }
+    Nothing response;
     if (request->id().id() != controller->get_current_player_id()) {
-        response.set_is_success(false);
+
         return response;
     }
 
@@ -133,15 +129,17 @@ BoardState TTRServer::local_get_board_state() {
 
 ::grpc::Status TTRServer::make_turn(::grpc::ServerContext *context,
                                     const ::ttr::MakeTurnRequest *request,
-                                    ::ttr::MakeTurnResponse *response) {
+                                    ::ttr::Nothing *response) {
     *response = local_make_turn(request);
-    return ::grpc::Status();
+    return ::grpc::Status::OK;
 }
 ::grpc::Status TTRServer::get_score(::grpc::ServerContext *context,
                                     const Nothing *request,
                                     ::ttr::INT_ARRAY *result) {
-    //TODO
-    return grpc::Status();
+    for(auto i: controller->get_results()){
+        result->add_values(i);
+    }
+    return grpc::Status::OK;
 }
 ::grpc::Status TTRServer::get_player_id(::grpc::ServerContext *context,
                                         const ::ttr::Nothing *request,
@@ -179,6 +177,12 @@ BoardState TTRServer::local_get_board_state() {
     std::cout<<"all got\n";
     return grpc::Status::OK;
 }
+::grpc::Status TTRServer::check_is_bot(::grpc::ServerContext *context,
+                                       const ::ttr::PlayerID *request,
+                                       ::ttr::BOOL *result) {
+    result->set_value(controller->get_players()[request->id()].is_bot));
+    return ::grpc::Status::OK;
+}
 
 LocalServer::LocalServer(TTRController *c) : service(TTRServer(c)) {
     builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
@@ -196,7 +200,6 @@ void LocalServer::terminate() {
 
 void RunServer(LocalServer *serv, bool needRun) {
     if (needRun) {
-        std::cout << "Server started!!!";
         serv->runServer();
     }
 }

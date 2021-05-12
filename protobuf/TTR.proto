@@ -64,18 +64,19 @@ message BoardState{
   Players all_players = 3;
 }
 
+message Wagons{
+  repeated Wagon wagons = 1;
+}
 message MakeTurnRequest{
   string type = 1;
   PlayerID id = 2;
   int32 active_card_id = 3;
   int32 path_to_build_id = 4;
   string station_to_build_id = 5;
+  Wagon color_to_build = 6;
 }
 message Routes{
   repeated Route routes = 1;
-}
-message Wagons{
-  repeated Wagon wagons = 1;
 }
 message PrivatePlayerInfo{
   Wagons player_wagons = 2;
@@ -84,11 +85,6 @@ message PrivatePlayerInfo{
 message PlayerState{
   Player player_general_info = 1;
   PrivatePlayerInfo private_info = 2;
-}
-message  MakeTurnResponse{
-  bool is_success = 1;
-  BoardState current_state = 2;
-  Deck deck = 3;
 }
 message PlayerID{
   int32 id = 1;
@@ -101,7 +97,7 @@ message INT_ARRAY{
 }
 service TTRService{
   rpc get_board_state(Nothing) returns (BoardState);
-  rpc make_turn(MakeTurnRequest) returns (MakeTurnResponse);
+  rpc make_turn(MakeTurnRequest) returns (Nothing);
   rpc get_player_state(PlayerID) returns(PlayerState);
   rpc check_end_game(Nothing) returns(BOOL);
   rpc get_player_id(Nothing) returns(PlayerID);

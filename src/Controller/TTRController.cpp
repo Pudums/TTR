@@ -176,7 +176,7 @@ std::vector<int> TTRController::get_results() {
         }
         return res;
     } else {
-        // TODO also....
+        return client->get_score();
     }
 }
 std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
@@ -231,7 +231,7 @@ void TTRController::start_game_server() {
 void TTRController::try_bot() {
     if(typeOfGame == type_of_game::SINGLE_COMPUTER){
         if(game->players[game->active_player].is_bot){
-
+            game->make_move(game->get_bots_move());
         }
     }
 }

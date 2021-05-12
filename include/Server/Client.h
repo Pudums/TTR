@@ -24,5 +24,7 @@ public:
     std::vector<WagonCard> get_active_cards();
     std::vector<WagonCard> get_player_cards(int id);
     std::vector<Player> get_all_players();
+    std::vector<int> get_score();
+    void make_turn(Turn* turn);
 };
 #endif  // TTR_CLIENT_H

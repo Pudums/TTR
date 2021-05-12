@@ -19,13 +19,14 @@ public:
 
     ::grpc::Status make_turn(::grpc::ServerContext *context,
                              const ::ttr::MakeTurnRequest *request,
-                             ::ttr::MakeTurnResponse *response) override;
+                             ::ttr::Nothing *response) override;
     BoardState local_get_board_state();
     ::grpc::Status get_score(::grpc::ServerContext *context, const ::ttr::Nothing* request, ::ttr::INT_ARRAY *result) override;
-    MakeTurnResponse local_make_turn(const ttr::MakeTurnRequest *request);
+    Nothing local_make_turn(const ttr::MakeTurnRequest *request);
     ::grpc::Status get_player_id(::grpc::ServerContext *context, const ::ttr::Nothing* request, ::ttr::PlayerID* response) override;
     ::grpc::Status start_game(::grpc::ServerContext *context, const ::ttr::Nothing* request, ::ttr::Nothing *result) override;
     ::grpc::Status get_player_state(::grpc::ServerContext *context, const ::ttr::PlayerID* request, ::ttr::PlayerState *result) override;
+    ::grpc::Status check_is_bot(::grpc::ServerContext *context, const ::ttr::PlayerID* request, ::ttr::BOOL *result) override;
 private:
     TTRController *controller;
 };
