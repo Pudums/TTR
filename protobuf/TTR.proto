@@ -107,4 +107,5 @@ service TTRService{
   rpc get_player_id(Nothing) returns(PlayerID);
   rpc get_score(Nothing) returns(INT_ARRAY);
   rpc start_game(Nothing) returns(Nothing);
+  rpc check_is_bot(PlayerID) returns(BOOL);
 }

@@ -46,6 +46,7 @@ public:
     std::vector<Path> get_all_paths();
     std::vector<int> get_results();
     std::vector<std::pair<std::string, Circle>> get_stations();
+    void try_bot();
     ~TTRController();
 };
 

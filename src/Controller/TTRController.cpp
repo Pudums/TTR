@@ -30,7 +30,7 @@ void TTRController::start_game(int number_of_players,
         client = new GameClient();
         my_id = client->get_id();
         std::cout<<"got id:"<<my_id<<'\n';
-        if (my_id + 1 ==
+        if (my_id + 1+number_of_bots ==
             client->get_all_players().size()) {
             std::cout<<"game started, connected players: "<<my_id;
         }
@@ -227,4 +227,11 @@ void TTRController::start_game_server() {
     assert(typeOfGame == type_of_game::LOCAL_SERVER);
     game->start_game();
     started = true;
+}
+void TTRController::try_bot() {
+    if(typeOfGame == type_of_game::SINGLE_COMPUTER){
+        if(game->players[game->active_player].is_bot){
+
+        }
+    }
 }
