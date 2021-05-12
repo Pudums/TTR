@@ -49,24 +49,6 @@ Deck::Deck(const std::string &wagons_file_name,
     set_start_active_wagons();
     short_routes = parse_routes_file(list_of_short_routes);
     long_routes = parse_routes_file(list_of_long_routes);
-    for (const auto &elem : wagons_deck) {
-        std::cout << elem.color << '\n';
-    }
-    std::cout << '\n';
-    for (const auto &elem : active_wagons) {
-        std::cout << elem.color << '\n';
-    }
-    std::cout << '\n';
-    for (const auto &elem : short_routes) {
-        std::cout << elem.city1 << ' ' << elem.city2 << ' '
-                  << elem.points_for_passing << '\n';
-    }
-    std::cout << '\n';
-    for (const auto &elem : long_routes) {
-        std::cout << elem.city1 << ' ' << elem.city2 << ' '
-                  << elem.points_for_passing << '\n';
-    }
-    std::cout << '\n';
 }
 
 void Deck::set_start_active_wagons() {

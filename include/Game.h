@@ -56,7 +56,7 @@ public:
     [[nodiscard]] bool check_if_enough_cards_for_building_path(
         const Path &path,
         const std::vector<WagonCard> &list_of_cards) const;
-
+    [[nodiscard]] Turn *get_bots_move();
     void end_game();
     void count_players_points();
 };
