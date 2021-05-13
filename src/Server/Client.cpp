@@ -144,7 +144,9 @@ void GameClient::make_turn(Turn *t) {
         request->set_path_to_build_id(p->get_pos());
         auto* w = new ::ttr::Wagon();
 
-        w->set_color(::Multicolored);
+        w->set_color(p->getWagons()[0].color);
         request->set_allocated_color_to_build(w);
     }
+    auto* response = new ::ttr::Nothing();
+    stub_->make_turn(context, *request, response);
 }

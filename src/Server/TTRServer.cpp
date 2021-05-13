@@ -180,7 +180,7 @@ BoardState TTRServer::local_get_board_state() {
 ::grpc::Status TTRServer::check_is_bot(::grpc::ServerContext *context,
                                        const ::ttr::PlayerID *request,
                                        ::ttr::BOOL *result) {
-    result->set_value(controller->get_players()[request->id()].is_bot));
+    result->set_value(controller->get_players()[request->id()].is_bot);
     return ::grpc::Status::OK;
 }
 

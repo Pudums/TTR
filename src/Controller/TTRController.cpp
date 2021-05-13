@@ -54,6 +54,7 @@ void TTRController::get_card_from_deck() {
 
 void TTRController::get_card_from_active(int num) {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
+
         if (game->deck.active_wagons[num].color == Multicolored and
             current_turn != nullptr) {
             return;
@@ -67,7 +68,9 @@ void TTRController::get_card_from_active(int num) {
         if (Turn::num == 0)
             current_turn = nullptr;
     } else {
-        // get response from server
+        current_turn = new DrawCardFromActive(num);
+        client->make_turn(current_turn);
+        current_turn = nullptr;
     }
 }
 
@@ -77,12 +80,10 @@ void TTRController::build_path_initialize(int id) {
             game->update_station_path(p->get_city(), id);
             current_turn = nullptr;
         }
+    }
         if (Turn::num == 0) {
             current_turn = new BuildPath(id);
         }
-    } else {
-        // get response from server
-    }
 }
 
 void TTRController::get_routes() {
@@ -102,6 +103,9 @@ TTRController::~TTRController() {
 
 void TTRController::set_color_to_build_path(const WagonCard &w) {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
+        if(typeOfGame == type_of_game::LOCAL_SERVER && my_id != game->active_player){
+            return;
+        }
         if (auto p = dynamic_cast<BuildPath *>(current_turn); p) {
             p->set_wagons(game->cards_with_suitable_color(
                 w, game->players[game->active_player]));
@@ -109,7 +113,12 @@ void TTRController::set_color_to_build_path(const WagonCard &w) {
             current_turn = nullptr;
         }
     } else {
-        // get response from server
+
+        if (auto p = dynamic_cast<BuildPath *>(current_turn); p) {
+            p->set_wagons({w});
+            client->make_turn(p);
+            current_turn = nullptr;
+        }
     }
 }
 
@@ -193,6 +202,7 @@ std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
 }
 void TTRController::build_station(const std::string &city) {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
+
         if (!is_game_end()) {
             game->make_move(new BuildStation(city));
             current_turn = nullptr;
@@ -200,7 +210,8 @@ void TTRController::build_station(const std::string &city) {
             current_turn = new BuildStation(city);
         }
     } else {
-        // TODO
+        current_turn = new BuildStation(city);
+        client->make_turn(current_turn);
     }
 }
 void TTRController::end_game() {
