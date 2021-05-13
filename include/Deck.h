@@ -15,14 +15,12 @@
 #include "WagonCard.h"
 
 struct Deck {
-private:
     std::vector<WagonCard> wagons_deck;
     std::vector<Route> short_routes;
     std::vector<Route> long_routes;
     void set_start_active_wagons();
     Discharge &discharge;
 
-public:
     static const int number_of_active_cards = 5;
     static const int number_of_getting_new_routes = 3;
     static const int max_number_of_active_locomotives = 2;
@@ -36,7 +34,7 @@ public:
     void check_correctness_of_deck();
     void replace_active_cards();
     void return_cards_from_discharge();
-    [[nodiscard]] bool check_deck_empty();
+    [[nodiscard]] bool check_deck_empty() const;
     [[nodiscard]] bool check_active_card_set_is_correct();
 
     [[nodiscard]] WagonCard draw_card_from_deck();

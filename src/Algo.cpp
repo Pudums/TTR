@@ -62,7 +62,7 @@ int Algo::find_best_way(const std::string &start,
         std::string name_of_closest;
         for (const auto &elem : all_cities) {
             if (used.find(elem) == used.end() &&
-                (name_of_closest.empty() ||
+                ((name_of_closest.empty() && dist.find(elem) != dist.end()) ||
                  (dist.find(elem) != dist.end() &&
                   dist[elem].first < dist[name_of_closest].first))) {
                 name_of_closest = elem;

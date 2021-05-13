@@ -40,23 +40,23 @@ public:
     std::set<std::string> players_cities();
     [[nodiscard]] bool move_build_path(int position,
                                        const std::vector<WagonCard> &cards);
-    void get_wagon_card_from_deck();
+    bool get_wagon_card_from_deck();
     [[nodiscard]] bool move_build_station(const std::string &city);
-    void get_wagon_card_from_active_cards(int position);
+    bool get_wagon_card_from_active_cards(int position);
     void add_extra_tunnel_cards(Path &path);
     void update_state_after_path_building(
         Path &path,
         const std::vector<WagonCard> &list_of_wagon_cards);
     [[nodiscard]] int check_end_game() const;
-    [[nodiscard]] std::vector<WagonCard> cards_with_suitable_color(
-        const WagonCard &wagon_card, const Player& player) const;
+    [[nodiscard]] static std::vector<WagonCard> cards_with_suitable_color(
+        const WagonCard &wagon_card, const Player& player) ;
     [[nodiscard]] int number_of_cards_with_fixed_color(
         const std::string &color) const;
     [[nodiscard]] std::map<std::string, int> color_to_num() const;
     [[nodiscard]] bool check_if_enough_cards_for_building_path(
         const Path &path,
         const std::vector<WagonCard> &list_of_cards) const;
-    [[nodiscard]] Turn *get_bots_move();
+    //[[nodiscard]] Turn *get_bots_move();
     void end_game();
     void count_players_points();
 };
