@@ -90,9 +90,7 @@ bool Game::get_wagon_card_from_deck() {
 }
 
 bool Game::get_wagon_card_from_active_cards(int position) {
-    //std::cout << "last_turn" << std::endl;
     if (deck.wagons_deck[position].color.empty()) {
-        //std::cout << "bad move" << std::endl;
         return false;
     }
     players[active_player].wagon_cards.push_back(
@@ -245,22 +243,32 @@ void Game::make_move(Turn *t) {
         active_player = (active_player + 1) % number_of_players;
     }
     while (players[active_player].is_bot) {
-        //std::cout << "bots move ";
+        int route_pos = 0;
         std::set<std::string> player_cities = players_cities();
-        player_cities.insert(players[active_player].active_routes[0].city1);
-        int path_pos =
-            Algo::find_best_way(players[active_player].active_routes[0].city2,
-                                player_cities, board.paths);
-        std::vector<WagonCard> needed_cards = cards_with_suitable_color(
-            WagonCard(board.paths[path_pos].color), players[active_player]);
-        if (check_if_enough_cards_for_building_path(board.paths[path_pos],
-                                                    needed_cards) && board.paths[path_pos].owner == -1) {
-            //std::cout << "build_path " << board.paths[path_pos].start  << ' ' << board.paths[path_pos].finish << std::endl;
-            bool f = move_build_path(path_pos, needed_cards);
-        } else {
-            get_wagon_card_from_deck();
-            get_wagon_card_from_deck();
-            //std::cout << "get_card" << std::endl;
+        bool moved = false;
+        while (player_cities.find(players[active_player].active_routes[route_pos].city2) != player_cities.end()) {
+            route_pos++;
+            if (route_pos == player_cities.size()) {
+                move_get_new_roots();
+                moved = true;
+                break;
+            }
+        }
+        if (!moved) {
+            player_cities.insert(players[active_player].active_routes[0].city1);
+            int path_pos = Algo::find_best_way(
+                players[active_player].active_routes[0].city2, player_cities,
+                board.paths);
+            std::vector<WagonCard> needed_cards = cards_with_suitable_color(
+                WagonCard(board.paths[path_pos].color), players[active_player]);
+            if (check_if_enough_cards_for_building_path(board.paths[path_pos],
+                                                        needed_cards) &&
+                board.paths[path_pos].owner == -1) {
+                bool f = move_build_path(path_pos, needed_cards);
+            } else {
+                get_wagon_card_from_deck();
+                get_wagon_card_from_deck();
+            }
         }
         active_player = (active_player + 1) % number_of_players;
     }
