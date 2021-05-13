@@ -44,44 +44,42 @@ int Algo::find_best_way(const std::string &start,
                         const std::set<std::string> &visited_cities,
                         const std::vector<Path> &all_paths) {
     std::map<std::string, std::pair<int, int>> dist;
-    std::set<std::string> used_cities, all_cities;
-    std::pair<int, int> shortest_path(INT32_MAX, INT32_MAX);
+    std::set<std::string> all_cities, used;
+    std::pair<int, int> shortest_path(1e9, 1e9);
     std::map<std::string, std::vector<Edge>> g;
-    dist[start] = std::make_pair(INT32_MAX, 0);
+    dist[start] = std::make_pair(0, 0);
     for (int i = 0; i < all_paths.size(); i++) {
         if (all_paths[i].owner == -1) {
             g[all_paths[i].start].push_back(
                 Edge{all_paths[i].length, all_paths[i].finish, i});
             g[all_paths[i].finish].push_back(
                 Edge{all_paths[i].length, all_paths[i].start, i});
-            all_cities.insert(all_paths[i].start);
-            all_cities.insert(all_paths[i].finish);
         }
+        all_cities.insert(all_paths[i].start);
+        all_cities.insert(all_paths[i].finish);
     }
-    for (int i = 0; i < all_cities.size(); i++) {
+    for (int i = 1; i < all_cities.size(); i++) {
         std::string name_of_closest;
         for (const auto &elem : all_cities) {
-            if (used_cities.find(elem) == used_cities.end()) {
-                if (dist.find(elem) != dist.end() &&
-                    (name_of_closest.empty() ||
-                     dist[elem].second < dist[name_of_closest].second)) {
-                    name_of_closest = elem;
-                }
+            if (used.find(elem) == used.end() &&
+                ((name_of_closest.empty() && dist.find(elem) != dist.end()) ||
+                 (dist.find(elem) != dist.end() &&
+                  dist[elem].first < dist[name_of_closest].first))) {
+                name_of_closest = elem;
             }
-            if (visited_cities.find(name_of_closest) != visited_cities.end() &&
-                dist[name_of_closest].first < shortest_path.first) {
-                shortest_path = dist[name_of_closest];
+        }
+        used.insert(name_of_closest);
+        for (const auto &edge : g[name_of_closest]) {
+            if (dist.find(edge.to_city) == dist.end() ||
+                dist[edge.to_city].first >
+                    dist[name_of_closest].first + edge.length) {
+                dist[edge.to_city] = {dist[name_of_closest].first + edge.length,
+                                      edge.path_pos};
             }
-            for (const auto &edge : g[name_of_closest]) {
-                if (dist.find(edge.to_city) == dist.end() ||
-                    dist[edge.to_city].first >
-                        dist[name_of_closest].first + edge.length) {
-                    dist[edge.to_city] = {
-                        dist[name_of_closest].first + edge.length,
-                        edge.path_pos};
-                }
-            }
-            used_cities.insert(name_of_closest);
+        }
+        if (visited_cities.find(name_of_closest) != visited_cities.end() &&
+            dist[name_of_closest].first < shortest_path.first) {
+            shortest_path = dist[name_of_closest];
         }
     }
     return shortest_path.second;

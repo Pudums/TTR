@@ -49,24 +49,6 @@ Deck::Deck(const std::string &wagons_file_name,
     set_start_active_wagons();
     short_routes = parse_routes_file(list_of_short_routes);
     long_routes = parse_routes_file(list_of_long_routes);
-    for (const auto &elem : wagons_deck) {
-        std::cout << elem.color << '\n';
-    }
-    std::cout << '\n';
-    for (const auto &elem : active_wagons) {
-        std::cout << elem.color << '\n';
-    }
-    std::cout << '\n';
-    for (const auto &elem : short_routes) {
-        std::cout << elem.city1 << ' ' << elem.city2 << ' '
-                  << elem.points_for_passing << '\n';
-    }
-    std::cout << '\n';
-    for (const auto &elem : long_routes) {
-        std::cout << elem.city1 << ' ' << elem.city2 << ' '
-                  << elem.points_for_passing << '\n';
-    }
-    std::cout << '\n';
 }
 
 void Deck::set_start_active_wagons() {
@@ -132,7 +114,7 @@ void Deck::replace_active_cards() {
     set_start_active_wagons();
 }
 
-bool Deck::check_deck_empty() {
+bool Deck::check_deck_empty() const {
     return wagons_deck.empty();
 }
 
@@ -153,10 +135,17 @@ WagonCard Deck::draw_card_from_deck() {
 }
 
 WagonCard Deck::draw_card_from_active_cards(int card_number) {
-    WagonCard result = active_wagons[card_number];
-    active_wagons[card_number] = wagons_deck.back();
-    wagons_deck.pop_back();
     check_correctness_of_deck();
+    //std::cout << "card number:    " << card_number << "active card size:   " << active_wagons.size() << std::endl;
+    WagonCard result = active_wagons[card_number];
+    if (!wagons_deck.empty()) {
+        active_wagons[card_number] = wagons_deck.back();
+        wagons_deck.pop_back();
+        check_correctness_of_deck();
+    }
+    else {
+        wagons_deck[card_number] = WagonCard();
+    }
     return result;
 }
 
@@ -168,6 +157,7 @@ void Deck::check_correctness_of_deck() {
         replace_active_cards();
     }
 }
+
 std::vector<WagonCard> Deck::get_cards_for_tunnel() {
     std::vector<WagonCard> result(number_of_extra_wagons_for_tunnel);
     for (int i = 0; i < number_of_extra_wagons_for_tunnel; i++) {
