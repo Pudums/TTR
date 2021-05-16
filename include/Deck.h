@@ -20,6 +20,7 @@ struct Deck {
     std::vector<Route> long_routes;
     void set_start_active_wagons();
     Discharge &discharge;
+    WagonCard last_card;
 
     static const int number_of_active_cards = 5;
     static const int number_of_getting_new_routes = 3;
