@@ -43,6 +43,7 @@ void TTRController::start_game(int number_of_players,
 }
 
 void TTRController::get_card_from_deck(int id) {
+    if(!is_game_started())return;
     if (typeOfGame != type_of_game::SINGLE_COMPUTER and
         (id == -1 and my_id != client->get_id() or
          id != -1 and id != client->get_id())) {
@@ -62,6 +63,7 @@ void TTRController::get_card_from_deck(int id) {
 }
 
 void TTRController::get_card_from_active(int num, int id) {
+    if(!is_game_started())return;
     if (typeOfGame != type_of_game::SINGLE_COMPUTER and
         (id == -1 and my_id != client->get_id() or
          id != -1 and id != client->get_id())) {
@@ -93,6 +95,7 @@ void TTRController::get_card_from_active(int num, int id) {
 }
 
 void TTRController::build_path_initialize(int id, int player_id) {
+    if(!is_game_started())return;
     if (typeOfGame != type_of_game::SINGLE_COMPUTER and
         (player_id == -1 and my_id != client->get_id() or
          player_id != -1 and player_id != client->get_id())) {
@@ -127,6 +130,7 @@ TTRController::~TTRController() {
 }
 
 void TTRController::set_color_to_build_path(const WagonCard &w, int id) {
+    if(!is_game_started())return;
     if (typeOfGame != type_of_game::SINGLE_COMPUTER and
         (id == -1 and my_id != client->get_id() or
          id != -1 and id != client->get_id())) {
@@ -259,7 +263,11 @@ std::vector<Path> TTRController::get_all_paths() {
     return get_paths();
 }
 bool TTRController::is_game_started() const {
-    return started;
+    if(typeOfGame != type_of_game::LOCAL_CLIENT){
+        return started;
+    }else{
+        return true;
+    }
 }
 void TTRController::start_game_server() {
     started = true;
