@@ -4,8 +4,9 @@
 
 #include "TTRController.h"
 #include "Server/TTRServer.h"
-namespace{
-int number_of_cards_with_fixed_color(const std::string &color, const std::vector<WagonCard>& cards) {
+namespace {
+int number_of_cards_with_fixed_color(const std::string &color,
+                                     const std::vector<WagonCard> &cards) {
     int result = 0;
     for (const auto &wagon_card : cards) {
         if (wagon_card.color == color) {
@@ -15,7 +16,7 @@ int number_of_cards_with_fixed_color(const std::string &color, const std::vector
     return result;
 }
 
-}
+}  // namespace
 void TTRController::start_game(int number_of_players,
                                int number_of_bots,
                                type_of_game type) {
@@ -25,14 +26,16 @@ void TTRController::start_game(int number_of_players,
             server = new ttr::LocalServer(this);
             game = new Game(number_of_players, number_of_bots);
             game->start_game();
+
         }
-        std::cout<< "try to create client\n";
+        std::cout << "try to create client\n";
         client = new GameClient();
         my_id = client->get_id();
-        std::cout<<"got id:"<<my_id<<'\n';
-        if (my_id + 1+number_of_bots ==
-            client->get_all_players().size()) {
-            std::cout<<"game started, connected players: "<<my_id;
+
+        std::cout << "got id:" << my_id << '\n';
+        if (my_id + 1 == get_number_of_players()) {
+            client->start_game();
+            std::cout << "game started, connected players: " << my_id + 1;
         }
     } else {
         game = new Game(number_of_players, number_of_bots);
@@ -41,20 +44,27 @@ void TTRController::start_game(int number_of_players,
 }
 
 void TTRController::get_card_from_deck() {
-    if (typeOfGame != type_of_game::LOCAL_CLIENT) {
-        current_turn = new DrawCardFromDeck();
-        Turn::increase_num();
-        game->make_move(current_turn);
-        if (Turn::num == 0)
-            current_turn = nullptr;
-    } else {
-        // get response from server
+    if(typeOfGame!= type_of_game::SINGLE_COMPUTER and my_id != client->get_id()){
+        std::cout<<"it's not your turn: your id is"<<my_id<<", but now moves "<<client->get_id();
+        return;
     }
+    current_turn = new DrawCardFromDeck();
+    Turn::increase_num();
+    if (typeOfGame != type_of_game::LOCAL_CLIENT) {
+        game->make_move(current_turn);
+    } else {
+        client->make_turn(current_turn, my_id);
+    }
+    if (Turn::num == 0)
+        current_turn = nullptr;
 }
 
 void TTRController::get_card_from_active(int num) {
+    if(typeOfGame!= type_of_game::SINGLE_COMPUTER and my_id != client->get_id()){
+        std::cout<<"it's not your turn: your id is"<<my_id<<", but now moves "<<client->get_id();
+        return;
+    }
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
-
         if (game->deck.active_wagons[num].color == Multicolored and
             current_turn != nullptr) {
             return;
@@ -63,13 +73,16 @@ void TTRController::get_card_from_active(int num) {
         }
         current_turn = new DrawCardFromActive(num);
         Turn::increase_num();
-        game->make_move(current_turn);
-
+        if (typeOfGame != type_of_game::LOCAL_CLIENT) {
+            game->make_move(current_turn);
+        } else {
+            client->make_turn(current_turn, my_id);
+        }
         if (Turn::num == 0)
             current_turn = nullptr;
     } else {
         current_turn = new DrawCardFromActive(num);
-        client->make_turn(current_turn);
+        client->make_turn(current_turn, my_id);
         current_turn = nullptr;
     }
 }
@@ -81,9 +94,9 @@ void TTRController::build_path_initialize(int id) {
             current_turn = nullptr;
         }
     }
-        if (Turn::num == 0) {
-            current_turn = new BuildPath(id);
-        }
+    if (Turn::num == 0) {
+        current_turn = new BuildPath(id);
+    }
 }
 
 void TTRController::get_routes() {
@@ -103,9 +116,6 @@ TTRController::~TTRController() {
 
 void TTRController::set_color_to_build_path(const WagonCard &w) {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
-        if(typeOfGame == type_of_game::LOCAL_SERVER && my_id != game->active_player){
-            return;
-        }
         if (auto p = dynamic_cast<BuildPath *>(current_turn); p) {
             p->set_wagons(game->cards_with_suitable_color(
                 w, game->players[game->active_player]));
@@ -113,10 +123,9 @@ void TTRController::set_color_to_build_path(const WagonCard &w) {
             current_turn = nullptr;
         }
     } else {
-
         if (auto p = dynamic_cast<BuildPath *>(current_turn); p) {
             p->set_wagons({w});
-            client->make_turn(p);
+            client->make_turn(p, my_id);
             current_turn = nullptr;
         }
     }
@@ -126,11 +135,7 @@ std::vector<WagonCard> TTRController::get_current_player_cards() {
     if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         return game->players[game->active_player].wagon_cards;
     } else {
-        if (typeOfGame == type_of_game::LOCAL_SERVER) {
-            return game->players[my_id].wagon_cards;
-        } else {
-            return client->get_player_cards(my_id);
-        }
+        return client->get_player_cards(my_id);
     }
 }
 
@@ -150,14 +155,16 @@ std::vector<WagonCard> TTRController::get_active_cards() {
     }
 }
 std::map<std::string, int> TTRController::get_count_by_color() {
-    if (typeOfGame != type_of_game::LOCAL_CLIENT) {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         return game->color_to_num();
-    }else{
+    } else {
         std::map<std::string, int> result;
-        std::vector<std::string> colors{White, Orange, Green,  Red,         Black,
-                                        Blue,  Yellow, Purple, Multicolored};
+        std::vector<std::string> colors{White,  Orange, Green,
+                                        Red,    Black,  Blue,
+                                        Yellow, Purple, Multicolored};
         for (const auto &color : colors) {
-            result[color] = number_of_cards_with_fixed_color(color, get_current_player_cards());
+            result[color] = number_of_cards_with_fixed_color(
+                color, get_current_player_cards());
         }
         return result;
     }
@@ -202,7 +209,6 @@ std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
 }
 void TTRController::build_station(const std::string &city) {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
-
         if (!is_game_end()) {
             game->make_move(new BuildStation(city));
             current_turn = nullptr;
@@ -211,7 +217,7 @@ void TTRController::build_station(const std::string &city) {
         }
     } else {
         current_turn = new BuildStation(city);
-        client->make_turn(current_turn);
+        client->make_turn(current_turn, my_id);
     }
 }
 void TTRController::end_game() {
@@ -235,14 +241,19 @@ bool TTRController::is_game_started() const {
     return started;
 }
 void TTRController::start_game_server() {
-    assert(typeOfGame == type_of_game::LOCAL_SERVER);
-    game->start_game();
     started = true;
 }
 void TTRController::try_bot() {
-    if(typeOfGame == type_of_game::SINGLE_COMPUTER){
-        if(game->players[game->active_player].is_bot){
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
+        if (game->players[game->active_player].is_bot) {
             game->make_move(game->get_bots_move());
         }
+    }
+}
+int TTRController::get_number_of_players() {
+    if (typeOfGame != type_of_game::LOCAL_CLIENT) {
+        return game->number_of_players;
+    } else {
+        return client->get_number_of_players();
     }
 }

@@ -36,7 +36,7 @@ public:
 
     void start_game();
     void make_move(Turn *turn);
-    void update_station_path(const std::string &station_city, int path_pos);
+    void update_station_path(const std  ::string &station_city, int path_pos);
     void move_get_new_roots();
     std::set<std::string> players_cities();
     [[nodiscard]] bool move_build_path(int position,

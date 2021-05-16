@@ -27,6 +27,8 @@ public:
     ::grpc::Status start_game(::grpc::ServerContext *context, const ::ttr::Nothing* request, ::ttr::Nothing *result) override;
     ::grpc::Status get_player_state(::grpc::ServerContext *context, const ::ttr::PlayerID* request, ::ttr::PlayerState *result) override;
     ::grpc::Status check_is_bot(::grpc::ServerContext *context, const ::ttr::PlayerID* request, ::ttr::BOOL *result) override;
+    ::grpc::Status get_number_of_players(::grpc::ServerContext *context, const ::ttr::Nothing* request, ::ttr::PlayerID* response) override;
+
 private:
     TTRController *controller;
 };

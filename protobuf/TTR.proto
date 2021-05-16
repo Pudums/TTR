@@ -104,4 +104,5 @@ service TTRService{
   rpc get_score(Nothing) returns(INT_ARRAY);
   rpc start_game(Nothing) returns(Nothing);
   rpc check_is_bot(PlayerID) returns(BOOL);
+  rpc get_number_of_players(Nothing) returns(PlayerID);
 }

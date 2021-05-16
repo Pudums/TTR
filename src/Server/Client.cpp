@@ -55,8 +55,10 @@ int GameClient::get_id() {
     return id->id();
 }
 void GameClient::start_game() {
-    ::ttr::Nothing req;
-    stub_->start_game(nullptr, req, nullptr);
+    auto* req = new ::ttr::Nothing();
+    auto *client_context = new ::grpc::ClientContext();
+    auto *response = new ::ttr::Nothing();
+    stub_->start_game(client_context, *req, response);
 }
 std::vector<WagonCard> GameClient::get_active_cards() {
     auto state = get_board_state();
@@ -122,9 +124,14 @@ std::vector<int> GameClient::get_score() {
     }
     return points;
 }
-void GameClient::make_turn(Turn *t) {
+void GameClient::make_turn(Turn *t, int id) {
+    if(get_id() != id){
+        return;
+    }
     auto* context = new ::grpc::ClientContext();
     auto *request = new ::ttr::MakeTurnRequest();
+    request->mutable_id()->set_id(id);
+    std::cout<<"i want to make turn and my id is "<<request->id().id()<<'\n';
     if (auto *p = dynamic_cast<DrawCardFromDeck *>(t); p) {
         request->set_type("draw from deck");
     }
@@ -149,4 +156,12 @@ void GameClient::make_turn(Turn *t) {
     }
     auto* response = new ::ttr::Nothing();
     stub_->make_turn(context, *request, response);
+}
+int GameClient::get_number_of_players() {
+    std::cout<<"number_of_players()\n";
+    auto* context = new ::grpc::ClientContext();
+    auto request = new ::ttr::Nothing();
+    auto* response = new ttr::PlayerID();
+    stub_->get_number_of_players(context, *request, response);
+    return response->id();
 }
