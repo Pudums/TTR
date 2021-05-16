@@ -13,7 +13,7 @@ std::vector<WagonCard> parse_wagons_file(std::ifstream &list_of_wagons) {
     while (list_of_wagons >> color) {
         list_of_wagons >> number_of_wagons;
         for (int i = 0; i < number_of_wagons; i++) {
-            wagons_list.push_back({color});
+            wagons_list.emplace_back(color);
         }
     }
     std::shuffle(wagons_list.begin(), wagons_list.end(),
@@ -114,7 +114,7 @@ void Deck::replace_active_cards() {
     set_start_active_wagons();
 }
 
-bool Deck::check_deck_empty() {
+bool Deck::check_deck_empty() const {
     return wagons_deck.empty();
 }
 
@@ -128,17 +128,33 @@ void Deck::return_cards_from_discharge() {
 }
 
 WagonCard Deck::draw_card_from_deck() {
-    WagonCard result = wagons_deck.back();
-    wagons_deck.pop_back();
-    check_correctness_of_deck();
-    return result;
+    if (!wagons_deck.empty()) {
+        WagonCard result = wagons_deck.back();
+        wagons_deck.pop_back();
+        check_correctness_of_deck();
+        return result;
+    }
+    return WagonCard();
 }
 
 WagonCard Deck::draw_card_from_active_cards(int card_number) {
-    WagonCard result = active_wagons[card_number];
-    active_wagons[card_number] = wagons_deck.back();
-    wagons_deck.pop_back();
+    std::cout << "in deck" << std::endl;
     check_correctness_of_deck();
+    std::cout << "deck is correct " << wagons_deck.size()  << std::endl;
+    WagonCard result = active_wagons[card_number];
+    std::cout << "card is drawn" << std::endl;
+    if (!wagons_deck.empty()) {
+        active_wagons[card_number] = wagons_deck.back();
+        std::cout << "active updated" << std::endl;
+        std::cout << "wagon deck size " << wagons_deck.size() << std::endl;
+        wagons_deck.pop_back();
+        std::cout << "deck updated" << std::endl;
+        check_correctness_of_deck();
+    }
+    else {
+        active_wagons[card_number] = WagonCard();
+    }
+    std::cout << "out deck" << std::endl;
     return result;
 }
 
@@ -146,12 +162,13 @@ void Deck::check_correctness_of_deck() {
     if (check_deck_empty()) {
         return_cards_from_discharge();
     }
-    while (!check_active_card_set_is_correct()) {
+    if (!check_active_card_set_is_correct()) {
         replace_active_cards();
     }
 }
+
 std::vector<WagonCard> Deck::get_cards_for_tunnel() {
-    std::vector<WagonCard> result(number_of_extra_wagons_for_tunnel);
+    std::vector<WagonCard> result;
     for (int i = 0; i < number_of_extra_wagons_for_tunnel; i++) {
         result.push_back(draw_card_from_deck());
     }

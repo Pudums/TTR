@@ -208,6 +208,9 @@ int TTRController::is_game_end() {
         return 0;
     }
 }
+//🥰
+
+
 std::vector<int> TTRController::get_results() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         game->count_players_points();

@@ -22,7 +22,7 @@ const std::string None = "None";
 
 struct WagonCard {
     std::string color;
-    WagonCard() = default;
+    WagonCard();
     WagonCard(std::string color_);
 };
 

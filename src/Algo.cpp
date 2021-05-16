@@ -10,7 +10,9 @@ struct Edge {
     int path_pos;
 };
 }  // namespace
+
 bool Algo::is_route_exists(const std::string &s, const std::string &t) {
+    std::cout << "check existance" << std::endl;
     std::set<std::string> used;
     dfs(s, t, used);
     if (used.find(t) != used.end()) {
@@ -24,7 +26,7 @@ void Algo::dfs(const std::string &current,
                std::set<std::string> &used) {
     used.insert(current);
     for (const auto &elem : g[current]) {
-        dfs(elem, t, used);
+        if (used.find(elem) == used.end()) dfs(elem, t, used);
     }
 }
 
@@ -62,7 +64,7 @@ int Algo::find_best_way(const std::string &start,
         std::string name_of_closest;
         for (const auto &elem : all_cities) {
             if (used.find(elem) == used.end() &&
-                (name_of_closest.empty() ||
+                ((name_of_closest.empty() && dist.find(elem) != dist.end()) ||
                  (dist.find(elem) != dist.end() &&
                   dist[elem].first < dist[name_of_closest].first))) {
                 name_of_closest = elem;
@@ -81,6 +83,9 @@ int Algo::find_best_way(const std::string &start,
             dist[name_of_closest].first < shortest_path.first) {
             shortest_path = dist[name_of_closest];
         }
+    }
+    if (shortest_path.second == 1e9) {
+        return rand() % all_paths.size();
     }
     return shortest_path.second;
 }
