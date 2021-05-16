@@ -12,7 +12,6 @@ struct Edge {
 }  // namespace
 
 bool Algo::is_route_exists(const std::string &s, const std::string &t) {
-    std::cout << "check existance" << std::endl;
     std::set<std::string> used;
     dfs(s, t, used);
     if (used.find(t) != used.end()) {
