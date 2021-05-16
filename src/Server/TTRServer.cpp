@@ -61,17 +61,23 @@ TTRServer::TTRServer(TTRController *c) {
 Nothing TTRServer::local_make_turn(const ::ttr::MakeTurnRequest *request) {
     Nothing response;
     if (request->id().id() != controller->get_current_player_id()) {
+        std::cout << "\nnot allowed to make move\n";
         return response;
     }
 
     if (request->type() == "draw from deck") {  // TODO make global constants
-        controller->get_card_from_deck();
+        controller->get_card_from_deck(request->id().id());
     }
     if (request->type() == "draw from active") {
-        controller->get_card_from_active(request->active_card_id());
+        controller->get_card_from_active(request->active_card_id(),
+                                         request->id().id());
     }
     if (request->type() == "build path") {
-        controller->build_path_initialize(request->path_to_build_id());
+        controller->build_path_initialize(request->path_to_build_id(),
+                                          request->id().id());
+        WagonCard wagon;
+        wagon.color = request->color_to_build().color();
+        controller->set_color_to_build_path(wagon, request->id().id());
     }
     if (request->type() == "build station") {
         // TODO

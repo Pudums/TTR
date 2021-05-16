@@ -26,7 +26,6 @@ void TTRController::start_game(int number_of_players,
             server = new ttr::LocalServer(this);
             game = new Game(number_of_players, number_of_bots);
             game->start_game();
-
         }
         std::cout << "try to create client\n";
         client = new GameClient();
@@ -43,9 +42,12 @@ void TTRController::start_game(int number_of_players,
     }
 }
 
-void TTRController::get_card_from_deck() {
-    if(typeOfGame!= type_of_game::SINGLE_COMPUTER and my_id != client->get_id()){
-        std::cout<<"it's not your turn: your id is"<<my_id<<", but now moves "<<client->get_id();
+void TTRController::get_card_from_deck(int id) {
+    if (typeOfGame != type_of_game::SINGLE_COMPUTER and
+        (id == -1 and my_id != client->get_id() or
+         id != -1 and id != client->get_id())) {
+        std::cout << "it's not your turn: your id is" << my_id
+                  << ", but now moves " << client->get_id();
         return;
     }
     current_turn = new DrawCardFromDeck();
@@ -59,9 +61,12 @@ void TTRController::get_card_from_deck() {
         current_turn = nullptr;
 }
 
-void TTRController::get_card_from_active(int num) {
-    if(typeOfGame!= type_of_game::SINGLE_COMPUTER and my_id != client->get_id()){
-        std::cout<<"it's not your turn: your id is"<<my_id<<", but now moves "<<client->get_id();
+void TTRController::get_card_from_active(int num, int id) {
+    if (typeOfGame != type_of_game::SINGLE_COMPUTER and
+        (id == -1 and my_id != client->get_id() or
+         id != -1 and id != client->get_id())) {
+        std::cout << "it's not your turn: your id is" << my_id
+                  << ", but now moves " << client->get_id();
         return;
     }
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
@@ -87,7 +92,14 @@ void TTRController::get_card_from_active(int num) {
     }
 }
 
-void TTRController::build_path_initialize(int id) {
+void TTRController::build_path_initialize(int id, int player_id) {
+    if (typeOfGame != type_of_game::SINGLE_COMPUTER and
+        (player_id == -1 and my_id != client->get_id() or
+         player_id != -1 and player_id != client->get_id())) {
+        std::cout << "it's not your turn: your id is" << my_id
+                  << ", but now moves " << client->get_id();
+        return;
+    }
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         if (auto p = dynamic_cast<BuildStation *>(current_turn); p) {
             game->update_station_path(p->get_city(), id);
@@ -114,7 +126,14 @@ TTRController::~TTRController() {
     delete current_turn;
 }
 
-void TTRController::set_color_to_build_path(const WagonCard &w) {
+void TTRController::set_color_to_build_path(const WagonCard &w, int id) {
+    if (typeOfGame != type_of_game::SINGLE_COMPUTER and
+        (id == -1 and my_id != client->get_id() or
+         id != -1 and id != client->get_id())) {
+        std::cout << "it's not your turn: your id is" << my_id
+                  << ", but now moves " << client->get_id();
+        return;
+    }
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         if (auto p = dynamic_cast<BuildPath *>(current_turn); p) {
             p->set_wagons(game->cards_with_suitable_color(
@@ -127,6 +146,8 @@ void TTRController::set_color_to_build_path(const WagonCard &w) {
             p->set_wagons({w});
             client->make_turn(p, my_id);
             current_turn = nullptr;
+        } else {
+            std::cout << "you should choose path first...\n";
         }
     }
 }
