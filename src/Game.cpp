@@ -218,15 +218,15 @@ void Game::make_move(Turn *t) {
         if (!get_wagon_card_from_deck()) {
             flag = false;
         }
-    }  // OK
+    }
     if (auto *p = dynamic_cast<DrawCardFromActive *>(t); p) {
         if (!get_wagon_card_from_active_cards(p->number)) {
             flag = false;
         }
-    }  // OK
+    }
     if (auto *p = dynamic_cast<TakeRoutes *>(t); p) {
         move_get_new_roots();
-    }  // OK
+    }
     if (auto *p = dynamic_cast<BuildStation *>(t); p) {
         if (!move_build_station(p->get_city())) {
             flag = false;
@@ -236,7 +236,7 @@ void Game::make_move(Turn *t) {
         if (!move_build_path(p->get_pos(), p->getWagons())) {
             flag = false;
         }
-    }  // OK
+    }
     if (check_end_game()) {
         end_game();
     }
@@ -263,15 +263,6 @@ void Game::make_move(Turn *t) {
             int path_pos = Algo::find_best_way(
                 players[active_player].active_routes[route_pos].city2,
                 player_cities, board.paths);
-            if (path_pos > 1000) {
-                std::cout
-                    << players[active_player].active_routes[route_pos].city2
-                    << std::endl;
-                for (auto elem : player_cities) {
-                    std::cout << elem << ' ';
-                }
-                std::cout << std::endl;
-            }
             std::vector<WagonCard> needed_cards = cards_with_suitable_color(
                 WagonCard(board.paths[path_pos].color), players[active_player]);
             if (check_if_enough_cards_for_building_path(board.paths[path_pos],
