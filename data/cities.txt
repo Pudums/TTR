@@ -5,7 +5,7 @@ Danzig 791 202
 Wilno 993 259
 Smolensk 1122 264
 Moskva 1228 233
-Kodenhavn 613 149
+Kobenhavn 613 149
 Berlin 648 300
 Essen 523 282
 Amsterdam 421 271
