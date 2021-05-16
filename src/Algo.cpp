@@ -84,5 +84,8 @@ int Algo::find_best_way(const std::string &start,
             shortest_path = dist[name_of_closest];
         }
     }
+    if (shortest_path.second == 1e9) {
+        return rand() % all_paths.size();
+    }
     return shortest_path.second;
 }

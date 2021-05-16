@@ -140,12 +140,13 @@ WagonCard Deck::draw_card_from_deck() {
 WagonCard Deck::draw_card_from_active_cards(int card_number) {
     std::cout << "in deck" << std::endl;
     check_correctness_of_deck();
-    std::cout << "deck is correct" << std::endl;
+    std::cout << "deck is correct " <<  wagons_deck.size() << std::endl;
     WagonCard result = active_wagons[card_number];
     std::cout << "card is drawn" << std::endl;
     if (!wagons_deck.empty()) {
         active_wagons[card_number] = wagons_deck.back();
         wagons_deck.pop_back();
+        std::cout << "updated" << std::endl;
         check_correctness_of_deck();
     }
     else {

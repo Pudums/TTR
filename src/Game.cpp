@@ -262,7 +262,7 @@ void Game::make_move(Turn *t) {
                    players[active_player].active_routes[route_pos].city2) !=
                player_cities.end()) {
             route_pos++;
-            if (route_pos == players[active_player].active_routes.size()) {
+            if (route_pos == player_cities.size()) {
                 std::cout << "take routes" << std::endl;
                 move_get_new_roots();
                 moved = true;
