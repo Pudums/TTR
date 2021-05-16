@@ -483,8 +483,11 @@ void View::get_card_from_deck() {
 }
 
 void View::draw_players_cards() {
+	std::cout << "start controller.get_current_player_cards\n";
     const auto &cards = Controller->get_current_player_cards();
+	std::cout << "end controller.get_current_player_cards\n";
 	std::map<std::string, int> count = Controller->get_count_by_color();
+	std::cout << "end controller.get_count_by_color\n";
     for (const auto &card : cards) {
         int height = 150, width = 177;
         QVector<QPointF> coords;
