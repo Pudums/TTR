@@ -42,5 +42,5 @@ target_link_libraries(QT_VIEW
 		Qt5::Core
 		)
 
-add_executable(${PROJECT_NAME} main.cpp)
+add_executable(${PROJECT_NAME} main.cpp src/Tests/test.cpp src/Tests/test.h)
 target_link_libraries(${PROJECT_NAME} QT_VIEW)
