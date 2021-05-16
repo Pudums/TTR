@@ -10,7 +10,9 @@ struct Edge {
     int path_pos;
 };
 }  // namespace
+
 bool Algo::is_route_exists(const std::string &s, const std::string &t) {
+    std::cout << "check existance" << std::endl;
     std::set<std::string> used;
     dfs(s, t, used);
     if (used.find(t) != used.end()) {
@@ -24,7 +26,7 @@ void Algo::dfs(const std::string &current,
                std::set<std::string> &used) {
     used.insert(current);
     for (const auto &elem : g[current]) {
-        dfs(elem, t, used);
+        if (used.find(elem) == used.end()) dfs(elem, t, used);
     }
 }
 

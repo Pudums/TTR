@@ -9,9 +9,18 @@ Player::Player(bool is_bot)
 
 void Player::count_points_for_routes() {
     for (const auto& route : active_routes) {
-        if (graph.is_route_exists(route.city1, route.city2)) {
-            points += route.points_for_passing;
+        bool f;
+        std::cout << "start counting" << std::endl;
+        try {
+            f = graph.is_route_exists(route.city1, route.city2);
+            if (f) {
+                points += route.points_for_passing;
+            }
         }
+        catch(...) {
+            std::cout << "bad dfs" << std::endl;
+        }
+        //auto tmp = graph.g;
     }
 }
 
