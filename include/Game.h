@@ -19,7 +19,7 @@
 
 struct Game {
 private:
-    static const int number_of_wagons_for_finish = 30;
+    static const int number_of_wagons_for_finish = 5;
     static const int number_of_getting_wagons = 2;
 
 public:
