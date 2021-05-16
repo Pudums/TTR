@@ -29,7 +29,7 @@ Board::Board(const std::string &paths_file_name, const std::string &wagon_blocks
     std::ifstream list_of_paths(paths_file_name);
     paths = parse_paths_file(list_of_paths);
     std::ifstream wagon_blocks_filestream(wagon_blocks_filename);
-    for (int i = 0; i < 50; i++) {
-        paths[i].read_wagon_blocks(wagon_blocks_filestream);
+    for (auto & path : paths) {
+        path.read_wagon_blocks(wagon_blocks_filestream);
     }
 }

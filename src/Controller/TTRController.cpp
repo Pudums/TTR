@@ -81,6 +81,9 @@ std::vector<Player> TTRController::get_players() {
 int TTRController::is_game_end() {
     return game->check_end_game();
 }
+//🥰
+
+
 std::vector<int> TTRController::get_results() {
     game->count_players_points();
     std::vector<int> res;

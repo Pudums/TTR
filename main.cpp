@@ -11,9 +11,6 @@ void play(int argc, char *argv[]) {
 }
 
 int main(int argc, char *argv[]) {
-    // Deck deck("wagons.txt", "short_routes.txt", "long_routes.txt");
-    // Board board("paths.txt");
     play(argc, argv);
-
     return 0;
 }

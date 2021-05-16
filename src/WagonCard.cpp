@@ -5,3 +5,7 @@
 #include "WagonCard.h"
 WagonCard::WagonCard(std::string color_) : color(std::move(color_)) {
 }
+
+WagonCard::WagonCard() {
+    color = "Unknown";
+}
