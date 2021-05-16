@@ -22,6 +22,7 @@ ttr::Rectangle parse_to_grpc_rectangle(const Rectangle &r) {
     }
     return ans;
 }
+
 ttr::Card parse_card_to_grpc(const WagonCard &active_card) {
     ttr::Card n_card;
     n_card.set_type(::ttr::Card_Type_Wagon);
@@ -29,6 +30,7 @@ ttr::Card parse_card_to_grpc(const WagonCard &active_card) {
     n_card.mutable_wagon_info()->set_color(active_card.color);
     return n_card;
 }
+
 ttr::Route parse_to_grpc_route(const Route &route) {
     ttr::Route n_route;
     n_route.set_begin(route.city1);
@@ -36,6 +38,7 @@ ttr::Route parse_to_grpc_route(const Route &route) {
     n_route.set_points(route.points_for_passing);
     return n_route;
 }
+
 ttr::WagonBlock parse_to_grpc_wagon_block(const WagonBlock &w) {
     ttr::WagonBlock n_block;
     n_block.set_id(w.id);
@@ -50,6 +53,7 @@ ttr::Wagon parse_to_grpc_wagon(const WagonCard &w) {
     n_card.set_color(w.color);
     return n_card;
 }
+
 }  // namespace
 
 namespace ttr {

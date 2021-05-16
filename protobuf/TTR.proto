@@ -19,7 +19,11 @@ message Point {
   int32 x = 1;
   int32 y = 2;
 };
-
+message Station{
+  string city = 1;
+  int32 owner = 2;
+  Point coords = 3;
+};
 message Rectangle {
   repeated Point points = 1;
 };
@@ -54,6 +58,7 @@ message Players{
 
 message Board{
   repeated Path paths = 1;
+  repeated Station stations = 2;
 }
 message Deck{
   repeated Card cards_on_table = 1;

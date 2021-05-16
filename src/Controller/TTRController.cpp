@@ -39,6 +39,7 @@ void TTRController::start_game(int number_of_players,
     } else {
         game = new Game(number_of_players, number_of_bots);
         game->start_game();
+        started = true;
     }
 }
 
@@ -278,7 +279,7 @@ void TTRController::start_game_server() {
 void TTRController::try_bot() {
     if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         if (game->players[game->active_player].is_bot) {
-            game->make_move(game->get_bots_move());
+//            game->make_move(game->get_bots_move());
         }
     }
 }

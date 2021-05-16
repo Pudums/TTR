@@ -9,10 +9,12 @@ Rectangle parse_grpc_rectangle(const ::ttr::Rectangle &r) {
     return ans;
 }
 }  // namespace
+
 GameClient::GameClient() {
     stub_ = ::ttr::TTRService::NewStub(grpc::CreateChannel(
         "localhost:50051", grpc::InsecureChannelCredentials()));
 }
+
 ttr::BoardState *GameClient::get_board_state() {
     auto *state = new ttr::BoardState();
     ttr::Nothing request;
@@ -20,6 +22,7 @@ ttr::BoardState *GameClient::get_board_state() {
     stub_->get_board_state(client_context, request, state);
     return state;
 }
+
 std::vector<Path> GameClient::get_paths() {
     auto state = get_board_state();
     auto board = *(state->release_board_state());
@@ -47,6 +50,7 @@ std::vector<Path> GameClient::get_paths() {
     }
     return paths;
 }
+
 int GameClient::get_id() {
     auto *id = new ::ttr::PlayerID;
     ttr::Nothing request;
@@ -54,12 +58,14 @@ int GameClient::get_id() {
     stub_->get_player_id(client_context, request, id);
     return id->id();
 }
+
 void GameClient::start_game() {
-    auto* req = new ::ttr::Nothing();
+    auto *req = new ::ttr::Nothing();
     auto *client_context = new ::grpc::ClientContext();
     auto *response = new ::ttr::Nothing();
     stub_->start_game(client_context, *req, response);
 }
+
 std::vector<WagonCard> GameClient::get_active_cards() {
     auto state = get_board_state();
     auto deck = state->release_deck_state();
@@ -71,6 +77,7 @@ std::vector<WagonCard> GameClient::get_active_cards() {
     }
     return active_cards;
 }
+
 std::vector<WagonCard> GameClient::get_player_cards(int id) {
     auto player_state = get_state(id);
     std::vector<WagonCard> cards;
@@ -86,6 +93,7 @@ std::vector<WagonCard> GameClient::get_player_cards(int id) {
     }
     return cards;
 }
+
 ttr::PlayerState GameClient::get_state(int id) {
     auto context = new ::grpc::ClientContext();
     ::ttr::PlayerID player_id;
@@ -94,6 +102,7 @@ ttr::PlayerState GameClient::get_state(int id) {
     stub_->get_player_state(context, player_id, state);
     return *state;
 }
+
 std::vector<Player> GameClient::get_all_players() {
     auto board_state = get_board_state();
     std::vector<Player> player_general_info(
@@ -112,6 +121,7 @@ std::vector<Player> GameClient::get_all_players() {
     }
     return player_general_info;
 }
+
 std::vector<int> GameClient::get_score() {
     auto context = new ::grpc::ClientContext();
     ::ttr::Nothing request;
@@ -124,14 +134,16 @@ std::vector<int> GameClient::get_score() {
     }
     return points;
 }
+
 void GameClient::make_turn(Turn *t, int id) {
-    if(get_id() != id){
+    if (get_id() != id) {
         return;
     }
-    auto* context = new ::grpc::ClientContext();
+    auto *context = new ::grpc::ClientContext();
     auto *request = new ::ttr::MakeTurnRequest();
     request->mutable_id()->set_id(id);
-    std::cout<<"i want to make turn and my id is "<<request->id().id()<<'\n';
+    std::cout << "i want to make turn and my id is " << request->id().id()
+              << '\n';
     if (auto *p = dynamic_cast<DrawCardFromDeck *>(t); p) {
         request->set_type("draw from deck");
     }
@@ -140,7 +152,7 @@ void GameClient::make_turn(Turn *t, int id) {
         request->set_active_card_id(p->number);
     }
     if (auto *p = dynamic_cast<TakeRoutes *>(t); p) {
-        //todo
+        // todo
     }
     if (auto *p = dynamic_cast<BuildStation *>(t); p) {
         request->set_type("build station");
@@ -154,14 +166,15 @@ void GameClient::make_turn(Turn *t, int id) {
         w.set_color(p->getWagons()[0].color);
         *(request->mutable_color_to_build()) = w;
     }
-    auto* response = new ::ttr::Nothing();
+    auto *response = new ::ttr::Nothing();
     stub_->make_turn(context, *request, response);
 }
+
 int GameClient::get_number_of_players() {
-    std::cout<<"number_of_players()\n";
-    auto* context = new ::grpc::ClientContext();
+    std::cout << "number_of_players()\n";
+    auto *context = new ::grpc::ClientContext();
     auto request = new ::ttr::Nothing();
-    auto* response = new ttr::PlayerID();
+    auto *response = new ttr::PlayerID();
     stub_->get_number_of_players(context, *request, response);
     return response->id();
 }
