@@ -104,6 +104,6 @@ Marseille Roma Uncolored 4 0 0
 Venezia Zagrab Uncolored 2 0 0
 Wien Zagrab Uncolored 2 0 0
 Roma Palermo Uncolored 3 1 0
-Palermo Brindisi Uncolored 3 1 0
+Palermo Brindisi Uncolored 2 1 0
 Brindisi Athina Uncolored 3 1 0
 Palermo Smyrna Uncolored 4 2 0

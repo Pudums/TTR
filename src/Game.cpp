@@ -50,7 +50,7 @@ int Game::check_end_game() const {
     for (const auto &player : players) {
         if (player.number_of_wagons_left <= Game::number_of_wagons_for_finish) {
             return 2;
-            //return 1
+            // return 1
         }
     }
     return 0;
@@ -65,8 +65,6 @@ Game::Game(int number_of_players, int number_of_bots)
                 discharge)),
       active_player(0),
       number_of_players(number_of_players) {
-    std::cout << "players " << number_of_players - number_of_bots << " bots "
-              << number_of_bots << std::endl;
     for (int i = 0; i < number_of_players - number_of_bots; i++) {
         players.emplace_back(false);
     }
@@ -215,46 +213,37 @@ void Game::update_state_after_path_building(
 }
 
 void Game::make_move(Turn *t) {
-    std::cout << "players move" << std::endl;
     bool flag = true;
     if (auto *p = dynamic_cast<DrawCardFromDeck *>(t); p) {
-        std::cout << "draw card from deck" << std::endl;
         if (!get_wagon_card_from_deck()) {
             flag = false;
         }
     }  // OK
     if (auto *p = dynamic_cast<DrawCardFromActive *>(t); p) {
-        std::cout << "draw card from active" << std::endl;
         if (!get_wagon_card_from_active_cards(p->number)) {
             flag = false;
-            std::cout << "no active cards" << std::endl;
         }
     }  // OK
     if (auto *p = dynamic_cast<TakeRoutes *>(t); p) {
-        std::cout << "draw routes" << std::endl;
         move_get_new_roots();
     }  // OK
     if (auto *p = dynamic_cast<BuildStation *>(t); p) {
-        std::cout << "build station" << std::endl;
         if (!move_build_station(p->get_city())) {
             flag = false;
         }
     }
     if (auto *p = dynamic_cast<BuildPath *>(t); p) {
-        std::cout << "build path" << std::endl;
         if (!move_build_path(p->get_pos(), p->getWagons())) {
             flag = false;
         }
     }  // OK
     if (check_end_game()) {
-        std::cout << "end game" << std::endl;
         end_game();
     }
     if (Turn::num == 0 && flag) {
         active_player = (active_player + 1) % number_of_players;
     }
     while (players[active_player].is_bot) {
-        std::cout << "bot moves: " << active_player << std::endl;
         int route_pos = 0;
         std::set<std::string> player_cities = players_cities();
         bool moved = false;
@@ -263,59 +252,50 @@ void Game::make_move(Turn *t) {
                player_cities.end()) {
             route_pos++;
             if (route_pos == player_cities.size()) {
-                std::cout << "take routes" << std::endl;
                 move_get_new_roots();
                 moved = true;
                 break;
             }
         }
         if (!moved) {
-            std::cout << "finding best way   ";
             player_cities.insert(
                 players[active_player].active_routes[route_pos].city1);
             int path_pos = Algo::find_best_way(
                 players[active_player].active_routes[route_pos].city2,
                 player_cities, board.paths);
-            std::cout << path_pos << std::endl;
             if (path_pos > 1000) {
-                std::cout << players[active_player].active_routes[route_pos].city2 << std::endl;
+                std::cout
+                    << players[active_player].active_routes[route_pos].city2
+                    << std::endl;
                 for (auto elem : player_cities) {
                     std::cout << elem << ' ';
                 }
                 std::cout << std::endl;
             }
-            std::cout << board.paths[path_pos].color << std::endl;
             std::vector<WagonCard> needed_cards = cards_with_suitable_color(
                 WagonCard(board.paths[path_pos].color), players[active_player]);
             if (check_if_enough_cards_for_building_path(board.paths[path_pos],
                                                         needed_cards) &&
                 board.paths[path_pos].owner == -1) {
-                std::cout << "build path" << std::endl;
                 bool f = move_build_path(path_pos, needed_cards);
             } else {
-                std::cout << "draw cards" << std::endl;
                 get_wagon_card_from_deck();
                 get_wagon_card_from_deck();
             }
         }
         active_player = (active_player + 1) % number_of_players;
-        std::cout << "turn is finished" << std::endl;
     }
 }
 
 void Game::count_players_points() {
     for (auto &player : players) {
         player.count_points();
-        std::cout << player.id << std::endl;
     }
 }
 
 void Game::end_game() {
-    std::cout << "finishing game" << std::endl;
     create_graphs_for_players(players, board.paths);
-    std::cout << "counting points" << std::endl;
     count_players_points();
-    std::cout << "finished" << std::endl;
 }
 
 int Game::number_of_cards_with_fixed_color(const std::string &color) const {
