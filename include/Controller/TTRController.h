@@ -16,6 +16,7 @@ struct Game_info {
 };
 enum class type_of_game { LOCAL_SERVER, SINGLE_COMPUTER, LOCAL_CLIENT };
 class TTRController {
+private:
     Game *game = nullptr;
     Turn *current_turn = nullptr;
     GameClient *client = nullptr;
@@ -44,12 +45,13 @@ public:
     std::vector<WagonCard> get_active_cards();
     std::vector<Player> get_players();
     int is_game_end();
-    bool is_game_started() const;
+    [[nodiscard]] bool is_game_started() const;
     void end_game();
     int get_current_player_id();
     std::vector<Path> get_all_paths();
     std::vector<int> get_results();
     std::vector<std::pair<std::string, Circle>> get_stations();
+    [[nodiscard]] int get_my_id() const;
     void try_bot();
     ~TTRController();
 };
