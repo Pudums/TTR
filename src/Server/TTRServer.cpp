@@ -116,7 +116,14 @@ BoardState TTRServer::local_get_board_state() {
         n_path.set_length(path.length);
         *(board.add_paths()) = n_path;
     }
-
+    for(auto &[city, coords] : controller->get_stations()){
+        ::ttr::Station s;
+        s.set_city(city);
+        s.set_allocated_coords(new ::ttr::Point());
+        s.mutable_coords()->set_x(coords.p.x);
+        s.mutable_coords()->set_y(coords.p.y);
+        *(board.add_stations()) = s;
+    }
     std::vector<WagonCard> active_cards = controller->get_active_cards();
     for (auto &active_card : active_cards) {
         *(deck.add_cards_on_table()) = parse_card_to_grpc(active_card);
