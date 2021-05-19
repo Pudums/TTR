@@ -180,6 +180,7 @@ int GameClient::get_number_of_players() {
     stub_->get_number_of_players(context, *request, response);
     return response->id();
 }
+
 std::vector<std::pair<std::string, Circle>> GameClient::get_stations() {
     auto board = get_board_state();
     std::cout<<"try to get stations\n";

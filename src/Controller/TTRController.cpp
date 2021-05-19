@@ -180,6 +180,7 @@ std::vector<WagonCard> TTRController::get_active_cards() {
         return client->get_active_cards();
     }
 }
+
 std::map<std::string, int> TTRController::get_count_by_color() {
     if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         return game->color_to_num();
@@ -195,6 +196,7 @@ std::map<std::string, int> TTRController::get_count_by_color() {
         return result;
     }
 }
+
 std::vector<Player> TTRController::get_players() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         return game->players;
@@ -202,11 +204,12 @@ std::vector<Player> TTRController::get_players() {
         return client->get_all_players();
     }
 }
+
 int TTRController::is_game_end() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         return game->check_end_game();
     } else {
-        return 0;
+
     }
 }
 //🥰
@@ -224,6 +227,7 @@ std::vector<int> TTRController::get_results() {
         return client->get_score();
     }
 }
+
 std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         std::vector<std::pair<std::string, Circle>> stations;
@@ -235,6 +239,7 @@ std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
         return client->get_stations();
     }
 }
+
 void TTRController::build_station(const std::string &city) {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         if (!is_game_end()) {
@@ -248,6 +253,7 @@ void TTRController::build_station(const std::string &city) {
         client->make_turn(current_turn, my_id);
     }
 }
+
 void TTRController::end_game() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
@@ -255,6 +261,7 @@ void TTRController::end_game() {
         }
     }
 }
+
 int TTRController::get_current_player_id() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         return game->active_player;
@@ -262,9 +269,12 @@ int TTRController::get_current_player_id() {
         return client->get_id();
     }
 }
+
+
 std::vector<Path> TTRController::get_all_paths() {
     return get_paths();
 }
+
 bool TTRController::is_game_started() const {
     if(typeOfGame != type_of_game::LOCAL_CLIENT){
         return started;
@@ -272,9 +282,11 @@ bool TTRController::is_game_started() const {
         return true;
     }
 }
+
 void TTRController::start_game_server() {
     started = true;
 }
+
 void TTRController::try_bot() {
     if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         if (game->players[game->active_player].is_bot) {
@@ -282,10 +294,14 @@ void TTRController::try_bot() {
         }
     }
 }
+
 int TTRController::get_number_of_players() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         return game->number_of_players;
     } else {
         return client->get_number_of_players();
     }
+}
+int TTRController::get_my_id() const{
+    return my_id;
 }
