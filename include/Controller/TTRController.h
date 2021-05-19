@@ -51,7 +51,7 @@ public:
     std::vector<Path> get_all_paths();
     std::vector<int> get_results();
     std::vector<std::pair<std::string, Circle>> get_stations();
-    [[nodiscard]] int get_my_id() const;
+    [[nodiscard]] int get_my_id();
     void try_bot();
     ~TTRController();
 };
