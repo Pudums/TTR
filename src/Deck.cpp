@@ -13,7 +13,7 @@ std::vector<WagonCard> parse_wagons_file(std::ifstream &list_of_wagons) {
     while (list_of_wagons >> color) {
         list_of_wagons >> number_of_wagons;
         for (int i = 0; i < number_of_wagons; i++) {
-            wagons_list.push_back({color});
+            wagons_list.emplace_back(color);
         }
     }
     std::shuffle(wagons_list.begin(), wagons_list.end(),
@@ -128,15 +128,17 @@ void Deck::return_cards_from_discharge() {
 }
 
 WagonCard Deck::draw_card_from_deck() {
-    WagonCard result = wagons_deck.back();
-    wagons_deck.pop_back();
-    check_correctness_of_deck();
-    return result;
+    if (!wagons_deck.empty()) {
+        WagonCard result = wagons_deck.back();
+        wagons_deck.pop_back();
+        check_correctness_of_deck();
+        return result;
+    }
+    return WagonCard();
 }
 
 WagonCard Deck::draw_card_from_active_cards(int card_number) {
     check_correctness_of_deck();
-    //std::cout << "card number:    " << card_number << "active card size:   " << active_wagons.size() << std::endl;
     WagonCard result = active_wagons[card_number];
     if (!wagons_deck.empty()) {
         active_wagons[card_number] = wagons_deck.back();
@@ -144,7 +146,7 @@ WagonCard Deck::draw_card_from_active_cards(int card_number) {
         check_correctness_of_deck();
     }
     else {
-        wagons_deck[card_number] = WagonCard();
+        active_wagons[card_number] = WagonCard();
     }
     return result;
 }
@@ -153,13 +155,13 @@ void Deck::check_correctness_of_deck() {
     if (check_deck_empty()) {
         return_cards_from_discharge();
     }
-    while (!check_active_card_set_is_correct()) {
+    if (!check_active_card_set_is_correct()) {
         replace_active_cards();
     }
 }
 
 std::vector<WagonCard> Deck::get_cards_for_tunnel() {
-    std::vector<WagonCard> result(number_of_extra_wagons_for_tunnel);
+    std::vector<WagonCard> result;
     for (int i = 0; i < number_of_extra_wagons_for_tunnel; i++) {
         result.push_back(draw_card_from_deck());
     }

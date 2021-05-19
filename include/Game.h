@@ -19,7 +19,7 @@
 
 struct Game {
 private:
-    static const int number_of_wagons_for_finish = 2;
+    static const int number_of_wagons_for_finish = 20;
     static const int number_of_getting_wagons = 2;
 
 public:
@@ -36,7 +36,7 @@ public:
 
     void start_game();
     void make_move(Turn *turn);
-    void update_station_path(const std::string &station_city, int path_pos);
+    void update_station_path(const std  ::string &station_city, int path_pos);
     void move_get_new_roots();
     std::set<std::string> players_cities();
     [[nodiscard]] bool move_build_path(int position,
@@ -57,7 +57,6 @@ public:
     [[nodiscard]] bool check_if_enough_cards_for_building_path(
         const Path &path,
         const std::vector<WagonCard> &list_of_cards) const;
-    //[[nodiscard]] Turn *get_bots_move();
     void end_game();
     void count_players_points();
 };
