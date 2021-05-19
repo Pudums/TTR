@@ -219,11 +219,12 @@ void View::host_or_not(bool is_server) {
 void View::timed_redraw() {
 	draw_board();
 	QTimer *timer = new QTimer();
-	timer->setSingleShot(true);
-	timer->setInterval(5000);
+	timer->setSingleShot(false);
+	timer->setInterval(100);
 	connect(timer, &QTimer::timeout, [=](){
 		draw_board();
-		timed_redraw();
+		// timed_redraw();
+		timer->start();
 	});
 	timer->start();
 }
@@ -281,6 +282,10 @@ void View::draw_board() {
 		Controller->end_game();
 		end_game();
 		return;
+	} else if (status == 1) {
+		draw_map();
+		draw_wagons();
+		draw_wagons_count();
 	} else {
 		std::cout << "draw_deck\n";
 		draw_deck();
@@ -303,11 +308,19 @@ void View::draw_board() {
 void View::draw_redraw_button() {
 }
 
+namespace {
+	bool flag = true;
+}
+
 void View::draw_wagons_count() {
-	const auto players = Controller->get_players();
+	const auto &players = Controller->get_players();
+	const auto &my_id = Controller->get_current_player_id();
 	int height = 220, width = 367;
     for (int i = 0; i < players.size(); ++ i) {
+
 		const auto &player = players[i];
+		QFont font("comic sans", 14);
+
         QVector<QPointF> coords;
         coords << QPointF(1320 + width * 0, height * i)
                << QPointF(1320 + width * 1, height * i)
@@ -316,64 +329,53 @@ void View::draw_wagons_count() {
 
         Wagon *wagon_to_draw = new Wagon(coords, 
 				color_frow_owner[i]);
+		connect(wagon_to_draw, &Wagon::clicked, [&]() {
+				flag = !flag;
+				});
         scene->addItem(wagon_to_draw);
 
-		QFont font("comic sans", 14);
-		QGraphicsTextItem* some_text1 = new QGraphicsTextItem(QString("Wagons left: ") + QString::number(player.number_of_wagons_left));
-		some_text1->setFont(font);
-		some_text1->setPos(1320 + width * 0.3, i * height);
-		scene->addItem(some_text1);
+		if(my_id != i || flag) {
 
-		QGraphicsTextItem* some_text2 = new QGraphicsTextItem(QString("Points: ") 
-				+ QString::number(player.points));
-		some_text2->setPos(1320 + width * 0.3, i * height + 30);
-		some_text2->setFont(font);
-		scene->addItem(some_text2);
+			QGraphicsTextItem* some_text1 = new QGraphicsTextItem(QString("Wagons left: ") + QString::number(player.number_of_wagons_left));
+			some_text1->setFont(font);
+			some_text1->setPos(1320 + width * 0.3, i * height);
+			scene->addItem(some_text1);
 
-		QGraphicsTextItem* some_text3 = new QGraphicsTextItem(QString("Stations left: ") 
-				+ QString::number(player.number_of_stations_left));
-		some_text3->setPos(1320 + width * 0.3, i * height + 30 * 2);
-		some_text3->setFont(font);
-		scene->addItem(some_text3);
+			QGraphicsTextItem* some_text2 = new QGraphicsTextItem(QString("Points: ") 
+					+ QString::number(player.points));
+			some_text2->setPos(1320 + width * 0.3, i * height + 30);
+			some_text2->setFont(font);
+			scene->addItem(some_text2);
 
-		QGraphicsTextItem* some_text4 = new QGraphicsTextItem(QString("Cards : ") 
-				+ QString::number(player.wagon_cards.size()));
-		some_text4->setPos(1320 + width * 0.3, i * height + 30 * 3);
-		some_text4->setFont(font);
-		scene->addItem(some_text4);
-		bool flag = true;
+			QGraphicsTextItem* some_text3 = new QGraphicsTextItem(QString("Stations left: ") 
+					+ QString::number(player.number_of_stations_left));
+			some_text3->setPos(1320 + width * 0.3, i * height + 30 * 2);
+			some_text3->setFont(font);
+			scene->addItem(some_text3);
 
-		connect(wagon_to_draw, &Wagon::clicked, [=, flag]() mutable {
-				scene->removeItem(wagon_to_draw);
-				scene->addItem(wagon_to_draw);
-				if(flag) {
-					scene->removeItem(some_text1);
-					scene->removeItem(some_text2);
-					scene->removeItem(some_text3);
-					scene->removeItem(some_text4);
-					int j = 0;
-					for(auto &path: player.active_routes) {
-						QGraphicsTextItem *some_text = new QGraphicsTextItem(QString("From: ") 
-							+ QString(path.city1.c_str()) + QString(" to ") + QString(path.city2.c_str()));
-						some_text->setPos(1320 + width * 0.05, i * height + 25 * (2 * j));
-						some_text->setFont(font);
-						scene->addItem(some_text);
+			QGraphicsTextItem* some_text4 = new QGraphicsTextItem(QString("Cards : ") 
+					+ QString::number(player.wagon_cards.size()));
+			some_text4->setPos(1320 + width * 0.3, i * height + 30 * 3);
+			some_text4->setFont(font);
+			scene->addItem(some_text4);
 
-						some_text = new QGraphicsTextItem(QString("Left to build: ") 
-							+ QString::number(path.points_for_passing));
-						some_text->setPos(1320 + width * 0.05, i * height + 25 * (2 * j + 1));
-						some_text->setFont(font);
-						scene->addItem(some_text);
-						j++;
-					}
-				}else {
-					scene->addItem(some_text1);
-					scene->addItem(some_text2);
-					scene->addItem(some_text3);
-					scene->addItem(some_text4);
-				}
-				flag = !flag;
-		} );
+		} else {
+			int j = 0;
+			for(const auto &path: player.active_routes) {
+				QGraphicsTextItem *some_text = new QGraphicsTextItem(QString("From: ") 
+					+ QString(path.city1.c_str()) + QString(" to ") + QString(path.city2.c_str()));
+				some_text->setPos(1320 + width * 0.05, i * height + 25 * (2 * j));
+				some_text->setFont(font);
+				scene->addItem(some_text);
+
+				some_text = new QGraphicsTextItem(QString("Left to build: ") 
+					+ QString::number(path.points_for_passing));
+				some_text->setPos(1320 + width * 0.05, i * height + 25 * (2 * j + 1));
+				some_text->setFont(font);
+				scene->addItem(some_text);
+				j++;
+			}
+		}
 	}
 }
 
