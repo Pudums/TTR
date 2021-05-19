@@ -314,7 +314,7 @@ namespace {
 
 void View::draw_wagons_count() {
 	const auto &players = Controller->get_players();
-	const auto &my_id = Controller->get_current_player_id();
+	const auto &my_id = Controller->get_my_id();
 	int height = 220, width = 367;
     for (int i = 0; i < players.size(); ++ i) {
 
