@@ -10,6 +10,7 @@
 #include <thread>
 #include <QBrush>
 #include <chrono>
+#include <QTimer>
 #include <QPalette>
 #include <iostream>
 #include <QTimeLine>
@@ -215,6 +216,18 @@ void View::host_or_not(bool is_server) {
     scene->addItem(client);
 }
 
+void View::timed_redraw() {
+	draw_board();
+	QTimer *timer = new QTimer();
+	timer->setSingleShot(true);
+	timer->setInterval(5000);
+	connect(timer, &QTimer::timeout, [=](){
+		draw_board();
+		timed_redraw();
+	});
+	timer->start();
+}
+
 void View::choose_count_of_bots(int n, bool is_server, bool is_host) {
     scene->clear();
 	std::cout << "choose_count_of_bots " << n << 
@@ -224,7 +237,7 @@ void View::choose_count_of_bots(int n, bool is_server, bool is_host) {
 		Controller->start_game(-1,
 				-1, 
 				type_of_game::LOCAL_CLIENT);
-				draw_board();
+				timed_redraw();
 		return;
 	}
 
@@ -251,7 +264,7 @@ void View::choose_count_of_bots(int n, bool is_server, bool is_host) {
 						   	i, 
 							type_of_game::LOCAL_CLIENT);
 				}
-				draw_board();
+				timed_redraw();
 		} );
 		scene->addItem(bot);
 	}
@@ -283,7 +296,11 @@ void View::draw_board() {
 		draw_wagons_count();
 		std::cout << "draw_stations\n";
 		draw_stations();
+		draw_redraw_button();
 	}
+}
+
+void View::draw_redraw_button() {
 }
 
 void View::draw_wagons_count() {

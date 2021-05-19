@@ -6,6 +6,10 @@
 #include "Server/TTRServer.h"
 #include "TTRController_fwd.h"
 #include "Turn.h"
+#include "View_fwd.h"
+
+extern View *view;
+
 struct Game_info {
     int number_of_players = 0;
     int number_of_bots = 0;
