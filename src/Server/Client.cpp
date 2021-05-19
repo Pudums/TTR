@@ -115,10 +115,10 @@ std::vector<Player> GameClient::get_all_players() {
         player_general_info[i].number_of_wagons_left =
             curr_player.wagons_left();
         auto private_info = get_state(i);
-        for(int i = 0; i < private_info.mutable_private_info()->player_routes().routes_size();i++) {
+        for(int j = 0; j < private_info.mutable_private_info()->player_routes().routes_size();j++) {
             Route n_route;
-            n_route.city1 = private_info.mutable_private_info()->player_routes().routes(i).begin();
-            n_route.city2 = private_info.mutable_private_info()->player_routes().routes(i).end();
+            n_route.city1 = private_info.mutable_private_info()->player_routes().routes(j).begin();
+            n_route.city2 = private_info.mutable_private_info()->player_routes().routes(j).end();
             player_general_info[i].active_routes.push_back(n_route);
         }
         player_general_info[i].wagon_cards.resize(
