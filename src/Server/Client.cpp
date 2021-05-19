@@ -119,6 +119,7 @@ std::vector<Player> GameClient::get_all_players() {
             Route n_route;
             n_route.city1 = private_info.mutable_private_info()->player_routes().routes(j).begin();
             n_route.city2 = private_info.mutable_private_info()->player_routes().routes(j).end();
+            n_route.points_for_passing = private_info.mutable_private_info()->player_routes().routes(j).points();
             player_general_info[i].active_routes.push_back(n_route);
         }
         player_general_info[i].wagon_cards.resize(
@@ -196,8 +197,16 @@ std::vector<std::pair<std::string, Circle>> GameClient::get_stations() {
         Point coords{station.coords().x(), station.coords().y()};
         Circle point{coords, 5};
         std::string city = *station.mutable_city();
-        stations.push_back(std::make_pair(city, point));
+        stations.emplace_back(city, point);
     }
     std::cout<<"got stations\n";
     return stations;
+}
+
+bool GameClient::is_game_end() {
+    auto *context = new ::grpc::ClientContext();
+    auto request = new ::ttr::Nothing();
+    auto *response = new ttr::BOOL();
+    stub_->check_end_game(context, *request, response);
+    return response->value();
 }
