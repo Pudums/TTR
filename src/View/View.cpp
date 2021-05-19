@@ -219,11 +219,12 @@ void View::host_or_not(bool is_server) {
 void View::timed_redraw() {
 	draw_board();
 	QTimer *timer = new QTimer();
-	timer->setSingleShot(true);
-	timer->setInterval(5000);
+	timer->setSingleShot(false);
+	timer->setInterval(100);
 	connect(timer, &QTimer::timeout, [=](){
 		draw_board();
-		timed_redraw();
+		// timed_redraw();
+		timer->start();
 	});
 	timer->start();
 }
