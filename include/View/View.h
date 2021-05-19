@@ -28,6 +28,8 @@ class View : public QGraphicsView {
 	void choose_count_of_bots(int count, bool is_server = true, bool is_host = true);
 	void mouseDoubleClickEvent(QMouseEvent *event);
 	void host_or_not(bool is_server = true);
+	void draw_redraw_button();
+	void timed_redraw();
 
 public:
     void draw_board();

@@ -3,10 +3,14 @@
 #include "Button.h"
 #include "Station.h"
 #include "WagonCard.h"
+#include "Deck_class.h"
 #include "CircleWidget.h"
 
 #include <string>
+#include <thread>
 #include <QBrush>
+#include <chrono>
+#include <QTimer>
 #include <QPalette>
 #include <iostream>
 #include <QTimeLine>
@@ -212,6 +216,18 @@ void View::host_or_not(bool is_server) {
     scene->addItem(client);
 }
 
+void View::timed_redraw() {
+	draw_board();
+	QTimer *timer = new QTimer();
+	timer->setSingleShot(true);
+	timer->setInterval(5000);
+	connect(timer, &QTimer::timeout, [=](){
+		draw_board();
+		timed_redraw();
+	});
+	timer->start();
+}
+
 void View::choose_count_of_bots(int n, bool is_server, bool is_host) {
     scene->clear();
 	std::cout << "choose_count_of_bots " << n << 
@@ -221,7 +237,7 @@ void View::choose_count_of_bots(int n, bool is_server, bool is_host) {
 		Controller->start_game(-1,
 				-1, 
 				type_of_game::LOCAL_CLIENT);
-				draw_board();
+				timed_redraw();
 		return;
 	}
 
@@ -248,7 +264,7 @@ void View::choose_count_of_bots(int n, bool is_server, bool is_host) {
 						   	i, 
 							type_of_game::LOCAL_CLIENT);
 				}
-				draw_board();
+				timed_redraw();
 		} );
 		scene->addItem(bot);
 	}
@@ -280,7 +296,11 @@ void View::draw_board() {
 		draw_wagons_count();
 		std::cout << "draw_stations\n";
 		draw_stations();
+		draw_redraw_button();
 	}
+}
+
+void View::draw_redraw_button() {
 }
 
 void View::draw_wagons_count() {
@@ -416,18 +436,35 @@ void View::mouseDoubleClickEvent(QMouseEvent *event) {
 }
 
 void View::draw_deck() {
-    QBrush q;
-    q.setTextureImage(QImage("data/deck.jpeg"));
-
-    Button *deck = new Button();
     int hight = 200, width = 327;  // free 1593 x 880
-    deck->setRect(1920 - width, 1080 - hight, width, hight);
-    deck->setBrush(q);
-    connect(deck, SIGNAL(clicked()), this, SLOT(get_card_from_deck()));
 
-	deck->setZValue(deck_z_vzlue);
+    // QBrush q;
+    // q.setTextureImage(QImage("data/deck.jpeg"));
 
-    scene->addItem(deck);
+    // Button *deck = new Button();
+	
+	QVector<QPointF> coords;
+	coords << QPointF(1920 - width, 1080 - hight)
+		   << QPointF(1920 - width, 1080)
+		   << QPointF(1920, 1080)
+		   << QPointF(1920, 1080 - hight);
+
+	Wagon *wagon_to_draw = new Wagon(coords);
+
+	// Deck_class *deck = new Deck_class();
+	QWidget *deck_qw;
+	// deck_qw = qobject_cast<QWidget *> (deck);
+	deck_qw = new QWidget();
+	deck_qw->setStyleSheet("background-image:url(./data/deck.jpeg)");
+	deck_qw->setAutoFillBackground(true);
+    deck_qw->setGeometry(1920 - width, 1080 - hight, width, hight);
+    // deck->setBrush(q);
+    connect(wagon_to_draw, SIGNAL(clicked()), this, SLOT(get_card_from_deck()));
+
+	// deck->setZValue(deck_z_vzlue);
+
+    scene->addWidget(deck_qw);
+	scene->addItem(wagon_to_draw);
 }
 
 void View::get_card_from_deck() {

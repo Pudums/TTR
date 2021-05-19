@@ -13,7 +13,7 @@ class Wagon : public QWidget, public QGraphicsPolygonItem {
 	Q_OBJECT
 	// Q_PROPERTY(QPointF pos READ pos WRITE setPos)
 public:
-    Wagon(const QVector<QPointF> &points, const std::string &color);
+    Wagon(const QVector<QPointF> &points, const std::string &color = "un_vis");
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 
 	// QPointF pos() const;
