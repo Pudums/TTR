@@ -282,6 +282,10 @@ void View::draw_board() {
 		Controller->end_game();
 		end_game();
 		return;
+	} else if (status == 1) {
+		draw_map();
+		draw_wagons();
+		draw_wagons_count();
 	} else {
 		std::cout << "draw_deck\n";
 		draw_deck();
@@ -305,7 +309,8 @@ void View::draw_redraw_button() {
 }
 
 void View::draw_wagons_count() {
-	const auto players = Controller->get_players();
+	const auto &players = Controller->get_players();
+	const auto &my_id = Controller->get_current_player_id();
 	int height = 220, width = 367;
     for (int i = 0; i < players.size(); ++ i) {
 		const auto &player = players[i];
@@ -344,6 +349,7 @@ void View::draw_wagons_count() {
 		scene->addItem(some_text4);
 		bool flag = true;
 
+		if(i == my_id)
 		connect(wagon_to_draw, &Wagon::clicked, [=, flag]() mutable {
 				scene->removeItem(wagon_to_draw);
 				scene->addItem(wagon_to_draw);
