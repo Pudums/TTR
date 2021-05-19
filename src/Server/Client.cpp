@@ -1,4 +1,6 @@
 #include "Server/Client.h"
+#include <vector>
+#include <utility>
 namespace {
 Rectangle parse_grpc_rectangle(const ::ttr::Rectangle &r) {
     Rectangle ans;
@@ -177,4 +179,18 @@ int GameClient::get_number_of_players() {
     auto *response = new ttr::PlayerID();
     stub_->get_number_of_players(context, *request, response);
     return response->id();
+}
+std::vector<std::pair<std::string, Circle>> GameClient::get_stations() {
+    auto board = get_board_state();
+    std::cout<<"try to get stations\n";
+    std::vector<std::pair<std::string, Circle>> stations;
+    for(int i = 0; i < board->board_state().stations_size();i++){
+        auto station = board->mutable_board_state()->stations(i);
+        Point coords{station.coords().x(), station.coords().y()};
+        Circle point{coords, 5};
+        std::string city = *station.mutable_city();
+        stations.push_back(std::make_pair(city, point));
+    }
+    std::cout<<"got stations\n";
+    return stations;
 }

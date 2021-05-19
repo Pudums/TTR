@@ -232,8 +232,7 @@ std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
         }
         return stations;
     } else {
-        return {};
-        // TODO
+        return client->get_stations();
     }
 }
 void TTRController::build_station(const std::string &city) {

@@ -23,6 +23,7 @@ public:
     int get_id();
     void start_game();
     int get_number_of_players();
+    std::vector<std::pair<std::string, Circle>> get_stations();
     std::vector<WagonCard> get_active_cards();
     std::vector<WagonCard> get_player_cards(int id);
     std::vector<Player> get_all_players();
