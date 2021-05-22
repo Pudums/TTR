@@ -212,7 +212,7 @@ int TTRController::is_game_end() {
         return client->is_game_end();
     }
 }
-//🥰
+//🥰🥰🥰🥰🥰🥰🥰🥰
 
 
 std::vector<int> TTRController::get_results() {
@@ -256,9 +256,7 @@ void TTRController::build_station(const std::string &city) {
 
 void TTRController::end_game() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
-        if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
             game->end_game();
-        }
     }
 }
 

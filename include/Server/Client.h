@@ -29,6 +29,6 @@ public:
     std::vector<Player> get_all_players();
     std::vector<int> get_score();
     void make_turn(Turn *turn, int id);
-    bool is_game_end();
+    int is_game_end();
 };
 #endif  // TTR_CLIENT_H
