@@ -189,6 +189,9 @@ void GameClient::make_turn(Turn *t, int id) {
     auto *response = new ::ttr::Nothing();
     stub_->make_turn(context, *request, response);
 }
+GameClient::operator bool() {
+    return stub_.operator bool();
+}
 
 int GameClient::get_number_of_players() {
     auto *context = new ::grpc::ClientContext();
