@@ -32,6 +32,7 @@ class View : public QGraphicsView {
     void host_or_not(bool is_server = true);
     void draw_redraw_button();
     void timed_redraw();
+	void disconnected();
 
 public:
     void draw_board();

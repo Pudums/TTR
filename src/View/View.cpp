@@ -140,14 +140,29 @@ void View::display_rulles() {
 
 	std::stringstream rul;
 	{
-		//std::ifstream in;
-		//in.open("data/rules.txt");
-		//in.close();
+		std::ifstream in;
+		std::string line;
+		in.open("data/rules.txt");
+		while(!in.eof()) {
+			getline(in, line);
+			if(line.size() == 0 || line[0] == '#') 
+				continue;
+			rul << line << '\n';
+		}
+		in.close();
 	}
+
+	std::cout << "rul:\n" << rul.str() << "\nend rul\n";
 
 	//const QString rull = std::string(rul.str());
 
-	//QTextObject *rulles = new QTextObject(rull);
+    QFont font("comic sans", 14);
+    QGraphicsTextItem *some_text =
+        new QGraphicsTextItem(QString(rul.str().c_str()));
+    some_text->setPos(10, 10);
+    some_text->setFont(font);
+    some_text->setDefaultTextColor(QColor("black"));
+    scene->addItem(some_text);
 }
 
 void View::start(bool is_server, bool is_host) {
@@ -295,6 +310,7 @@ void View::draw_board() {
         delete i;
     }
     scene->clear();
+	try {
     std::cout << "draw_board "
               << "\n";
     std::cout << "start controller.is_game_end\n";
@@ -307,6 +323,7 @@ void View::draw_board() {
         return;
 	} else if(status == 3) {
 		std::cout << "server closed\n";
+		disconnected();
 		close();
     } else if (status == 1) {
         draw_map();
@@ -330,6 +347,29 @@ void View::draw_board() {
         draw_stations();
         draw_redraw_button();
     }
+	} catch(...) {
+		std::cout << "server closed\n";
+		disconnected();
+	}
+}
+
+void View::disconnected() {
+    QFont font("comic sans", 14);
+    QGraphicsTextItem *some_text =
+        new QGraphicsTextItem(QString("Server closed"));
+    int txPos = this->width() / 2 - some_text->boundingRect().width() / 2;
+    int tyPos = 150;
+    some_text->setPos(txPos, tyPos);
+    some_text->setFont(font);
+    some_text->setDefaultTextColor(QColor("black"));
+    scene->addItem(some_text);
+
+    Button *main_menu = new Button(QString("Back menu"));
+    int bxPos = this->width() / 2 - main_menu->boundingRect().width() / 2;
+    int byPos = 300;
+    main_menu->setPos(bxPos, byPos);
+    connect(main_menu, &Button::clicked, [=]() { display_menu(); });
+    scene->addItem(main_menu);
 }
 
 void View::draw_redraw_button() {
@@ -344,6 +384,7 @@ void View::draw_redraw_button() {
     map->setZValue(map_z_value);
 	connect(map, &Button::clicked, [&]() {
 			Controller->get_routes();
+			draw_board();
 			});
     // TODO
     scene->addItem(map);
@@ -509,7 +550,7 @@ void View::draw_deck() {
     QWidget *deck_qw;
     // deck_qw = qobject_cast<QWidget *> (deck);
     deck_qw = new QWidget();
-    deck_qw->setStyleSheet("background-image:url(./data/deck.jpeg)");
+    deck_qw->setStyleSheet("background-image:url(./data/deck.jpg)");
     deck_qw->setAutoFillBackground(true);
     deck_qw->setGeometry(1920 - width, 1080 - hight, width, hight);
     // deck->setBrush(q);
