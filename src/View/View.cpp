@@ -254,9 +254,8 @@ void View::host_or_not(bool is_server) {
                   << "\n";
 		try {
         start(is_server, false);
-		} catch (...) {
-		std::cout <<"server disconnected\n";
-		disconnected();
+		} catch (const std::logic_error &e){
+		disconnected(e.what());
 		}
         // start_players(4, is_server);
         // start_player_4(is_server);
@@ -326,10 +325,6 @@ void View::draw_board() {
         Controller->end_game();
         end_game();
         return;
-	} else if(status == 3) {
-		std::cout << "server closed\n";
-		disconnected();
-		close();
     } else if (status == 1) {
         draw_map();
         draw_wagons();
@@ -352,16 +347,16 @@ void View::draw_board() {
         draw_stations();
         draw_redraw_button();
     }
-	} catch(...) {
+	} catch(const std::logic_error &e) {
 		std::cout << "server closed\n";
-		disconnected();
+		disconnected(e.what());
 	}
 }
 
-void View::disconnected() {
+void View::disconnected(const char *err) {
     QFont font("comic sans", 14);
     QGraphicsTextItem *some_text =
-        new QGraphicsTextItem(QString("Server closed"));
+        new QGraphicsTextItem(QString(err));
     int txPos = this->width() / 2 - some_text->boundingRect().width() / 2;
     int tyPos = 150;
     some_text->setPos(txPos, tyPos);
