@@ -336,3 +336,9 @@ void TTRController::throw_exception_if_server_disconnected() {
         throw std::logic_error("cannot connect to server");
     }
 }
+bool TTRController::is_my_turn() {
+    if(typeOfGame == type_of_game::SINGLE_COMPUTER){
+        return true;
+    }
+    return my_id == get_current_player_id();
+}
