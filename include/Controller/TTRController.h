@@ -52,7 +52,7 @@ public:
     std::vector<int> get_results();
     std::vector<std::pair<std::string, Circle>> get_stations();
     [[nodiscard]] int get_my_id();
-    void try_bot();
+    void throw_exception_if_server_disconnected();
     ~TTRController();
 };
 

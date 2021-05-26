@@ -190,7 +190,13 @@ void GameClient::make_turn(Turn *t, int id) {
     stub_->make_turn(context, *request, response);
 }
 GameClient::operator bool() {
-    return stub_.operator bool();
+    auto *context = new ::grpc::ClientContext();
+    auto request = new ::ttr::Nothing();
+    auto *response = new ttr::PlayerID();
+    std::cerr<<"try to detect server";
+    const auto return_status =
+        stub_->get_number_of_players(context, *request, response);
+    return return_status.ok();
 }
 
 int GameClient::get_number_of_players() {
