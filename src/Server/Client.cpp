@@ -15,7 +15,7 @@ Rectangle parse_grpc_rectangle(const ::ttr::Rectangle &r) {
 GameClient::GameClient() {
     stub_ = ::ttr::TTRService::NewStub(grpc::CreateChannel(
         "localhost:50051", grpc::InsecureChannelCredentials()));
-    //TODO not only localhost
+    // TODO not only localhost
 }
 
 ttr::BoardState *GameClient::get_board_state() {
@@ -172,22 +172,30 @@ void GameClient::make_turn(Turn *t, int id) {
         request->set_active_card_id(p->number);
     }
     if (auto *p = dynamic_cast<TakeRoutes *>(t); p) {
-        // todo
+        request->set_type("take routes");
     }
     if (auto *p = dynamic_cast<BuildStation *>(t); p) {
         request->set_type("build station");
         request->set_station_to_build_id(p->get_city());
+        request->set_path_to_build_id(p->get_path_pos());
     }
     if (auto *p = dynamic_cast<BuildPath *>(t); p) {
         request->set_type("build path");
         request->set_path_to_build_id(p->get_pos());
         ::ttr::Wagon w;
-
         w.set_color(p->getWagons()[0].color);
         *(request->mutable_color_to_build()) = w;
     }
     auto *response = new ::ttr::Nothing();
     stub_->make_turn(context, *request, response);
+}
+GameClient::operator bool() {
+    auto *context = new ::grpc::ClientContext();
+    auto request = new ::ttr::Nothing();
+    auto *response = new ttr::PlayerID();
+    const auto return_status =
+        stub_->get_number_of_players(context, *request, response);
+    return return_status.ok();
 }
 
 int GameClient::get_number_of_players() {
