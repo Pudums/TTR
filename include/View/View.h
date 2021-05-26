@@ -39,7 +39,6 @@ public:
 
     QGraphicsScene *scene;
 
-    void display_menu();
 
 public slots:
     void start(bool is_server = true, bool is_host = true);
@@ -47,6 +46,8 @@ public slots:
                        bool is_server = true,
                        bool is_host = true);
     void get_card_from_deck();
+	void display_rulles();
+    void display_menu();
 };
 
 #endif  //__View__H__
