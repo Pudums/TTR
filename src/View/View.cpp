@@ -352,6 +352,7 @@ void View::draw_board() {
         std::cout << "draw_stations\n";
         draw_stations();
         draw_redraw_button();
+		draw_whoose_turn();
     }
 	} catch(const std::logic_error &e) {
 		std::cout << "server closed\n";
@@ -359,9 +360,54 @@ void View::draw_board() {
 	}
 }
 
+void View::draw_whoose_turn() {
+    QFont font("comic sans", 20);
+	font.setBold(true);
+
+    int txPos = 30;
+    int tyPos = 30;
+	int id = Controller->get_current_player_id();
+	int my_id = Controller->get_my_id();
+	auto color = color_frow_owner[id];
+
+    QGraphicsTextItem *some_text =
+        new QGraphicsTextItem(QString("Curr turn is this color"));
+    some_text->setFont(font);
+    some_text->setPos(txPos, tyPos);
+	some_text->setDefaultTextColor(Qt::cyan);
+	if(color == Red) {
+		some_text->setDefaultTextColor(Qt::red);
+	} else if(color ==  Yellow) {
+		some_text->setDefaultTextColor(Qt::yellow);
+	} else if(color == Blue) {
+		some_text->setDefaultTextColor(Qt::blue);
+	} else if(color == Green) {
+		some_text->setDefaultTextColor(Qt::green);
+	}
+    scene->addItem(some_text);
+
+    some_text =
+        new QGraphicsTextItem(QString("Ur color is"));
+	color = color_frow_owner[my_id];
+    some_text->setFont(font);
+    some_text->setPos(txPos, tyPos + 22);
+	some_text->setDefaultTextColor(Qt::cyan);
+	if(color == Red) {
+		some_text->setDefaultTextColor(Qt::red);
+	} else if(color ==  Yellow) {
+		some_text->setDefaultTextColor(Qt::yellow);
+	} else if(color == Blue) {
+		some_text->setDefaultTextColor(Qt::blue);
+	} else if(color == Green) {
+		some_text->setDefaultTextColor(Qt::green);
+	}
+    scene->addItem(some_text);
+}
+
 void View::disconnected(const char *err) {
 	delete Controller;
 	Controller = new TTRController();
+
     QFont font("comic sans", 14);
     QGraphicsTextItem *some_text =
         new QGraphicsTextItem(QString(err));

@@ -33,6 +33,7 @@ class View : public QGraphicsView {
     void draw_redraw_button();
     void timed_redraw();
 	void disconnected(const char *);
+	void draw_whoose_turn();
 
 public:
     void draw_board();
