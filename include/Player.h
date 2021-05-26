@@ -26,7 +26,6 @@ public:
     int id;
     std::vector<WagonCard> wagon_cards;
     std::vector<Route> active_routes;
-    std::vector<std::string> stations;
     std::set<int> station_paths;
     int number_of_wagons_left;
     int points;

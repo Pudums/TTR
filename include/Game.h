@@ -42,7 +42,7 @@ public:
     [[nodiscard]] bool move_build_path(int position,
                                        const std::vector<WagonCard> &cards);
     bool get_wagon_card_from_deck();
-    [[nodiscard]] bool move_build_station(const std::string &city);
+    [[nodiscard]] bool move_build_station(const std::string &city, int path_id);
     bool get_wagon_card_from_active_cards(int position);
     void add_extra_tunnel_cards(Path &path);
     void update_state_after_path_building(
