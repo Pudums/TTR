@@ -61,7 +61,7 @@ void View::draw_stations() {
 		QPen *pen = new QPen;
 		pen->setBrush(brush);
 		connect(path, &Station::clicked, [=]() {
-				std::cout << "station " << name << " cliced\n";
+				Controller->build_station(name);
 		} );
 		scene->addPath(*path, *pen, brush);
 	}
@@ -220,7 +220,7 @@ void View::timed_redraw() {
 	draw_board();
 	QTimer *timer = new QTimer();
 	timer->setSingleShot(false);
-	timer->setInterval(100);
+	timer->setInterval(2000);
 	connect(timer, &QTimer::timeout, [=](){
 		draw_board();
 		// timed_redraw();
@@ -286,6 +286,7 @@ void View::draw_board() {
 		draw_map();
 		draw_wagons();
 		draw_wagons_count();
+		draw_stations();
 	} else {
 		std::cout << "draw_deck\n";
 		draw_deck();
@@ -306,6 +307,24 @@ void View::draw_board() {
 }
 
 void View::draw_redraw_button() {
+    QBrush brush;
+	brush.setStyle(Qt::SolidPattern);
+    brush.setColor(Qt::darkRed);
+    // brush.setTextureImage(QImage("data/map.jpg"));
+
+    Button *map = new Button();
+    map->setRect((1320 / 9) * 9, 880, 279, 200);
+    map->setBrush(brush);
+	map->setZValue(map_z_value);
+	// TODO
+    scene->addItem(map);
+
+	QFont font("comic sans", 14);
+	QGraphicsTextItem* some_text = new QGraphicsTextItem(QString("Take new route"));
+	some_text->setPos((1320 / 9) * 9 + 20, 880 + 15);
+	some_text->setFont(font);
+	some_text->setDefaultTextColor(QColor("white"));
+	scene->addItem(some_text);
 }
 
 namespace {
@@ -528,7 +547,7 @@ void View::draw_players_cards() {
 	std::map<std::string, int> count = Controller->get_count_by_color();
 	std::cout << "end controller.get_count_by_color\n";
     for (const auto &card : cards) {
-        int height = 150, width = 177;
+        int height = 200, width = 1320 / 9;
         QVector<QPointF> coords;
         coords << QPointF(width * color_to_sdvig[card.color], 1080)
                << QPointF(width * color_to_sdvig[card.color], 1080 - height)
@@ -546,6 +565,8 @@ void View::draw_players_cards() {
 
 		QGraphicsTextItem* cur_color_count = new QGraphicsTextItem(QString::number(count[card.color]));
 		QFont font("comic sans",50);
+		if(card.color == Black)
+			cur_color_count->setDefaultTextColor(QColor("white"));
 		cur_color_count->setFont(font);
 		cur_color_count->setPos(width * (color_to_sdvig[card.color] + 0.5), 1080 - height);
 		scene->addItem(cur_color_count);
@@ -580,6 +601,7 @@ void View::draw_active_cards() {
 		Wagon *wagon_to_draw = new Wagon(coords, card.color);
 
 		connect(wagon_to_draw, &Wagon::clicked, [=]() {
+				int height = 200, width = 1320 / 9;
 				Controller->get_card_from_active(i);
 				draw_board();
 
@@ -626,7 +648,7 @@ void View::draw_active_cards() {
 				QRect(0, 0, 200, 200));
 				*/
 				animation->setKeyValueAt(1, 
-						QRect(177 * color_to_sdvig[card.color], 1080 - 150, 177, 150));
+						QRect(width * color_to_sdvig[card.color] + 1, 1080 - height / 2 + 1, width - 2, height - 2));
 				scene->addWidget(w);
 				connect(animation, &QPropertyAnimation::finished, [&](){
 						// scene->removeItem(w->graphicsProxyWidget());

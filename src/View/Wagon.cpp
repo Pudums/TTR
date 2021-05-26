@@ -30,7 +30,6 @@ Wagon::Wagon(const QVector<QPointF> &points, const std::string &color) {
     } else if (color == Uncolored || color == Multicolored) {
         brush.setColor(Qt::gray);
     } else if (color == "un_vis") {
-		std::cout << "\tun_vis\n";
         flag = false;
     } else {
         std::cout << color << '\n';
