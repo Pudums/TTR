@@ -114,13 +114,13 @@ bool Game::get_wagon_card_from_active_cards(int position) {
     return true;
 }
 
-bool Game::move_build_station(const std::string &city) {
+bool Game::move_build_station(const std::string &city, int path_id) {
     if (players[active_player].number_of_stations_left == 0 ||
         occupied_stations.find(city) != occupied_stations.end()) {
         return false;
     }
     players[active_player].number_of_stations_left--;
-    players[active_player].stations.push_back(city);
+    players[active_player].station_paths.insert(path_id);
     occupied_stations[city] = active_player;
     return true;
 }
@@ -251,7 +251,7 @@ void Game::make_move(Turn *t) {
     }  // OK
     if (auto *p = dynamic_cast<BuildStation *>(t); p) {
         std::cout << "build station" << std::endl;
-        if (!move_build_station(p->get_city())) {
+        if (!move_build_station(p->get_city(), p->get_path_pos())) {
             flag = false;
         }
     }
