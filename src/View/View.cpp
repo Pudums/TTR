@@ -354,6 +354,8 @@ void View::draw_board() {
 }
 
 void View::disconnected(const char *err) {
+	delete Controller;
+	Controller = new Controller();
     QFont font("comic sans", 14);
     QGraphicsTextItem *some_text =
         new QGraphicsTextItem(QString(err));
