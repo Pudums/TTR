@@ -236,7 +236,7 @@ std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         std::vector<std::pair<std::string, Circle>> stations;
         for (const auto &i : game->cities) {
-            stations.push_back({i.second, {i.first.x, i.first.y, 3}});
+            stations.push_back({i.second, {i.first.p.x, i.first.p.y, i.first.r}});
         }
         return stations;
     } else {

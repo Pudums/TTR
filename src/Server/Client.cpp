@@ -204,7 +204,7 @@ std::vector<std::pair<std::string, Circle>> GameClient::get_stations() {
     for (int i = 0; i < board->board_state().stations_size(); i++) {
         auto station = board->mutable_board_state()->stations(i);
         Point coords{station.coords().x(), station.coords().y()};
-        Circle point{coords, 5};
+        Circle point{coords, station.owner()};
         std::string city = *station.mutable_city();
         stations.emplace_back(city, point);
     }
