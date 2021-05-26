@@ -35,9 +35,9 @@ public:
     void get_card_from_active(int, int id = -1);
     void build_path_initialize(int, int id = -1);
     void set_color_to_build_path(const WagonCard &w, int id = -1);
-    void get_routes();
+    void get_routes(int id=-1);
     int get_number_of_players();
-    void build_station(const std::string &city);
+    void build_station(const std::string &city, int id=-1);
     std::vector<WagonCard> get_current_player_cards();
     std::vector<Path> get_paths();
     void get_card_from_deck(int id = -1);

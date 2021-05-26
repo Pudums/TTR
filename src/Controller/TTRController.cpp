@@ -120,13 +120,20 @@ void TTRController::build_path_initialize(int id, int player_id) {
     }
 }
 
-void TTRController::get_routes() {
+void TTRController::get_routes(int id) {
+    if (typeOfGame != type_of_game::SINGLE_COMPUTER and
+        (id == -1 and my_id != client->get_id() or
+                      id != -1 and id != client->get_id())) {
+        std::cout << "it's not your turn: your id is" << my_id
+                  << ", but now moves " << client->get_id();
+        return;
+    }
+    current_turn = new TakeRoutes();
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
-        current_turn = new TakeRoutes();
         game->make_move(current_turn);
         current_turn = nullptr;
     } else {
-        // get response from server
+        client->make_turn(current_turn, my_id);
     }
 }
 
@@ -249,7 +256,14 @@ std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
     }
 }
 
-void TTRController::build_station(const std::string &city) {
+void TTRController::build_station(const std::string &city, int id) {
+    if (typeOfGame != type_of_game::SINGLE_COMPUTER and
+        (id == -1 and my_id != client->get_id() or
+                      id != -1 and id != client->get_id())) {
+        std::cout << "it's not your turn: your id is" << my_id
+                  << ", but now moves " << client->get_id();
+        return;
+    }
     current_turn = new BuildStation(city);
 }
 
@@ -284,13 +298,6 @@ void TTRController::start_game_server() {
     started = true;
 }
 
-void TTRController::try_bot() {
-    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
-        if (game->players[game->active_player].is_bot) {
-//            game->make_move(game->get_bots_move());
-        }
-    }
-}
 
 int TTRController::get_number_of_players() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {

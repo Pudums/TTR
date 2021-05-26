@@ -172,17 +172,17 @@ void GameClient::make_turn(Turn *t, int id) {
         request->set_active_card_id(p->number);
     }
     if (auto *p = dynamic_cast<TakeRoutes *>(t); p) {
-        // todo
+        request->set_type("take routes");
     }
     if (auto *p = dynamic_cast<BuildStation *>(t); p) {
         request->set_type("build station");
         request->set_station_to_build_id(p->get_city());
+        request->set_path_to_build_id(p->get_path_pos());
     }
     if (auto *p = dynamic_cast<BuildPath *>(t); p) {
         request->set_type("build path");
         request->set_path_to_build_id(p->get_pos());
         ::ttr::Wagon w;
-
         w.set_color(p->getWagons()[0].color);
         *(request->mutable_color_to_build()) = w;
     }

@@ -84,7 +84,11 @@ Nothing TTRServer::local_make_turn(const ::ttr::MakeTurnRequest *request) {
         controller->set_color_to_build_path(wagon, request->id().id());
     }
     if (request->type() == "build station") {
-        // TODO
+        controller->build_station(request->station_to_build_id(), request->id().id());
+        controller->build_path_initialize(request->path_to_build_id(),request->id().id());
+    }
+    if(request->type() == "take routes"){
+        controller->get_routes(request->id().id());
     }
     return response;
 }
