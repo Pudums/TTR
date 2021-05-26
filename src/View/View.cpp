@@ -361,7 +361,7 @@ void View::draw_wagons_count() {
                << QPointF(1320 + width * 0, height * (i + 1));
 
         Wagon *wagon_to_draw = new Wagon(coords, color_frow_owner[i]);
-        connect(wagon_to_draw, &Wagon::clicked, [&]() { flag = !flag; draw_board() });
+        connect(wagon_to_draw, &Wagon::clicked, [&]() { flag = !flag; draw_board(); });
         scene->addItem(wagon_to_draw);
 
         if (my_id != i || flag) {
