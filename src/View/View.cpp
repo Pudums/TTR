@@ -286,6 +286,12 @@ void View::choose_count_of_bots(int n, bool is_server, bool is_host) {
         return;
     }
 
+	if(is_server && is_host) {
+		Controller->start_game(n, 0, type_of_game::LOCAL_SERVER);
+		timed_redraw();
+		return;
+	}
+
     for (int i = 0; i <= n; i++) {
         Button *bot = new Button(QString::number(i) + QString("Bots"));
         int bxPos = this->width() / 2 - bot->boundingRect().width() / 2;
@@ -355,7 +361,7 @@ void View::draw_board() {
 
 void View::disconnected(const char *err) {
 	delete Controller;
-	Controller = new Controller();
+	Controller = new TTRController();
     QFont font("comic sans", 14);
     QGraphicsTextItem *some_text =
         new QGraphicsTextItem(QString(err));
