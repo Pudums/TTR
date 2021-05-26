@@ -104,12 +104,16 @@ void TTRController::build_path_initialize(int id, int player_id) {
                   << ", but now moves " << client->get_id();
         return;
     }
-    if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         if (auto p = dynamic_cast<BuildStation *>(current_turn); p) {
-            game->update_station_path(p->get_city(), id);
+            p->set_path(id);
+            if (typeOfGame != type_of_game::LOCAL_CLIENT) {
+                    game->make_move(p);
+            }else{
+                client->make_turn(p, my_id);
+            }
             current_turn = nullptr;
         }
-    }
+
     if (Turn::num == 0) {
         current_turn = new BuildPath(id);
     }
@@ -209,10 +213,14 @@ int TTRController::is_game_end() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         return game->check_end_game();
     } else {
-        return 0;
+        try{
+        return client->is_game_end();
+        }catch(...){
+            return 3;
+        }
     }
 }
-//🥰
+//🥰🥰🥰🥰🥰🥰🥰🥰
 
 
 std::vector<int> TTRController::get_results() {
@@ -232,7 +240,7 @@ std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         std::vector<std::pair<std::string, Circle>> stations;
         for (const auto &i : game->cities) {
-            stations.push_back({i.second, {i.first.x, i.first.y, 3}});
+            stations.push_back({i.second, {i.first.p.x, i.first.p.y, i.first.r}});
         }
         return stations;
     } else {
@@ -256,9 +264,7 @@ void TTRController::build_station(const std::string &city) {
 
 void TTRController::end_game() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
-        if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
             game->end_game();
-        }
     }
 }
 
@@ -302,6 +308,7 @@ int TTRController::get_number_of_players() {
         return client->get_number_of_players();
     }
 }
+
 int TTRController::get_my_id(){
     if(typeOfGame == type_of_game::SINGLE_COMPUTER){
         return get_current_player_id();

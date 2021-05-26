@@ -95,7 +95,7 @@ message PlayerID{
   int32 id = 1;
 }
 message BOOL{
-  bool value = 1;
+  int32 value = 1;
 }
 message INT_ARRAY{
   repeated int32 values = 1;
