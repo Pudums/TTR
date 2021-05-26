@@ -251,7 +251,7 @@ void Game::make_move(Turn *t) {
     }  // OK
     if (auto *p = dynamic_cast<BuildStation *>(t); p) {
         std::cout << "build station" << std::endl;
-        if (!move_build_station(p->get_city())) {
+        if (!move_build_station(p->get_city(), p->get_path_pos())) {
             flag = false;
         }
     }
