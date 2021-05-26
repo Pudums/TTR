@@ -322,6 +322,7 @@ void View::draw_board() {
         return;
 	} else if(status == 3) {
 		std::cout << "server closed\n";
+		disconnected();
 		close();
     } else if (status == 1) {
         draw_map();
@@ -345,6 +346,25 @@ void View::draw_board() {
         draw_stations();
         draw_redraw_button();
     }
+}
+
+void View::disconnected() {
+    QFont font("comic sans", 14);
+    QGraphicsTextItem *some_text =
+        new QGraphicsTextItem(QString("Server closed"));
+    int txPos = this->width() / 2 - some_text->boundingRect().width() / 2;
+    int tyPos = 150;
+    some_text->setPos(txPos, tyPos);
+    some_text->setFont(font);
+    some_text->setDefaultTextColor(QColor("black"));
+    scene->addItem(some_text);
+
+    Button *main_menu = new Button(QString("Back menu"));
+    int bxPos = this->width() / 2 - main_menu->boundingRect().width() / 2;
+    int byPos = 300;
+    main_menu->setPos(bxPos, byPos);
+    connect(main_menu, &Button::clicked, [=]() { display_menu(); });
+    scene->addItem(main_menu);
 }
 
 void View::draw_redraw_button() {
