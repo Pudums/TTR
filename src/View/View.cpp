@@ -218,7 +218,7 @@ void View::timed_redraw() {
     draw_board();
     QTimer *timer = new QTimer();
     timer->setSingleShot(false);
-    timer->setInterval(10000);
+    timer->setInterval(5000);
     connect(timer, &QTimer::timeout, [=]() {
         draw_board();
         // timed_redraw();
@@ -641,7 +641,7 @@ void View::draw_active_cards() {
             wid->setPalette(Pal);
             QPropertyAnimation *animation =
                 new QPropertyAnimation(w, "geometry");
-            animation->setDuration(100);
+            animation->setDuration(300);
 
             animation->setKeyValueAt(
                 0, QRect(1920 - width, height * (i), width, height));
