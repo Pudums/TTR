@@ -45,10 +45,10 @@ public:
 private:
     std::unique_ptr<grpc::Server> server;
     TTRServer service;
-    std::string server_address = "0.0.0.0:50051";
+    std::string server_address = "209.97.148.147:80";
     grpc::ServerBuilder builder;
 };
 
-void RunServer(LocalServer *serv, bool needRun);
+void RunServer(TTRController*);
 }  // namespace ttr
 #endif

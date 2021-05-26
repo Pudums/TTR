@@ -20,7 +20,7 @@ private:
     Game *game = nullptr;
     Turn *current_turn = nullptr;
     GameClient *client = nullptr;
-    ttr::LocalServer *server = nullptr;
+    //ttr::LocalServer *server = nullptr;
     int my_id = 0;
     bool started = false;
     type_of_game typeOfGame = type_of_game::SINGLE_COMPUTER;

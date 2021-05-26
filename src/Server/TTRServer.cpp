@@ -241,10 +241,16 @@ void LocalServer::terminate() {
     server->Shutdown();
 }
 
-void RunServer(LocalServer *serv, bool needRun) {
-    if (needRun) {
-        serv->runServer();
+void RunServer(TTRController*c) {
+        std::string server_address("192.168.1.1:23");
+        LocalServer service(c);
+
+        ::grpc::ServerBuilder builder;
+
+        builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
+        builder.RegisterService(reinterpret_cast<grpc::Service *>(&service));
+        std::unique_ptr<::grpc::Server> server(builder.BuildAndStart());
+        server->Wait();
     }
-}
 
 }  // namespace ttr
