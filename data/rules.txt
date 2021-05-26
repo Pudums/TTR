@@ -1,0 +1,21 @@
+Your aim is to earn as many points as you can.
+
+You can earn point by:
+    1. Building paths.
+Every path has a color, so to build path you must have enough wagon cards with suitable color.
+
+    2. Finish routes
+Route is considered to be built if you have continuous path between two cities.
+
+Start game.
+    1. You are getting 3 short and 1 long routes, but you still can take more.
+Be aware of taking too many routes, because for every unfinished route you lose points.
+
+    2. You are getting 4 random wagon cards.
+    3. Youngest player moves first.
+
+Game logic.
+You can make one of the following turns:
+    1. Take 2 cards from table or from deck. But, if you want to take locomotive card from table, that requires full turn.
+    2. Build path. (Pay attention that some path are tunnels, so 3 more cards will be drawn from the deck and for every card with the
+    same color as your path's color you will have to give away one move wagon card with the same color).
