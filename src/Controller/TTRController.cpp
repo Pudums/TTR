@@ -209,7 +209,11 @@ int TTRController::is_game_end() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         return game->check_end_game();
     } else {
+        try{
         return client->is_game_end();
+        }catch(...){
+            return 3;
+        }
     }
 }
 //🥰🥰🥰🥰🥰🥰🥰🥰
