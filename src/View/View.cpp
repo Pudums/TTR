@@ -525,7 +525,7 @@ void View::draw_deck() {
     QWidget *deck_qw;
     // deck_qw = qobject_cast<QWidget *> (deck);
     deck_qw = new QWidget();
-    deck_qw->setStyleSheet("background-image:url(./data/deck.jpeg)");
+    deck_qw->setStyleSheet("background-image:url(./data/deck.jpg)");
     deck_qw->setAutoFillBackground(true);
     deck_qw->setGeometry(1920 - width, 1080 - hight, width, hight);
     // deck->setBrush(q);
