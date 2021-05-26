@@ -64,7 +64,9 @@ void View::draw_stations() {
         QPen *pen = new QPen;
         pen->setBrush(brush);
         connect(path, &Station::clicked,
-                [=]() { Controller->build_station(name); });
+                [=]() { 
+				std::cout << "\t build name = " << name << '\n';
+				Controller->build_station(name); });
         scene->addPath(*path, *pen, brush);
     }
 }
@@ -216,7 +218,7 @@ void View::timed_redraw() {
     draw_board();
     QTimer *timer = new QTimer();
     timer->setSingleShot(false);
-    timer->setInterval(2000);
+    timer->setInterval(10000);
     connect(timer, &QTimer::timeout, [=]() {
         draw_board();
         // timed_redraw();
@@ -450,7 +452,7 @@ void View::mouseDoubleClickEvent(QMouseEvent *event) {
         int r = 20;
 
         if (r * r > (cx - x) * (cx - x) + (cy - y) * (cy - y)) {
-            std::cout << name << '\n';
+            std::cout << "\t build path = " <<name << '\n';
             Controller->build_station(name);
         }
     }
