@@ -1,4 +1,5 @@
 #include "View.h"
+#include <sstream>
 #include <QApplication>
 #include <QBrush>
 #include <QDesktopWidget>
@@ -136,6 +137,17 @@ void View::display_rulles() {
     back->setPos(qxPos, qyPos);
     connect(back, SIGNAL(clicked()), this, SLOT(display_menu()));
     scene->addItem(back);
+
+	std::stringstream rul;
+	{
+		//std::ifstream in;
+		//in.open("data/rules.txt");
+		//in.close();
+	}
+
+	//const QString rull = std::string(rul.str());
+
+	//QTextObject *rulles = new QTextObject(rull);
 }
 
 void View::start(bool is_server, bool is_host) {
@@ -293,6 +305,9 @@ void View::draw_board() {
         Controller->end_game();
         end_game();
         return;
+	} else if(status == 3) {
+		std::cout << "server closed\n";
+		close();
     } else if (status == 1) {
         draw_map();
         draw_wagons();
