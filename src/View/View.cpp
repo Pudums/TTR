@@ -88,6 +88,7 @@ View::View(QWidget *parrent) : Controller(new TTRController()) {
 }
 
 void View::display_menu() {
+	scene->clear();
     QGraphicsTextItem *titleText =
         new QGraphicsTextItem(QString("Ticket to Ride"));
     QFont titleFont("comic sans", 50);
@@ -112,12 +113,29 @@ void View::display_menu() {
     connect(playOnlineButton, &Button::clicked, [=]() { host_or_not(true); });
     scene->addItem(playOnlineButton);
 
-    Button *quitButton = new Button(QString("Quit"));
-    int qxPos = this->width() / 2 - quitButton->boundingRect().width() / 2;
+    Button *rules_button = new Button(QString("Rules"));
+    int qxPos = this->width() / 2 - rules_button->boundingRect().width() / 2;
     int qyPos = 350 + 125;
+    rules_button->setPos(qxPos, qyPos);
+    connect(rules_button, SIGNAL(clicked()), this, SLOT(display_rulles()));
+    scene->addItem(rules_button);
+
+    Button *quitButton = new Button(QString("Quit"));
+    qxPos = this->width() / 2 - quitButton->boundingRect().width() / 2;
+    qyPos = 350 + 125 + 125;
     quitButton->setPos(qxPos, qyPos);
     connect(quitButton, SIGNAL(clicked()), this, SLOT(close()));
     scene->addItem(quitButton);
+}
+
+void View::display_rulles() {
+	scene->clear();
+    Button *back = new Button(QString("Back"));
+    int qxPos = 1700;
+    int qyPos = 1000;
+    back->setPos(qxPos, qyPos);
+    connect(back, SIGNAL(clicked()), this, SLOT(display_menu()));
+    scene->addItem(back);
 }
 
 void View::start(bool is_server, bool is_host) {
@@ -218,7 +236,7 @@ void View::timed_redraw() {
     draw_board();
     QTimer *timer = new QTimer();
     timer->setSingleShot(false);
-    timer->setInterval(10000);
+    timer->setInterval(5000);
     connect(timer, &QTimer::timeout, [=]() {
         draw_board();
         // timed_redraw();
@@ -343,7 +361,7 @@ void View::draw_wagons_count() {
                << QPointF(1320 + width * 0, height * (i + 1));
 
         Wagon *wagon_to_draw = new Wagon(coords, color_frow_owner[i]);
-        connect(wagon_to_draw, &Wagon::clicked, [&]() { flag = !flag; });
+        connect(wagon_to_draw, &Wagon::clicked, [&]() { flag = !flag; draw_board(); });
         scene->addItem(wagon_to_draw);
 
         if (my_id != i || flag) {
@@ -641,7 +659,7 @@ void View::draw_active_cards() {
             wid->setPalette(Pal);
             QPropertyAnimation *animation =
                 new QPropertyAnimation(w, "geometry");
-            animation->setDuration(100);
+            animation->setDuration(300);
 
             animation->setKeyValueAt(
                 0, QRect(1920 - width, height * (i), width, height));
