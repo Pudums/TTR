@@ -21,8 +21,6 @@
 #include "WagonCard.h"
 
 namespace {
-unsigned int microseconds = 1000;
-
 std::map<std::string, int> color_to_sdvig = {
     {White, 0}, {Orange, 1}, {Green, 2},  {Red, 3},       {Black, 4},
     {Blue, 5},  {Yellow, 6}, {Purple, 7}, {Uncolored, 8}, {Multicolored, 8}};
@@ -49,11 +47,24 @@ void View::draw_stations() {
         path->addEllipse(QPointF(s.p.x, s.p.y), 20, 20);
         QBrush brush;
         brush.setStyle(Qt::SolidPattern);
-        brush.setColor(Qt::cyan);
+		if(s.r == -1) {
+			brush.setColor(Qt::cyan);
+		} else {
+			auto color = color_frow_owner[s.r];
+			if(color == Red) {
+				brush.setColor(Qt::red);
+			} else if(color ==  Yellow) {
+				brush.setColor(Qt::yellow);
+			} else if(color == Blue) {
+				brush.setColor(Qt::blue);
+			} else if(color == Green) {
+				brush.setColor(Qt::green);
+			}
+		}
         QPen *pen = new QPen;
         pen->setBrush(brush);
         connect(path, &Station::clicked,
-                [&]() { Controller->build_station(name); });
+                [=]() { Controller->build_station(name); });
         scene->addPath(*path, *pen, brush);
     }
 }
