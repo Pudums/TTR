@@ -15,7 +15,7 @@ Rectangle parse_grpc_rectangle(const ::ttr::Rectangle &r) {
 GameClient::GameClient() {
     stub_ = ::ttr::TTRService::NewStub(grpc::CreateChannel(
         "localhost:50051", grpc::InsecureChannelCredentials()));
-    //TODO not only localhost
+    // TODO not only localhost
 }
 
 ttr::BoardState *GameClient::get_board_state() {
@@ -193,7 +193,6 @@ GameClient::operator bool() {
     auto *context = new ::grpc::ClientContext();
     auto request = new ::ttr::Nothing();
     auto *response = new ttr::PlayerID();
-    std::cerr<<"try to detect server";
     const auto return_status =
         stub_->get_number_of_players(context, *request, response);
     return return_status.ok();
