@@ -4,13 +4,12 @@
 #include <QGraphicsSceneMouseEvent>
 #include <QPainterPath>
 
-class Station: public QObject, public QPainterPath {
-	Q_OBJECT
+class Station : public QObject, public QPainterPath {
+    Q_OBJECT
 public:
-
     void mousePressEvent(QGraphicsSceneMouseEvent *event);
 signals:
-	void clicked();
+    void clicked();
 };
 
-#endif // __STATION__H__
+#endif  // __STATION__H__

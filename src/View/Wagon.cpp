@@ -48,10 +48,10 @@ void Wagon::make_step() {
 
 /*
 QPointF Wagon::pos() const {
-	return QGraphicsObject::pos(); 
+        return QGraphicsObject::pos();
 }
 
-void Wagon::setPos(QPointF& pos) { 
-	QGraphicsObject::setPos(pos); 
+void Wagon::setPos(QPointF& pos) {
+        QGraphicsObject::setPos(pos);
 }
 */
