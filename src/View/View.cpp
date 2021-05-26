@@ -140,14 +140,29 @@ void View::display_rulles() {
 
 	std::stringstream rul;
 	{
-		//std::ifstream in;
-		//in.open("data/rules.txt");
-		//in.close();
+		std::ifstream in;
+		std::string line;
+		in.open("data/rules.txt");
+		while(!in.eof()) {
+			getline(in, line);
+			if(line.size() == 0 || line[0] == '#') 
+				continue;
+			rul << line << '\n';
+		}
+		in.close();
 	}
+
+	std::cout << "rul:\n" << rul.str() << "\nend rul\n";
 
 	//const QString rull = std::string(rul.str());
 
-	//QTextObject *rulles = new QTextObject(rull);
+    QFont font("comic sans", 14);
+    QGraphicsTextItem *some_text =
+        new QGraphicsTextItem(QString(rul.str().c_str()));
+    some_text->setPos(10, 10);
+    some_text->setFont(font);
+    some_text->setDefaultTextColor(QColor("black"));
+    scene->addItem(some_text);
 }
 
 void View::start(bool is_server, bool is_host) {
@@ -344,6 +359,7 @@ void View::draw_redraw_button() {
     map->setZValue(map_z_value);
 	connect(map, &Button::clicked, [&]() {
 			Controller->get_routes();
+			draw_board();
 			});
     // TODO
     scene->addItem(map);
