@@ -252,7 +252,12 @@ void View::host_or_not(bool is_server) {
     connect(client, &Button::clicked, [=]() {
         std::cout << "cliend clicked "
                   << "\n";
+		try {
         start(is_server, false);
+		} catch (...) {
+		std::cout <<"server disconnected\n";
+		disconnected();
+		}
         // start_players(4, is_server);
         // start_player_4(is_server);
     });
