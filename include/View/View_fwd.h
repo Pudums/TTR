@@ -3,4 +3,4 @@
 
 struct View;
 
-#endif // VIEW_FWD_
+#endif  // VIEW_FWD_

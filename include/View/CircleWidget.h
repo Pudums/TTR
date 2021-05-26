@@ -1,12 +1,12 @@
 #ifndef __CIRCLEWIDGET__H__
 #define __CIRCLEWIDGET__H__
 
-#include <QWidget>
 #include <QGraphicsPolygonItem>
 #include <QGraphicsSceneMouseEvent>
+#include <QWidget>
 #include <string>
 
-class CircleWidget : public QWidget{
+class CircleWidget : public QWidget {
     Q_OBJECT
 
 public:
@@ -30,7 +30,7 @@ private:
     bool antialiased;
     int frameNo;
 signals:
-	void clicked();
+    void clicked();
 };
 
-#endif // __CIRCLEWIDGET__H__
+#endif  // __CIRCLEWIDGET__H__

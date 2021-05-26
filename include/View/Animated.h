@@ -5,7 +5,7 @@
 
 class Animated : public QWidget {
 public:
-	Animated(QWidget *p = NULL);
+    Animated(QWidget *p = NULL);
 };
 
-#endif // __ANIMATED__H__
+#endif  // __ANIMATED__H__
