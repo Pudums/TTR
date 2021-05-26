@@ -228,6 +228,7 @@ BoardState TTRServer::local_get_board_state() {
 }
 
 LocalServer::LocalServer(TTRController *c) : service(TTRServer(c)) {
+    builder.SetDefaultCompressionAlgorithm(GRPC_COMPRESS_GZIP);
     builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
     builder.RegisterService(&service);
     server = builder.BuildAndStart();

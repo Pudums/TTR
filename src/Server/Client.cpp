@@ -26,6 +26,7 @@ ttr::BoardState *GameClient::get_board_state() {
     auto *state = new ttr::BoardState();
     ttr::Nothing request;
     auto *client_context = new ::grpc::ClientContext();
+    client_context->set_compression_algorithm(GRPC_COMPRESS_DEFLATE);
     stub_->get_board_state(client_context, request, state);
     return state;
 }
@@ -62,6 +63,7 @@ int GameClient::get_id() {
     auto *id = new ::ttr::PlayerID;
     ttr::Nothing request;
     auto *client_context = new ::grpc::ClientContext();
+    client_context->set_compression_algorithm(GRPC_COMPRESS_DEFLATE);
     stub_->get_player_id(client_context, request, id);
     return id->id();
 }
@@ -69,6 +71,7 @@ int GameClient::get_id() {
 void GameClient::start_game() {
     auto *req = new ::ttr::Nothing();
     auto *client_context = new ::grpc::ClientContext();
+    client_context->set_compression_algorithm(GRPC_COMPRESS_DEFLATE);
     auto *response = new ::ttr::Nothing();
     stub_->start_game(client_context, *req, response);
 }
@@ -103,6 +106,7 @@ std::vector<WagonCard> GameClient::get_player_cards(int id) {
 
 ttr::PlayerState GameClient::get_state(int id) {
     auto context = new ::grpc::ClientContext();
+    context->set_compression_algorithm(GRPC_COMPRESS_DEFLATE);
     ::ttr::PlayerID player_id;
     player_id.set_id(id);
     auto state = new ttr::PlayerState();
@@ -150,6 +154,7 @@ std::vector<Player> GameClient::get_all_players() {
 
 std::vector<int> GameClient::get_score() {
     auto context = new ::grpc::ClientContext();
+    context->set_compression_algorithm(GRPC_COMPRESS_DEFLATE);
     ::ttr::Nothing request;
     auto *response = new ::ttr::INT_ARRAY();
     stub_->get_score(context, request, response);
@@ -166,6 +171,7 @@ void GameClient::make_turn(Turn *t, int id) {
         return;
     }
     auto *context = new ::grpc::ClientContext();
+    context->set_compression_algorithm(GRPC_COMPRESS_DEFLATE);
     auto *request = new ::ttr::MakeTurnRequest();
     request->mutable_id()->set_id(id);
     if (auto *p = dynamic_cast<DrawCardFromDeck *>(t); p) {
@@ -195,6 +201,7 @@ void GameClient::make_turn(Turn *t, int id) {
 }
 GameClient::operator bool() {
     auto *context = new ::grpc::ClientContext();
+    context->set_compression_algorithm(GRPC_COMPRESS_DEFLATE);
     auto request = new ::ttr::Nothing();
     auto *response = new ttr::PlayerID();
     const auto return_status =
@@ -204,6 +211,7 @@ GameClient::operator bool() {
 
 int GameClient::get_number_of_players() {
     auto *context = new ::grpc::ClientContext();
+    context->set_compression_algorithm(GRPC_COMPRESS_DEFLATE);
     auto request = new ::ttr::Nothing();
     auto *response = new ttr::PlayerID();
     stub_->get_number_of_players(context, *request, response);
@@ -225,6 +233,7 @@ std::vector<std::pair<std::string, Circle>> GameClient::get_stations() {
 
 int GameClient::is_game_end() {
     auto *context = new ::grpc::ClientContext();
+    context->set_compression_algorithm(GRPC_COMPRESS_DEFLATE);
     auto request = new ::ttr::Nothing();
     auto *response = new ttr::BOOL();
     stub_->check_end_game(context, *request, response);
