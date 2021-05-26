@@ -310,6 +310,7 @@ void View::draw_board() {
         delete i;
     }
     scene->clear();
+	try {
     std::cout << "draw_board "
               << "\n";
     std::cout << "start controller.is_game_end\n";
@@ -346,6 +347,10 @@ void View::draw_board() {
         draw_stations();
         draw_redraw_button();
     }
+	} catch(...) {
+		std::cout << "server closed\n";
+		disconnected();
+	}
 }
 
 void View::disconnected() {
