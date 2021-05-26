@@ -64,7 +64,7 @@ int Game::check_end_game() const {
     for (const auto &player : players) {
         if (player.number_of_wagons_left <= Game::number_of_wagons_for_finish) {
             return 2;
-            //return 1
+            // return 1
         }
     }
     return 0;
@@ -116,12 +116,18 @@ bool Game::get_wagon_card_from_active_cards(int position) {
 
 bool Game::move_build_station(const std::string &city, int path_id) {
     if (players[active_player].number_of_stations_left == 0 ||
-        occupied_stations.find(city) != occupied_stations.end()) {
+        occupied_stations.find(city) != occupied_stations.end() ||
+        board.paths[path_id].owner == -1) {
         return false;
     }
     players[active_player].number_of_stations_left--;
     players[active_player].station_paths.insert(path_id);
     occupied_stations[city] = active_player;
+    for (auto& elem : cities) {
+        if (elem.second == city) {
+            elem.first.r = active_player;
+        }
+    }
     return true;
 }
 
@@ -293,7 +299,9 @@ void Game::make_move(Turn *t) {
                 player_cities, board.paths);
             std::cout << path_pos << std::endl;
             if (path_pos > 1000) {
-                std::cout << players[active_player].active_routes[route_pos].city2 << std::endl;
+                std::cout
+                    << players[active_player].active_routes[route_pos].city2
+                    << std::endl;
                 for (auto elem : player_cities) {
                     std::cout << elem << ' ';
                 }

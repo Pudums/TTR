@@ -106,6 +106,7 @@ void TTRController::build_path_initialize(int id, int player_id) {
     }
         if (auto p = dynamic_cast<BuildStation *>(current_turn); p) {
             p->set_path(id);
+            std::cout<<"oh you want to build station!!!\n";
             if (typeOfGame != type_of_game::LOCAL_CLIENT) {
                     game->make_move(p);
             }else{
@@ -249,17 +250,7 @@ std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
 }
 
 void TTRController::build_station(const std::string &city) {
-    if (typeOfGame != type_of_game::LOCAL_CLIENT) {
-        if (!is_game_end()) {
-            game->make_move(new BuildStation(city));
-            current_turn = nullptr;
-        } else {
-            current_turn = new BuildStation(city);
-        }
-    } else {
-        current_turn = new BuildStation(city);
-        client->make_turn(current_turn, my_id);
-    }
+    current_turn = new BuildStation(city);
 }
 
 void TTRController::end_game() {
