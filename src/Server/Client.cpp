@@ -1,6 +1,6 @@
 #include "Server/Client.h"
-#include <vector>
 #include <utility>
+#include <vector>
 namespace {
 Rectangle parse_grpc_rectangle(const ::ttr::Rectangle &r) {
     Rectangle ans;
@@ -15,6 +15,7 @@ Rectangle parse_grpc_rectangle(const ::ttr::Rectangle &r) {
 GameClient::GameClient() {
     stub_ = ::ttr::TTRService::NewStub(grpc::CreateChannel(
         "localhost:50051", grpc::InsecureChannelCredentials()));
+    //TODO not only localhost
 }
 
 ttr::BoardState *GameClient::get_board_state() {
@@ -114,7 +115,26 @@ std::vector<Player> GameClient::get_all_players() {
         player_general_info[i].points = curr_player.current_score();
         player_general_info[i].number_of_wagons_left =
             curr_player.wagons_left();
-        auto private_info = get_state(i);  // tssss it's a secret
+        auto private_info = get_state(i);
+        for (int j = 0;
+             j <
+             private_info.mutable_private_info()->player_routes().routes_size();
+             j++) {
+            Route n_route;
+            n_route.city1 = private_info.mutable_private_info()
+                                ->player_routes()
+                                .routes(j)
+                                .begin();
+            n_route.city2 = private_info.mutable_private_info()
+                                ->player_routes()
+                                .routes(j)
+                                .end();
+            n_route.points_for_passing = private_info.mutable_private_info()
+                                             ->player_routes()
+                                             .routes(j)
+                                             .points();
+            player_general_info[i].active_routes.push_back(n_route);
+        }
         player_general_info[i].wagon_cards.resize(
             private_info.release_private_info()
                 ->release_player_wagons()
@@ -144,8 +164,6 @@ void GameClient::make_turn(Turn *t, int id) {
     auto *context = new ::grpc::ClientContext();
     auto *request = new ::ttr::MakeTurnRequest();
     request->mutable_id()->set_id(id);
-    std::cout << "i want to make turn and my id is " << request->id().id()
-              << '\n';
     if (auto *p = dynamic_cast<DrawCardFromDeck *>(t); p) {
         request->set_type("draw from deck");
     }
@@ -173,7 +191,6 @@ void GameClient::make_turn(Turn *t, int id) {
 }
 
 int GameClient::get_number_of_players() {
-    std::cout << "number_of_players()\n";
     auto *context = new ::grpc::ClientContext();
     auto request = new ::ttr::Nothing();
     auto *response = new ttr::PlayerID();
@@ -183,15 +200,21 @@ int GameClient::get_number_of_players() {
 
 std::vector<std::pair<std::string, Circle>> GameClient::get_stations() {
     auto board = get_board_state();
-    std::cout<<"try to get stations\n";
     std::vector<std::pair<std::string, Circle>> stations;
-    for(int i = 0; i < board->board_state().stations_size();i++){
+    for (int i = 0; i < board->board_state().stations_size(); i++) {
         auto station = board->mutable_board_state()->stations(i);
         Point coords{station.coords().x(), station.coords().y()};
         Circle point{coords, 5};
         std::string city = *station.mutable_city();
-        stations.push_back(std::make_pair(city, point));
+        stations.emplace_back(city, point);
     }
-    std::cout<<"got stations\n";
     return stations;
+}
+
+int GameClient::is_game_end() {
+    auto *context = new ::grpc::ClientContext();
+    auto request = new ::ttr::Nothing();
+    auto *response = new ttr::BOOL();
+    stub_->check_end_game(context, *request, response);
+    return response->value();
 }

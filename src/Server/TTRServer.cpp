@@ -216,6 +216,13 @@ BoardState TTRServer::local_get_board_state() {
     return ::grpc::Status::OK;
 }
 
+::grpc::Status TTRServer::check_end_game(::grpc::ServerContext *context,
+                                         const ::ttr::Nothing *request,
+                                         ::ttr::BOOL *response) {
+    response->set_value(controller->is_game_end());
+    return grpc::Status::OK;
+}
+
 LocalServer::LocalServer(TTRController *c) : service(TTRServer(c)) {
     builder.AddListeningPort(server_address, grpc::InsecureServerCredentials());
     builder.RegisterService(&service);

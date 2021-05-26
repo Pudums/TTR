@@ -209,10 +209,10 @@ int TTRController::is_game_end() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         return game->check_end_game();
     } else {
-        return 0;
+        return client->is_game_end();
     }
 }
-//🥰
+//🥰🥰🥰🥰🥰🥰🥰🥰
 
 
 std::vector<int> TTRController::get_results() {
@@ -256,9 +256,7 @@ void TTRController::build_station(const std::string &city) {
 
 void TTRController::end_game() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
-        if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
             game->end_game();
-        }
     }
 }
 
@@ -302,6 +300,7 @@ int TTRController::get_number_of_players() {
         return client->get_number_of_players();
     }
 }
+
 int TTRController::get_my_id(){
     if(typeOfGame == type_of_game::SINGLE_COMPUTER){
         return get_current_player_id();
