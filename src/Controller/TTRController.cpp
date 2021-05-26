@@ -23,8 +23,7 @@ void TTRController::start_game(int number_of_players,
     typeOfGame = type;
     if (typeOfGame != type_of_game::SINGLE_COMPUTER) {
         if (typeOfGame == type_of_game::LOCAL_SERVER) {
-            //server = new ttr::LocalServer(this);
-            ttr::RunServer(this);
+            server = new ttr::LocalServer(this);
             game = new Game(number_of_players, number_of_bots);
             game->start_game();
         }

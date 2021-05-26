@@ -14,7 +14,7 @@ Rectangle parse_grpc_rectangle(const ::ttr::Rectangle &r) {
 
 GameClient::GameClient() {
     stub_ = ::ttr::TTRService::NewStub(grpc::CreateChannel(
-        "192.168.1.1:23", grpc::InsecureChannelCredentials()));
+        "localhost:50051", grpc::InsecureChannelCredentials()));
     // TODO not only localhost
 }
 
