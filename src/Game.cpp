@@ -32,15 +32,15 @@ void create_graphs_for_players(std::vector<Player> &players,
     }
 }
 
-std::vector<std::pair<Point, std::string>> read_cities(
+std::vector<std::pair<Circle, std::string>> read_cities(
     const std::string &filename) {
-    std::vector<std::pair<Point, std::string>> cities;
+    std::vector<std::pair<Circle, std::string>> cities;
     std::ifstream is(filename);
     for (int i = 0; i < 47; i++) {
         std::string name;
         int x, y;
         is >> name >> x >> y;
-        cities.push_back({{x, y}, name});
+        cities.push_back({{{x, y}, -1}, name});
     }
     return cities;
 }

@@ -116,12 +116,13 @@ BoardState TTRServer::local_get_board_state() {
         n_path.set_length(path.length);
         *(board.add_paths()) = n_path;
     }
-    for(auto &[city, coords] : controller->get_stations()){
+    for(auto &i : controller->get_stations()){
         ::ttr::Station s;
-        s.set_city(city);
+        s.set_city(i.first);
         s.set_allocated_coords(new ::ttr::Point());
-        s.mutable_coords()->set_x(coords.p.x);
-        s.mutable_coords()->set_y(coords.p.y);
+        s.mutable_coords()->set_x(i.second.p.x);
+        s.mutable_coords()->set_y(i.second.p.y);
+        s.set_owner(i.second.r);
         *(board.add_stations()) = s;
     }
     std::vector<WagonCard> active_cards = controller->get_active_cards();
@@ -212,7 +213,6 @@ BoardState TTRServer::local_get_board_state() {
                                                 const ::ttr::Nothing *request,
                                                 ::ttr::PlayerID *response) {
     response->set_id(controller->get_number_of_players());
-    std::cout << "request on id was made";
     return ::grpc::Status::OK;
 }
 

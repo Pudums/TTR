@@ -34,3 +34,9 @@ BuildStation::BuildStation(std::string s) : city(std::move(s)) {
 std::string BuildStation::get_city() const {
     return city;
 }
+void BuildStation::set_path(int num) {
+    path_num = num;
+}
+int BuildStation::get_path_pos() {
+    return path_num;
+}

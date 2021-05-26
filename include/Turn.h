@@ -46,10 +46,13 @@ public:
 struct BuildStation final : virtual Turn {
 private:
     std::string city;
+    int path_num;
 
 public:
     explicit BuildStation(std::string s);
     [[nodiscard]] std::string get_city() const;
+    int get_path_pos();
+    void set_path(int);
 };
 
 #endif  // TTR_TURN_H
