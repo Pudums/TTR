@@ -123,6 +123,11 @@ bool Game::move_build_station(const std::string &city, int path_id) {
     players[active_player].number_of_stations_left--;
     players[active_player].station_paths.insert(path_id);
     occupied_stations[city] = active_player;
+    for (auto& elem : cities) {
+        if (elem.second == city) {
+            elem.first.r = active_player;
+        }
+    }
     return true;
 }
 
