@@ -27,7 +27,7 @@ class View : public QGraphicsView {
     void draw_stations();  // TODO
     void choose_count_of_bots(int count,
                               bool is_server = true,
-                              bool is_host = true);
+                              bool is_host = true, const char *c = "");
     void mouseDoubleClickEvent(QMouseEvent *event);
     void host_or_not(bool is_server = true);
     void draw_redraw_button();
@@ -43,13 +43,14 @@ public:
 
 
 public slots:
-    void start(bool is_server = true, bool is_host = true);
+    void start(bool is_server = true, bool is_host = true, const char *c = "");
     void start_players(int players = 0,
                        bool is_server = true,
-                       bool is_host = true);
+                       bool is_host = true, const char *c = "");
     void get_card_from_deck();
 	void display_rulles();
     void display_menu();
+	void start_port(bool, bool);
 };
 
 #endif  //__View__H__

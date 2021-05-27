@@ -1,4 +1,5 @@
 #include "View.h"
+#include <QInputDialog>
 #include <sstream>
 #include <QApplication>
 #include <QBrush>
@@ -264,7 +265,14 @@ void View::host_or_not(bool is_server) {
 }
 
 void View::start_port(bool is_server, bool flag) {
-	start(is_server, flag, "ip");
+	scene->clear();
+	bool ok;
+    QString text = QInputDialog::getText(this, tr(""),
+                                         tr("Enter ip:"), QLineEdit::Normal,
+                                         QString("tmp"), &ok);
+	if (ok && !text.isEmpty()) {
+		start(is_server, flag, text.toStdString().c_str());
+	}
 }
 
 void View::timed_redraw() {
