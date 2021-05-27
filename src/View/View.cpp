@@ -272,6 +272,8 @@ void View::start_port(bool is_server, bool flag) {
                                          QString("tmp"), &ok);
 	if (ok && !text.isEmpty()) {
 		start(is_server, flag, text.toStdString().c_str());
+	} else {
+		disconnected("canceled");
 	}
 }
 
@@ -340,7 +342,7 @@ void View::draw_board() {
     std::cout << "end controller.is_game_end\n";
     if (status == 2) {
         std::cout << "status = 2\n";
-        Controller->end_game();
+        // Controller->end_game();
         end_game();
         return;
     } else if (status == 1) {
