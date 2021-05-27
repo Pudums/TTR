@@ -279,13 +279,16 @@ void View::start_port(bool is_server, bool flag) {
 
 void View::timed_redraw() {
     draw_board();
+	redrawble = true;
     QTimer *timer = new QTimer();
     timer->setSingleShot(false);
     timer->setInterval(5000);
     connect(timer, &QTimer::timeout, [=]() {
-        draw_board();
-        // timed_redraw();
-        timer->start();
+		if(redrawble) {
+			draw_board();
+			// timed_redraw();
+			timer->start();
+		}
     });
     timer->start();
 }
@@ -421,6 +424,7 @@ void View::draw_whoose_turn() {
 void View::disconnected(const char *err) {
 	delete Controller;
 	Controller = new TTRController();
+	redrawble = false;
 
     QFont font("comic sans", 14);
     QGraphicsTextItem *some_text =

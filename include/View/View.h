@@ -15,6 +15,8 @@ class View : public QGraphicsView {
     TTRController *Controller;
     ttr::LocalServer *server;
 
+	bool redrawble;
+
     void create_count_of_players();
     void draw_deck();
     void draw_wagons();
