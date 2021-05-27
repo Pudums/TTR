@@ -165,7 +165,7 @@ void View::display_rulles() {
     scene->addItem(some_text);
 }
 
-void View::start(bool is_server, bool is_host) {
+void View::start(bool is_server, bool is_host, const char *port) {
     scene->clear();
     std::cout << "start " << is_server << '\n';
     if (is_server && !is_host) {
@@ -173,7 +173,7 @@ void View::start(bool is_server, bool is_host) {
         Controller->start_game(-1,
                         -1, type_of_game::LOCAL_CLIENT);
         */
-        start_players(-1, is_server, is_host);
+        start_players(-1, is_server, is_host, port);
         return;
     }
 
@@ -183,7 +183,7 @@ void View::start(bool is_server, bool is_host) {
     int byPos = 150;
     play_1_player_button->setPos(bxPos, byPos);
     connect(play_1_player_button, &Button::clicked,
-            [=]() { start_players(1, is_server, is_host); });
+            [=]() { start_players(1, is_server, is_host, port); });
     scene->addItem(play_1_player_button);
 
     Button *play_2_player_button = new Button(QString("2 Player"));
@@ -193,7 +193,7 @@ void View::start(bool is_server, bool is_host) {
     play_2_player_button->setPos(bxPos, byPos);
     connect(play_2_player_button, &Button::clicked, [=]() {
         // start_player_2(is_server);
-        start_players(2, is_server, is_host);
+        start_players(2, is_server, is_host, port);
     });
     scene->addItem(play_2_player_button);
 
@@ -203,7 +203,7 @@ void View::start(bool is_server, bool is_host) {
     byPos = 450;
     play_3_player_button->setPos(bxPos, byPos);
     connect(play_3_player_button, &Button::clicked, [=]() {
-        start_players(3, is_server, is_host);
+        start_players(3, is_server, is_host, port);
         // start_player_3(is_server);
     });
     scene->addItem(play_3_player_button);
@@ -214,15 +214,15 @@ void View::start(bool is_server, bool is_host) {
     byPos = 600;
     play_4_player_button->setPos(bxPos, byPos);
     connect(play_4_player_button, &Button::clicked, [=]() {
-        start_players(4, is_server, is_host);
+        start_players(4, is_server, is_host, port);
         // start_player_4(is_server);
     });
     scene->addItem(play_4_player_button);
 }
 
-void View::start_players(int players, bool is_server, bool is_host) {
+void View::start_players(int players, bool is_server, bool is_host, const char *port) {
     std::cout << "start_players " << is_server << '\n';
-    choose_count_of_bots(players, is_server, is_host);
+    choose_count_of_bots(players, is_server, is_host, port);
 }
 
 void View::host_or_not(bool is_server) {
@@ -253,7 +253,7 @@ void View::host_or_not(bool is_server) {
         std::cout << "cliend clicked "
                   << "\n";
 		try {
-        start(is_server, false);
+        start_port(is_server, false);
 		} catch (const std::logic_error &e){
 		disconnected(e.what());
 		}
@@ -261,6 +261,10 @@ void View::host_or_not(bool is_server) {
         // start_player_4(is_server);
     });
     scene->addItem(client);
+}
+
+void View::start_port(bool is_server, bool flag) {
+	start(is_server, flag, "ip");
 }
 
 void View::timed_redraw() {
@@ -276,18 +280,18 @@ void View::timed_redraw() {
     timer->start();
 }
 
-void View::choose_count_of_bots(int n, bool is_server, bool is_host) {
+void View::choose_count_of_bots(int n, bool is_server, bool is_host, const char *port) {
     scene->clear();
     std::cout << "choose_count_of_bots " << n << " " << is_server << " "
               << is_host << '\n';
     if (is_server && !is_host) {
-        Controller->start_game(-1, -1, type_of_game::LOCAL_CLIENT);
+        Controller->start_game(-1, -1, type_of_game::LOCAL_CLIENT, port);
         timed_redraw();
         return;
     }
 
 	if(is_server && is_host) {
-		Controller->start_game(n, 0, type_of_game::LOCAL_SERVER);
+		Controller->start_game(n, 0, type_of_game::LOCAL_SERVER, port);
 		timed_redraw();
 		return;
 	}
@@ -301,11 +305,11 @@ void View::choose_count_of_bots(int n, bool is_server, bool is_host) {
             std::cout << "clicked bots " << n << " " << i << " " << is_server
                       << '\n';
             if (!is_server)
-                Controller->start_game(n, i, type_of_game::SINGLE_COMPUTER);
+                Controller->start_game(n, i, type_of_game::SINGLE_COMPUTER, port);
             else if (is_host) {
-                Controller->start_game(n, i, type_of_game::LOCAL_SERVER);
+                Controller->start_game(n, i, type_of_game::LOCAL_SERVER, port);
             } else {
-                Controller->start_game(n, i, type_of_game::LOCAL_CLIENT);
+                Controller->start_game(n, i, type_of_game::LOCAL_CLIENT, port);
             }
             timed_redraw();
         });
