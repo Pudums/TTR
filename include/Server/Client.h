@@ -18,7 +18,7 @@ class GameClient {
     ttr::BoardState *get_board_state();
 
 public:
-    explicit GameClient();
+    explicit GameClient(const std::string& ip_address);
     std::vector<Path> get_paths();
     int get_id();
     void start_game();

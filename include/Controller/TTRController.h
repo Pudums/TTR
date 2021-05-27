@@ -30,7 +30,7 @@ public:
     explicit TTRController() = default;
     void start_game(int number_of_players,
                     int number_of_bots = 0,
-                    type_of_game type = type_of_game::SINGLE_COMPUTER);
+                    type_of_game type = type_of_game::SINGLE_COMPUTER, const char* ip_address="");
     void start_game_server();
     void get_card_from_active(int, int id = -1);
     void build_path_initialize(int, int id = -1);

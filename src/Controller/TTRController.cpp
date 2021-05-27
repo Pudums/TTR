@@ -19,7 +19,7 @@ int number_of_cards_with_fixed_color(const std::string &color,
 }  // namespace
 void TTRController::start_game(int number_of_players,
                                int number_of_bots,
-                               type_of_game type) {
+                               type_of_game type, const char* ip_address) {
     typeOfGame = type;
     if (typeOfGame != type_of_game::SINGLE_COMPUTER) {
         if (typeOfGame == type_of_game::LOCAL_SERVER) {
@@ -28,7 +28,7 @@ void TTRController::start_game(int number_of_players,
             game->start_game();
         }
         std::cout << "try to create client\n";
-        client = new GameClient();
+        client = new GameClient(ip_address);
         throw_exception_if_server_disconnected();
         my_id = client->get_id();
 
