@@ -30,7 +30,7 @@ public:
     explicit TTRController() = default;
     void start_game(int number_of_players,
                     int number_of_bots = 0,
-                    type_of_game type = type_of_game::SINGLE_COMPUTER, const char* ip_address="");
+                    type_of_game type = type_of_game::SINGLE_COMPUTER, const char* ip_address="localhost ");
     void start_game_server();
     void get_card_from_active(int, int id = -1);
     void build_path_initialize(int, int id = -1);
@@ -53,7 +53,7 @@ public:
     std::vector<std::pair<std::string, Circle>> get_stations();
     [[nodiscard]] int get_my_id();
     void throw_exception_if_server_disconnected();
-    bool is_my_turn();
+    [[maybe_unused]] bool is_my_turn();
     ~TTRController();
 };
 

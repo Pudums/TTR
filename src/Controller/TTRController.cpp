@@ -19,16 +19,18 @@ int number_of_cards_with_fixed_color(const std::string &color,
 }  // namespace
 void TTRController::start_game(int number_of_players,
                                int number_of_bots,
-                               type_of_game type, const char* ip_address) {
+                               type_of_game type,
+                               const char *ip_address) {
     typeOfGame = type;
     if (typeOfGame != type_of_game::SINGLE_COMPUTER) {
         if (typeOfGame == type_of_game::LOCAL_SERVER) {
             server = new ttr::LocalServer(this);
             game = new Game(number_of_players, number_of_bots);
             game->start_game();
+            client = new GameClient("localhost");
+        } else {
+            client = new GameClient(ip_address);
         }
-        std::cout << "try to create client\n";
-        client = new GameClient(ip_address);
         throw_exception_if_server_disconnected();
         my_id = client->get_id();
 
@@ -45,7 +47,8 @@ void TTRController::start_game(int number_of_players,
 }
 
 void TTRController::get_card_from_deck(int id) {
-    if(!is_game_started())return;
+    if (!is_game_started())
+        return;
     if (typeOfGame != type_of_game::SINGLE_COMPUTER and
         (id == -1 and my_id != client->get_id() or
          id != -1 and id != client->get_id())) {
@@ -66,7 +69,8 @@ void TTRController::get_card_from_deck(int id) {
 }
 
 void TTRController::get_card_from_active(int num, int id) {
-    if(!is_game_started())return;
+    if (!is_game_started())
+        return;
     if (typeOfGame != type_of_game::SINGLE_COMPUTER and
         (id == -1 and my_id != client->get_id() or
          id != -1 and id != client->get_id())) {
@@ -100,7 +104,8 @@ void TTRController::get_card_from_active(int num, int id) {
 }
 
 void TTRController::build_path_initialize(int id, int player_id) {
-    if(!is_game_started())return;
+    if (!is_game_started())
+        return;
     if (typeOfGame != type_of_game::SINGLE_COMPUTER and
         (player_id == -1 and my_id != client->get_id() or
          player_id != -1 and player_id != client->get_id())) {
@@ -108,17 +113,17 @@ void TTRController::build_path_initialize(int id, int player_id) {
                   << ", but now moves " << client->get_id();
         return;
     }
-        if (auto p = dynamic_cast<BuildStation *>(current_turn); p) {
-            p->set_path(id);
-            std::cout<<"oh you want to build station!!!\n";
-            if (typeOfGame != type_of_game::LOCAL_CLIENT) {
-                    game->make_move(p);
-            }else{
-                throw_exception_if_server_disconnected();
-                client->make_turn(p, my_id);
-            }
-            current_turn = nullptr;
+    if (auto p = dynamic_cast<BuildStation *>(current_turn); p) {
+        p->set_path(id);
+        std::cout << "oh you want to build station!!!\n";
+        if (typeOfGame != type_of_game::LOCAL_CLIENT) {
+            game->make_move(p);
+        } else {
+            throw_exception_if_server_disconnected();
+            client->make_turn(p, my_id);
         }
+        current_turn = nullptr;
+    }
 
     if (Turn::num == 0) {
         current_turn = new BuildPath(id);
@@ -128,7 +133,7 @@ void TTRController::build_path_initialize(int id, int player_id) {
 void TTRController::get_routes(int id) {
     if (typeOfGame != type_of_game::SINGLE_COMPUTER and
         (id == -1 and my_id != client->get_id() or
-                      id != -1 and id != client->get_id())) {
+         id != -1 and id != client->get_id())) {
         std::cout << "it's not your turn: your id is" << my_id
                   << ", but now moves " << client->get_id();
         return;
@@ -149,8 +154,9 @@ TTRController::~TTRController() {
 }
 
 void TTRController::set_color_to_build_path(const WagonCard &w, int id) {
-    if(!is_game_started())return;
-    if(typeOfGame == type_of_game::LOCAL_CLIENT){
+    if (!is_game_started())
+        return;
+    if (typeOfGame == type_of_game::LOCAL_CLIENT) {
         throw_exception_if_server_disconnected();
     }
     if (typeOfGame != type_of_game::SINGLE_COMPUTER and
@@ -241,14 +247,18 @@ int TTRController::is_game_end() {
 }
 //🥰🥰🥰🥰🥰🥰🥰🥰
 
-
 std::vector<int> TTRController::get_results() {
+    static bool is_ended = false;
+
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
-        game->count_players_points();
+        if (!is_ended) {
+            game->count_players_points();
+        }
         std::vector<int> res;
         for (auto &i : game->players) {
             res.push_back(i.points);
         }
+        is_ended = true;
         return res;
     } else {
         throw_exception_if_server_disconnected();
@@ -260,7 +270,8 @@ std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         std::vector<std::pair<std::string, Circle>> stations;
         for (const auto &i : game->cities) {
-            stations.push_back({i.second, {i.first.p.x, i.first.p.y, i.first.r}});
+            stations.push_back(
+                {i.second, {i.first.p.x, i.first.p.y, i.first.r}});
         }
         return stations;
     } else {
@@ -270,12 +281,12 @@ std::vector<std::pair<std::string, Circle>> TTRController::get_stations() {
 }
 
 void TTRController::build_station(const std::string &city, int id) {
-    if(typeOfGame == type_of_game::LOCAL_CLIENT){
+    if (typeOfGame == type_of_game::LOCAL_CLIENT) {
         throw_exception_if_server_disconnected();
     }
     if (typeOfGame != type_of_game::SINGLE_COMPUTER and
         (id == -1 and my_id != client->get_id() or
-                      id != -1 and id != client->get_id())) {
+         id != -1 and id != client->get_id())) {
         std::cout << "it's not your turn: your id is" << my_id
                   << ", but now moves " << client->get_id();
         return;
@@ -284,8 +295,12 @@ void TTRController::build_station(const std::string &city, int id) {
 }
 
 void TTRController::end_game() {
+    static bool is_ended = false;
+    if (is_ended)
+        return;
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
-            game->end_game();
+        game->end_game();
+        is_ended = true;
     }
 }
 
@@ -298,15 +313,14 @@ int TTRController::get_current_player_id() {
     }
 }
 
-
 std::vector<Path> TTRController::get_all_paths() {
     return get_paths();
 }
 
 bool TTRController::is_game_started() const {
-    if(typeOfGame != type_of_game::LOCAL_CLIENT){
+    if (typeOfGame != type_of_game::LOCAL_CLIENT) {
         return started;
-    }else{
+    } else {
         return true;
     }
 }
@@ -314,7 +328,6 @@ bool TTRController::is_game_started() const {
 void TTRController::start_game_server() {
     started = true;
 }
-
 
 int TTRController::get_number_of_players() {
     if (typeOfGame != type_of_game::LOCAL_CLIENT) {
@@ -325,19 +338,19 @@ int TTRController::get_number_of_players() {
     }
 }
 
-int TTRController::get_my_id(){
-    if(typeOfGame == type_of_game::SINGLE_COMPUTER){
+int TTRController::get_my_id() {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         return get_current_player_id();
     }
     return my_id;
 }
 void TTRController::throw_exception_if_server_disconnected() {
-    if(!*client){
+    if (!*client) {
         throw std::logic_error("cannot connect to server");
     }
 }
-bool TTRController::is_my_turn() {
-    if(typeOfGame == type_of_game::SINGLE_COMPUTER){
+[[maybe_unused]] bool TTRController::is_my_turn() {
+    if (typeOfGame == type_of_game::SINGLE_COMPUTER) {
         return true;
     }
     return my_id == get_current_player_id();
