@@ -12,7 +12,7 @@ Button::Button(QString name, QGraphicsItem *parent)
     setRect(0, 0, 200, 50);
     QBrush brush;
     brush.setStyle(Qt::SolidPattern);
-    brush.setColor(Qt::darkBlue);
+    brush.setColor(Qt::blue);
     setBrush(brush);
 
     text = new QGraphicsTextItem(name, this);
@@ -32,7 +32,7 @@ void Button::hoverEnterEvent(QGraphicsSceneHoverEvent *event) {
     if (!image) {
         QBrush brush;
         brush.setStyle(Qt::SolidPattern);
-        brush.setColor(Qt::blue);
+        brush.setColor(Qt::yellow);
         setBrush(brush);
     }
 }
@@ -41,7 +41,7 @@ void Button::hoverLeaveEvent(QGraphicsSceneHoverEvent *event) {
     if (!image) {
         QBrush brush;
         brush.setStyle(Qt::SolidPattern);
-        brush.setColor(Qt::darkBlue);
+        brush.setColor(Qt::blue);
         setBrush(brush);
     }
 }
