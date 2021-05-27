@@ -12,12 +12,11 @@ Rectangle parse_grpc_rectangle(const ::ttr::Rectangle &r) {
 }
 }  // namespace
 
-GameClient::GameClient() {
+GameClient::GameClient(const std::string& ip_address) {
     ::grpc::ChannelArguments args;
-    // Set the default compression algorithm for the channel.
     args.SetCompressionAlgorithm(GRPC_COMPRESS_GZIP);
     stub_ = ::ttr::TTRService::NewStub(grpc::CreateCustomChannel(
-        "25.86.176.119:50051", grpc::InsecureChannelCredentials(), args));
+        ip_address+":50051", grpc::InsecureChannelCredentials(), args));
 
     // TODO not only localhost
 }
