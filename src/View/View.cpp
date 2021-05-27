@@ -272,6 +272,8 @@ void View::start_port(bool is_server, bool flag) {
                                          QString("tmp"), &ok);
 	if (ok && !text.isEmpty()) {
 		start(is_server, flag, text.toStdString().c_str());
+	} else {
+		disconnected("canceled");
 	}
 }
 
