@@ -23,6 +23,7 @@
 #include "WagonCard.h"
 
 namespace {
+bool end_game_true = false;
 std::map<std::string, int> color_to_sdvig = {
     {White, 0}, {Orange, 1}, {Green, 2},  {Red, 3},       {Black, 4},
     {Blue, 5},  {Yellow, 6}, {Purple, 7}, {Uncolored, 8}, {Multicolored, 8}};
@@ -344,6 +345,7 @@ void View::draw_board() {
     auto status = Controller->is_game_end();
     std::cout << "end controller.is_game_end\n";
     if (status == 2) {
+		end_game_true = true;
         draw_map();
         draw_wagons();
         draw_stations();
@@ -496,6 +498,7 @@ void View::draw_wagons_count() {
         scene->addItem(wagon_to_draw);
 
         if (my_id != i || flag) {
+			if(!end_game_true) {
             QGraphicsTextItem *some_text1 = new QGraphicsTextItem(
                 QString("Wagons left: ") +
                 QString::number(player.number_of_wagons_left));
@@ -523,6 +526,27 @@ void View::draw_wagons_count() {
             some_text4->setFont(font);
             scene->addItem(some_text4);
 
+			} else {
+            int j = 0;
+            for (const auto &path : player.active_routes) {
+                QGraphicsTextItem *some_text = new QGraphicsTextItem(
+                    QString("From: ") + QString(path.city1.c_str()) +
+                    QString(" to ") + QString(path.city2.c_str()));
+                some_text->setPos(1320 + width * 0.05,
+                                  i * height + 25 * (2 * j));
+                some_text->setFont(font);
+                scene->addItem(some_text);
+
+                some_text = new QGraphicsTextItem(
+                    QString("Left to build: ") +
+                    QString::number(path.points_for_passing));
+                some_text->setPos(1320 + width * 0.05,
+                                  i * height + 25 * (2 * j + 1));
+                some_text->setFont(font);
+                scene->addItem(some_text);
+                j++;
+            }
+			}
         } else {
             int j = 0;
             for (const auto &path : player.active_routes) {
