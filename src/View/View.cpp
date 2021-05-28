@@ -538,7 +538,7 @@ void View::draw_wagons_count() {
                 scene->addItem(some_text);
 
                 some_text = new QGraphicsTextItem(
-                    QString("Left to build: ") +
+                    QString("Points for passing: ") +
                     QString::number(path.points_for_passing));
                 some_text->setPos(1320 + width * 0.05,
                                   i * height + 25 * (2 * j + 1));
