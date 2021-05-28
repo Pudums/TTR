@@ -327,10 +327,13 @@ void Game::make_move(Turn *t) {
 }
 
 void Game::count_players_points() {
+    static bool is_counted = false;
+    if(is_counted)return;
     for (auto &player : players) {
         player.count_points();
         std::cout << player.id << std::endl;
     }
+    is_counted = true;
 }
 
 void Game::end_game() {
