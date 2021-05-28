@@ -342,7 +342,6 @@ void View::draw_board() {
               << "\n";
     std::cout << "start controller.is_game_end\n";
     auto status = Controller->is_game_end();
-	status = 2;
     std::cout << "end controller.is_game_end\n";
     if (status == 2) {
         draw_map();
