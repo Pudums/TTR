@@ -23,6 +23,7 @@
 #include "WagonCard.h"
 
 namespace {
+bool end_game_true = false;
 std::map<std::string, int> color_to_sdvig = {
     {White, 0}, {Orange, 1}, {Green, 2},  {Red, 3},       {Black, 4},
     {Blue, 5},  {Yellow, 6}, {Purple, 7}, {Uncolored, 8}, {Multicolored, 8}};
@@ -279,13 +280,16 @@ void View::start_port(bool is_server, bool flag) {
 
 void View::timed_redraw() {
     draw_board();
+	redrawble = true;
     QTimer *timer = new QTimer();
     timer->setSingleShot(false);
     timer->setInterval(5000);
     connect(timer, &QTimer::timeout, [=]() {
-        draw_board();
-        // timed_redraw();
-        timer->start();
+		if(redrawble) {
+			draw_board();
+			// timed_redraw();
+			timer->start();
+		}
     });
     timer->start();
 }
@@ -341,7 +345,11 @@ void View::draw_board() {
     auto status = Controller->is_game_end();
     std::cout << "end controller.is_game_end\n";
     if (status == 2) {
-        std::cout << "status = 2\n";
+		end_game_true = true;
+        draw_map();
+        draw_wagons();
+        draw_stations();
+        draw_wagons_count();
         // Controller->end_game();
         end_game();
         return;
@@ -421,6 +429,7 @@ void View::draw_whoose_turn() {
 void View::disconnected(const char *err) {
 	delete Controller;
 	Controller = new TTRController();
+	redrawble = false;
 
     QFont font("comic sans", 14);
     QGraphicsTextItem *some_text =
@@ -489,6 +498,7 @@ void View::draw_wagons_count() {
         scene->addItem(wagon_to_draw);
 
         if (my_id != i || flag) {
+			if(!end_game_true) {
             QGraphicsTextItem *some_text1 = new QGraphicsTextItem(
                 QString("Wagons left: ") +
                 QString::number(player.number_of_wagons_left));
@@ -516,6 +526,27 @@ void View::draw_wagons_count() {
             some_text4->setFont(font);
             scene->addItem(some_text4);
 
+			} else {
+            int j = 0;
+            for (const auto &path : player.active_routes) {
+                QGraphicsTextItem *some_text = new QGraphicsTextItem(
+                    QString("From: ") + QString(path.city1.c_str()) +
+                    QString(" to ") + QString(path.city2.c_str()));
+                some_text->setPos(1320 + width * 0.05,
+                                  i * height + 25 * (2 * j));
+                some_text->setFont(font);
+                scene->addItem(some_text);
+
+                some_text = new QGraphicsTextItem(
+                    QString("Left to build: ") +
+                    QString::number(path.points_for_passing));
+                some_text->setPos(1320 + width * 0.05,
+                                  i * height + 25 * (2 * j + 1));
+                some_text->setFont(font);
+                scene->addItem(some_text);
+                j++;
+            }
+			}
         } else {
             int j = 0;
             for (const auto &path : player.active_routes) {
@@ -807,14 +838,24 @@ void View::draw_active_cards() {
 }
 
 void View::end_game() {
-    int height = 30;
+    int height = 30, width = 233;
     const auto &results = Controller->get_results();
     for (int i = 0; i < results.size(); ++i) {
         QGraphicsTextItem *some_text = new QGraphicsTextItem(
             QString("Player ") + QString::number(i) + QString(" have: ") +
             QString::number(results[i]));
+		auto color = color_frow_owner[i];
+		if(color == Red) {
+			some_text->setDefaultTextColor(Qt::red);
+		} else if(color ==  Yellow) {
+			some_text->setDefaultTextColor(Qt::yellow);
+		} else if(color == Blue) {
+			some_text->setDefaultTextColor(Qt::blue);
+		} else if(color == Green) {
+			some_text->setDefaultTextColor(Qt::green);
+		}
         some_text->setFont(QFont("comic sans", 14));
-        some_text->setPos(0, height * i);
+        some_text->setPos(1920 - width, height * i);
         scene->addItem(some_text);
     }
 }
