@@ -342,9 +342,13 @@ void View::draw_board() {
               << "\n";
     std::cout << "start controller.is_game_end\n";
     auto status = Controller->is_game_end();
+	status = 2;
     std::cout << "end controller.is_game_end\n";
     if (status == 2) {
-        std::cout << "status = 2\n";
+        draw_map();
+        draw_wagons();
+        draw_stations();
+        draw_wagons_count();
         // Controller->end_game();
         end_game();
         return;
@@ -811,14 +815,24 @@ void View::draw_active_cards() {
 }
 
 void View::end_game() {
-    int height = 30;
+    int height = 30, width = 233;
     const auto &results = Controller->get_results();
     for (int i = 0; i < results.size(); ++i) {
         QGraphicsTextItem *some_text = new QGraphicsTextItem(
             QString("Player ") + QString::number(i) + QString(" have: ") +
             QString::number(results[i]));
+		auto color = color_frow_owner[i];
+		if(color == Red) {
+			some_text->setDefaultTextColor(Qt::red);
+		} else if(color ==  Yellow) {
+			some_text->setDefaultTextColor(Qt::yellow);
+		} else if(color == Blue) {
+			some_text->setDefaultTextColor(Qt::blue);
+		} else if(color == Green) {
+			some_text->setDefaultTextColor(Qt::green);
+		}
         some_text->setFont(QFont("comic sans", 14));
-        some_text->setPos(0, height * i);
+        some_text->setPos(1920 - width, height * i);
         scene->addItem(some_text);
     }
 }
